@@ -10,10 +10,17 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center">
-            <Brain className="h-8 w-8 text-yellow-400" />
-            <span className="ml-2 text-xl font-bold text-blue-600">
+            {/* <Brain className="h-8 w-8 text-yellow-400" /> */}
+            <img
+              src="/icons/FutureGPT.svg"
+              alt="FutureGPT"
+              className="w-32 h-32 mx-auto mb-8"
+              height="80px"
+              width="80px"
+            />
+            {/* <span className="ml-2 text-xl font-bold text-blue-600">
               FutureGPT
-            </span>
+            </span> */}
           </Link>
           
           <nav className="hidden md:flex space-x-8">
