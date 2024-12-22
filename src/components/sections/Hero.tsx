@@ -14,7 +14,7 @@ export function Hero() {
           className="w-full h-full object-cover"
         >
           <source
-            src="https://cdn.coverr.co/videos/coverr-artificial-intelligence-network-9235/1080p.mp4"
+            src="/gif/as.mp4"
             type="video/mp4"
           />
         </video>
@@ -24,9 +24,9 @@ export function Hero() {
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <img
-          src="/icons/FutureGPT.svg"
+          src="/icons/fg.png"
           alt="FutureGPT"
-          className="w-32 h-32 mx-auto mb-8"
+          className="w-32 h-32 mx-auto"
         />
         <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
           Welcome to{' '}

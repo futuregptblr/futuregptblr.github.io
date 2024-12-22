@@ -12,9 +12,9 @@ export function Header() {
           <Link to="/" className="flex items-center">
             {/* <Brain className="h-8 w-8 text-yellow-400" /> */}
             <img
-              src="/icons/FutureGPT.svg"
+              src="/icons/fg.png"
               alt="FutureGPT"
-              className="w-32 h-32 mx-auto mb-8"
+              className="w-32 h-32 mx-auto"
               height="80px"
               width="80px"
             />
