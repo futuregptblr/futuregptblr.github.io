@@ -45,7 +45,7 @@ export function CompanySlider() {
         >
           {companies.map((company, index) => (
             <SwiperSlide key={index}>
-              <div className="flex items-center justify-center h-24 grayscale hover:grayscale-0 transition-all">
+              <div className="flex items-center justify-center h-24 transition-all">
                 <img
                   src={company.logo}
                   alt={company.name}
