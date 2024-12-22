@@ -25,23 +25,23 @@ export const chapters: Chapter[] = [
     city: "Bangalore",
     country: "India",
     leads: [chapterLeads[1]],
-    memberCount: 2500,
+    memberCount: 8000,
     image: "https://images.unsplash.com/photo-1596176530529-78163a4f7af2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
-    id: "delhi",
-    city: "Delhi",
+    id: "pune",
+    city: "Pune",
     country: "India",
     leads: [],
     memberCount: 1800,
-    image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    image: "/chapter/pune.jpeg"
   },
   {
-    id: "mumbai",
-    city: "Mumbai",
+    id: "hyderabad",
+    city: "Hyderabad",
     country: "India",
     leads: [],
     memberCount: 2000,
-    image: "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    image: "/chapter/hyderabad.jpeg"
   }
 ];

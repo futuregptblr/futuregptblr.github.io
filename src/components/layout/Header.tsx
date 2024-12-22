@@ -30,9 +30,9 @@ export function Header() {
             <Link to="/team" className="text-gray-700 hover:text-yellow-500 transition-colors">
               Team
             </Link>
-            <a href="#features" className="text-gray-700 hover:text-yellow-500 transition-colors">
+            {/* <a href="/features" className="text-gray-700 hover:text-yellow-500 transition-colors">
               Features
-            </a>
+            </a> */}
             <Link to="/past-events" className="text-gray-700 hover:text-yellow-500 transition-colors">
               Past Events
             </Link>
@@ -43,7 +43,7 @@ export function Header() {
 
           <div className="hidden md:block">
             <Link
-              to="/signup"
+              to="https://www.meetup.com/futuregpt/"
               className="px-4 py-2 bg-yellow-400 text-blue-900 rounded-full font-medium hover:bg-yellow-300 transition-colors"
             >
               Join Us
@@ -80,13 +80,13 @@ export function Header() {
               >
                 Team
               </Link>
-              <a 
-                href="#features"
+              {/* <a 
+                href="/features"
                 className="text-gray-700 hover:text-yellow-500 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Features
-              </a>
+              </a> */}
               <Link 
                 to="/past-events"
                 className="text-gray-700 hover:text-yellow-500 transition-colors"
@@ -102,7 +102,7 @@ export function Header() {
                 Contact
               </a>
               <Link
-                to="/signup"
+                to="https://www.meetup.com/futuregpt/"
                 className="px-4 py-2 bg-yellow-400 text-blue-900 rounded-full font-medium hover:bg-yellow-300 transition-colors inline-block text-center"
                 onClick={() => setIsMenuOpen(false)}
               >

@@ -3,22 +3,42 @@ import { Event } from '../types';
 export const upcomingEvents: Event[] = [
   {
     id: "event1",
-    title: "AI for Everyone - Beginners Workshop",
-    date: "2024-04-15",
-    location: "WeWork Galaxy, Bangalore",
+    title: "FinAI: The Future of Financial Intelligence",
+    date: "2024-01-18",
+    location: "Bangalore",
     chapter: "Bangalore",
-    description: "Join us for an introductory workshop on AI fundamentals and practical applications.",
-    image: "https://images.unsplash.com/photo-1591453089816-0fbb971b454c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    description: "Join us to explore cutting-edge advancements in AI-driven solutions revolutionizing the financial industry.",
+    image: "/events/e1.jpg",
     registrationLink: "https://meetup.com/futuregpt/events/1"
   },
   {
     id: "event2",
-    title: "LLM Development Workshop",
+    title: "Bias, Breaches, and Beyond: Securing AI Systems in the Real World",
     date: "2024-04-20",
-    location: "91SpringBoard, Delhi",
-    chapter: "Delhi",
-    description: "Deep dive into Large Language Models development and fine-tuning.",
-    image: "https://images.unsplash.com/photo-1596443686812-2f45229eebc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    location: "Hyderabad",
+    chapter: "Hyderabad",
+    description: "Unpack the risks of AI deployment, including data breaches and algorithmic bias, and the tools to mitigate them.",
+    image: "/events/e2.jpg",
+    registrationLink: "https://meetup.com/futuregpt/events/2"
+  },
+  {
+    id: "event3",
+    title: "AI and Security: What You Need to Know",
+    date: "2024-04-20",
+    location: "Chennai",
+    chapter: "Chennai",
+    description: "Join us to cover essential insights into the risks and best practices for securing AI systems in today’s rapidly evolving digital landscape",
+    image: "/events/e3.jpg",
+    registrationLink: "https://meetup.com/futuregpt/events/2"
+  },
+  {
+    id: "event4",
+    title: "AI in 2025: Trends, Challenges, and Innovations to Expect",
+    date: "2024-04-20",
+    location: "Pune",
+    chapter: "Pune",
+    description: "A look ahead at the AI innovations, challenges, and trends shaping the next era of technology in 2025.",
+    image: "/events/e4.jpg",
     registrationLink: "https://meetup.com/futuregpt/events/2"
   }
 ];
@@ -26,12 +46,22 @@ export const upcomingEvents: Event[] = [
 export const pastEvents: Event[] = [
   {
     id: "past1",
-    title: "AI Ethics Symposium",
-    date: "2024-03-10",
-    location: "IIT Mumbai",
-    chapter: "Mumbai",
+    title: "Crypto to Metaverse",
+    date: "2024-05-25",
+    location: "Nokia",
+    chapter: "Bengaluru",
     description: "A discussion on ethical considerations in AI development.",
-    image: "https://images.unsplash.com/photo-1591453089816-0fbb971b454c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    image: "/events/event_nokia.avif",
+    registrationLink: ""
+  },
+  {
+    id: "past2",
+    title: "Inaugural FutureGPT AI & Cybersecurity Meetup ",
+    date: "2024-09-28",
+    location: "Pune",
+    chapter: "Pune",
+    description: "A discussion on ethical considerations in AI development.",
+    image: "/events/event_pune.avif",
     registrationLink: ""
   }
 ];

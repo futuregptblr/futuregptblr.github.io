@@ -12,8 +12,10 @@ import { SocialFeed } from './components/social/SocialFeed';
 import { SignupForm } from './components/auth/SignupForm';
 import { MemberCount } from './components/sections/MemberCount';
 import { CompanySlider } from './components/sections/CompanySlider';
+// import { Gallery } from './components/sections/Gallery';
 import { EventCard } from './components/events/EventCard';
 import { upcomingEvents, pastEvents } from './data/events';
+import { GallerySection } from './components/sections/GallerySection';
 
 function App() {
   return (
@@ -41,6 +43,7 @@ function App() {
                   </div>
                 </div>
               </section>
+              <GallerySection />
 
               <SocialFeed />
               <Community />

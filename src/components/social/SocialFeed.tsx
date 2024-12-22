@@ -13,7 +13,7 @@ export function SocialFeed() {
             <h3 className="text-xl font-semibold mb-6">Latest YouTube Content</h3>
             <div className="bg-white rounded-xl p-4 shadow-md">
               <YouTube
-                videoId="dQw4w9WgXcQ"
+                videoId="YS5XELr0J-g"
                 opts={{
                   width: '100%',
                   height: '315',
@@ -29,7 +29,8 @@ export function SocialFeed() {
             <h3 className="text-xl font-semibold mb-6">LinkedIn Updates</h3>
             <div className="bg-white rounded-xl p-4 shadow-md">
               <LinkedInEmbed
-                url="https://www.linkedin.com/embed/feed/update/urn:li:share:6234567890"
+                //url="https://www.linkedin.com/embed/feed/update/urn:li:share:6234567890"
+                url="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7201100981982445569"
                 height={400}
               />
             </div>

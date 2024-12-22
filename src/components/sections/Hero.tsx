@@ -38,7 +38,9 @@ export function Hero() {
           India's Premier Community for Emerging Technologies
         </p>
         <div className="flex justify-center gap-4">
-          <button className="px-8 py-3 bg-yellow-400 text-blue-900 rounded-full font-medium hover:bg-yellow-300 transition-colors flex items-center">
+          <button className="px-8 py-3 bg-yellow-400 text-blue-900 rounded-full font-medium hover:bg-yellow-300 transition-colors flex items-center"
+            onClick={() => {window.location.href = "https://www.meetup.com/futuregpt/"}}
+          >
             Join Community
             <ArrowRight className="ml-2 h-5 w-5" />
           </button>
