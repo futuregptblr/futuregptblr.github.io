@@ -16,6 +16,7 @@ import { CompanySlider } from './components/sections/CompanySlider';
 import { EventCard } from './components/events/EventCard';
 import { upcomingEvents, pastEvents } from './data/events';
 import { GallerySection } from './components/sections/GallerySection';
+import { PastSpeakers } from './components/sections/PastSpeakers';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
                   </div>
                 </div>
               </section>
+              <PastSpeakers />
               <GallerySection />
 
               <SocialFeed />

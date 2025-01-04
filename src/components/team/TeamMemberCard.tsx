@@ -25,6 +25,7 @@ export function TeamMemberCard({ member }: TeamMemberCardProps) {
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
             <h3 className="text-xl font-semibold text-white">{member.name}</h3>
             <p className="text-yellow-300">{member.role}</p>
+            <p className="text-white">{member.designation}</p>
           </div>
         </div>
         <div className="p-4">

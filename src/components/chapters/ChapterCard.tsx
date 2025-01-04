@@ -25,7 +25,7 @@ export function ChapterCard({ chapter }: ChapterCardProps) {
           {chapter.memberCount.toLocaleString()} members
         </p>
         <div className="flex justify-between items-center">
-          <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+          <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors" onClick={() => window.open(chapter.link)}>
             Join Chapter
           </button>
           {chapter.leads.length > 0 && (

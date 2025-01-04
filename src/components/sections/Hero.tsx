@@ -44,7 +44,7 @@ export function Hero() {
             Join Community
             <ArrowRight className="ml-2 h-5 w-5" />
           </button>
-          <button className="px-8 py-3 border-2 border-white text-white rounded-full font-medium hover:bg-white/10 transition-colors">
+          <button className="px-8 py-3 border-2 border-white text-white rounded-full font-medium hover:bg-white/10 transition-colors" onClick={() => window.open("https://www.linkedin.com/company/futuregptmeetup/")}>
             Learn More
           </button>
         </div>

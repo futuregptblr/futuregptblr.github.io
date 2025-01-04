@@ -2,56 +2,60 @@ import React from 'react';
 
 const members = [
   {
-    name: 'Aarushi Goyal',
-    role: 'Senior Software Engineer',
-    image: '/community/aaru.jpeg',
+    name: 'Sarang Kamalakar',
+    role: 'Founder & CEO - PARENTHESES SYSTEMS',
+    image: '/community/sarang.jpeg',
   },
   {
-    name: 'Sanjeev Jaiswal',
-    role: 'Security Architect',
-    image: '/community/sanjeev.jpeg',
+    name: 'Arun Badole',
+    role: 'VP Engineering - Mindbrowser',
+    image: '/community/arun.jpeg',
   },
   {
-    name: 'Sivakumar (Shiva) Dhakshinamoorthy',
-    role: 'GenAI Leader',
-    image: '/community/siva.jpeg',
+    name: 'Yogesh Kulkarn',
+    role: 'Co-Founder & Director Altizon Inc',
+    image: '/community/yogesh.jpeg',
   },
   {
-    name: 'Vellanki Sriharsha',
-    role: 'Applied AI Leader',
-    image: '/community/vel.jpeg',
+    name: 'Arun Mane',
+    role: 'Founder & CEO at AmynaSec Research Lab',
+    image: '/community/arun.jpeg',
   },
   {
-    name: 'Harsh Sanghvi',
-    role: 'Red Team Lead',
-    image: '/community/harsh.jpeg',
+    name: 'Navin Kabra',
+    role: 'Co-founder & CTO at Reliscore.com',
+    image: '/community/navin.jpeg',
   },
   
   {
-    name: 'Prabhanjan Gururaj',
-    role: 'Director - Solution Engineering',
-    image: '/community/prab.jpeg',
+    name: 'Gurmeet Singh',
+    role: 'Founder of Blazeclan Technologies',
+    image: '/community/gurmeet.jpeg',
   },
+  
   {
-    name: 'Dhruv Jhalani',
-    role: 'Co-Founder & CTO at Dalnex',
-    image: '/community/dhruv.jpeg',
+    name: 'Vinay Kumar Sankarapu',
+    role: 'Founder and CEO of Arya.ai',
+    image: '/community/vinay.jpeg',
   },
+  
+  {
+    name: 'Rajat Gahlot',
+    role: 'Co-Founder QuillAudits',
+    image: '/community/rajat.jpeg',
+  },
+  
 
-  {
-    name: 'Ayush Jain',
-    role: 'CEO - Mindbowser Inc',
-    image: '/community/ayush.jpeg',
-  },
+  
 ];
 
-export function Community() {
+export function PastSpeakers() {
   return (
-    <section id="community" className="py-20 bg-gray-50">
+    <section id="pastspeakers" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Meet Our Community
+            Past Speakers
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Join thousands of AI enthusiasts and professionals who are shaping the future

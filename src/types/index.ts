@@ -25,12 +25,14 @@ export interface Chapter {
   leads: ChapterLead[];
   memberCount: number;
   image: string;
+  link: string;
 }
 
 export interface TeamMember {
   id: string;
   name: string;
   role: string;
+  designation: string;
   chapter?: string;
   image: string;
   bio: string;
