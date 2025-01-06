@@ -105,7 +105,7 @@ export const hyderabadChapter: TeamMember[] = [
 
 ];
 
-export const chennaiChapter: TeamMember[] = [
+export const chennaiChapter: TeamMember[] = [ 
   {
     id: "lead1",
     name: "Karthik Ramanathan",
@@ -125,6 +125,17 @@ export const chennaiChapter: TeamMember[] = [
     image: "/community/sudha.png",
     bio: "I am a cybersecurity expert and entrepreneur with over 14 years of experience in the field. I have co-founded and led two successful technology companies, Vault Infosec that offer enterprise-level cybersecurity services and products to clients across various industries and regions.",
     linkedin: "https://www.linkedin.com/in/sudha-vault/"
+  },
+
+  {
+    id: "lead3",
+    name: "Shruthi Priyaa",
+    role: "Chapter Lead",
+    designation: "Member @ HIT squad of Founders office",
+    chapter: "Chennai",
+    image: "/community/priya.png",
+    bio: "Leading business operations and market expansion in the drone industry. Expert in data analysis, process optimization, and strategic decision-making.",
+    linkedin: "https://www.linkedin.com/in/shruthi-priyaa-i-a790ba18b/"
   },
 
 ];
