@@ -3,13 +3,13 @@ import { Event } from '../types';
 export const upcomingEvents: Event[] = [
   {
     id: "event1",
-    title: "AI x Finance: Bangalore’s Must-Attend Meetup of 2025!",
-    date: "2024-01-24",
+    title: "The Future of Autonomy: Drones, XR, Robotic Dogs, & Beyond at Scalar, Bengaluru",
+    date: "2025-02-22",
     location: "Bangalore",
     chapter: "Bangalore",
     description: "Join us to explore cutting-edge advancements in AI-driven solutions revolutionizing the financial industry.",
     image: "/events/e1.jpg",
-    registrationLink: "https://www.meetup.com/futuregpt/events/305413860/"
+    registrationLink: "https://lu.ma/k6pxkdhn/"
   },
   {
     id: "event2",
@@ -23,13 +23,13 @@ export const upcomingEvents: Event[] = [
   },
   {
     id: "event3",
-    title: "AI and Security: What You Need to Know",
-    date: "2024-04-20",
+    title: `Security x AI: The Future of Tech" at Auriseg, Chennai`,
+    date: "2025-02-22",
     location: "Chennai",
     chapter: "Chennai",
     description: "Join us to cover essential insights into the risks and best practices for securing AI systems in today’s rapidly evolving digital landscape",
     image: "/events/e3.jpg",
-    registrationLink: "https://meetup.com/futuregpt/events/2"
+    registrationLink: "https://lu.ma/84oluzi6/"
   },
   {
     id: "event4",
