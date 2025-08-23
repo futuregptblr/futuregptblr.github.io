@@ -3,10 +3,10 @@ import CountUp from 'react-countup';
 import { useInView } from 'react-intersection-observer';
 
 const stats = [
-  { label: 'Total Members', value: 19000 },
-  { label: 'Active Chapters', value: 5 },
-  { label: 'Events Conducted', value: 25 },
-  { label: 'Industry Partners', value:  40 }
+  { label: 'Total Members', value: 15000 },
+  { label: 'Active Chapters', value: 12 },
+  { label: 'Events Conducted', value: 150 },
+  { label: 'Industry Partners', value: 45 }
 ];
 
 export function MemberCount() {

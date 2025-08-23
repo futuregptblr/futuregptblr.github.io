@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Brain, Menu, X } from 'lucide-react';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,17 +10,10 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center">
-            {/* <Brain className="h-8 w-8 text-yellow-400" /> */}
-            <img
-              src="/icons/fg.png"
-              alt="FutureGPT"
-              className="w-32 h-32 mx-auto"
-              height="80px"
-              width="80px"
-            />
-            {/* <span className="ml-2 text-xl font-bold text-blue-600">
+            <Brain className="h-8 w-8 text-yellow-400" />
+            <span className="ml-2 text-xl font-bold text-blue-600">
               FutureGPT
-            </span> */}
+            </span>
           </Link>
           
           <nav className="hidden md:flex space-x-8">
@@ -30,11 +23,14 @@ export function Header() {
             <Link to="/team" className="text-gray-700 hover:text-yellow-500 transition-colors">
               Team
             </Link>
-            {/* <a href="/features" className="text-gray-700 hover:text-yellow-500 transition-colors">
+            <a href="#features" className="text-gray-700 hover:text-yellow-500 transition-colors">
               Features
-            </a> */}
+            </a>
             <Link to="/past-events" className="text-gray-700 hover:text-yellow-500 transition-colors">
               Past Events
+            </Link>
+            <Link to="/dashboard" className="text-gray-700 hover:text-yellow-500 transition-colors">
+              Dashboard
             </Link>
             <a href="#contact" className="text-gray-700 hover:text-yellow-500 transition-colors">
               Contact
@@ -43,7 +39,7 @@ export function Header() {
 
           <div className="hidden md:block">
             <Link
-              to="https://www.meetup.com/futuregpt/"
+              to="/signup"
               className="px-4 py-2 bg-yellow-400 text-blue-900 rounded-full font-medium hover:bg-yellow-300 transition-colors"
             >
               Join Us
@@ -80,19 +76,26 @@ export function Header() {
               >
                 Team
               </Link>
-              {/* <a 
-                href="/features"
+              <a 
+                href="#features"
                 className="text-gray-700 hover:text-yellow-500 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Features
-              </a> */}
+              </a>
               <Link 
                 to="/past-events"
                 className="text-gray-700 hover:text-yellow-500 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Past Events
+              </Link>
+              <Link 
+                to="/dashboard"
+                className="text-gray-700 hover:text-yellow-500 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Dashboard
               </Link>
               <a 
                 href="#contact"
@@ -102,7 +105,7 @@ export function Header() {
                 Contact
               </a>
               <Link
-                to="https://www.meetup.com/futuregpt/"
+                to="/signup"
                 className="px-4 py-2 bg-yellow-400 text-blue-900 rounded-full font-medium hover:bg-yellow-300 transition-colors inline-block text-center"
                 onClick={() => setIsMenuOpen(false)}
               >

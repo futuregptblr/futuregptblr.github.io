@@ -1,6 +1,6 @@
 import React from 'react';
 import { TeamMemberCard } from '../components/team/TeamMemberCard';
-import { teamMembers, puneChapter, hyderabadChapter, chennaiChapter } from '../data/team';
+import { teamMembers } from '../data/team';
 
 export function TeamPage() {
   return (
@@ -14,27 +14,8 @@ export function TeamPage() {
             </p>
           </div>
 
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Global Community & Bangalore Chapter</h1>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {teamMembers.map((member) => (
-              <TeamMemberCard key={member.id} member={member} />
-            ))}
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-4 mt-8">Pune Chapter</h1>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {puneChapter.map((member) => (
-              <TeamMemberCard key={member.id} member={member} />
-            ))}
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-4 mt-8">Hyderabad Chapter</h1>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {hyderabadChapter.map((member) => (
-              <TeamMemberCard key={member.id} member={member} />
-            ))}
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-4 mt-8">Chennai Chapter</h1>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {chennaiChapter.map((member) => (
               <TeamMemberCard key={member.id} member={member} />
             ))}
           </div>

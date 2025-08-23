@@ -3,42 +3,22 @@ import { Event } from '../types';
 export const upcomingEvents: Event[] = [
   {
     id: "event1",
-    title: "The Future of Autonomy: Drones, XR, Robotic Dogs, & Beyond at Scalar, Bengaluru",
-    date: "2025-02-22",
-    location: "Bangalore",
+    title: "AI for Everyone - Beginners Workshop",
+    date: "2024-04-15",
+    location: "WeWork Galaxy, Bangalore",
     chapter: "Bangalore",
-    description: "Join us to explore cutting-edge advancements in AI-driven solutions revolutionizing the financial industry.",
-    image: "/events/e1.jpg",
-    registrationLink: "https://lu.ma/k6pxkdhn/"
+    description: "Join us for an introductory workshop on AI fundamentals and practical applications.",
+    image: "https://images.unsplash.com/photo-1591453089816-0fbb971b454c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    registrationLink: "https://meetup.com/futuregpt/events/1"
   },
   {
     id: "event2",
-    title: "Bias, Breaches, and Beyond: Securing AI Systems in the Real World",
+    title: "LLM Development Workshop",
     date: "2024-04-20",
-    location: "Hyderabad",
-    chapter: "Hyderabad",
-    description: "Unpack the risks of AI deployment, including data breaches and algorithmic bias, and the tools to mitigate them.",
-    image: "/events/e2.jpg",
-    registrationLink: "https://meetup.com/futuregpt/events/2"
-  },
-  {
-    id: "event3",
-    title: `Security x AI: The Future of Tech" at Auriseg, Chennai`,
-    date: "2025-02-22",
-    location: "Chennai",
-    chapter: "Chennai",
-    description: "Join us to cover essential insights into the risks and best practices for securing AI systems in today’s rapidly evolving digital landscape",
-    image: "/events/e3.jpg",
-    registrationLink: "https://lu.ma/84oluzi6/"
-  },
-  {
-    id: "event4",
-    title: "AI in 2025: Trends, Challenges, and Innovations to Expect",
-    date: "2024-04-20",
-    location: "Pune",
-    chapter: "Pune",
-    description: "A look ahead at the AI innovations, challenges, and trends shaping the next era of technology in 2025.",
-    image: "/events/e4.jpg",
+    location: "91SpringBoard, Delhi",
+    chapter: "Delhi",
+    description: "Deep dive into Large Language Models development and fine-tuning.",
+    image: "https://images.unsplash.com/photo-1596443686812-2f45229eebc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     registrationLink: "https://meetup.com/futuregpt/events/2"
   }
 ];
@@ -46,22 +26,12 @@ export const upcomingEvents: Event[] = [
 export const pastEvents: Event[] = [
   {
     id: "past1",
-    title: "Crypto to Metaverse",
-    date: "2024-05-25",
-    location: "Nokia",
-    chapter: "Bengaluru",
+    title: "AI Ethics Symposium",
+    date: "2024-03-10",
+    location: "IIT Mumbai",
+    chapter: "Mumbai",
     description: "A discussion on ethical considerations in AI development.",
-    image: "/events/event_nokia.avif",
-    registrationLink: ""
-  },
-  {
-    id: "past2",
-    title: "Inaugural FutureGPT AI & Cybersecurity Meetup ",
-    date: "2024-09-28",
-    location: "Pune",
-    chapter: "Pune",
-    description: "A discussion on ethical considerations in AI development.",
-    image: "/events/event_pune.avif",
+    image: "https://images.unsplash.com/photo-1591453089816-0fbb971b454c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     registrationLink: ""
   }
 ];

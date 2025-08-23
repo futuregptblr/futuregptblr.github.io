@@ -9,16 +9,7 @@ const companies = [
   { name: 'Amazon', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg' },
   { name: 'Meta', logo: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg' },
   { name: 'IBM', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg' },
-  { name: 'Intel', logo: 'https://upload.wikimedia.org/wikipedia/commons/7/7d/Intel_logo_%282006-2020%29.svg' },
-  { name: 'Nokia', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/02/Nokia_wordmark.svg'},
-  { name: 'Deloitte', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/56/Deloitte.svg'},
-  { name: 'PwC', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/f2/Logo-pwc.png'},
-  { name: 'Accenture', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg'},
-  { name: 'Rakuten', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Rakuten_logo_2.svg'},
-  { name: 'Zepto', logo: 'https://upload.wikimedia.org/wikipedia/en/7/7d/Logo_of_Zepto.png'},
-  { name: 'HDFC Bank', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/28/HDFC_Bank_Logo.svg'},
-  { name: 'ISRO', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Indian_Space_Research_Organisation_Logo.svg'},
-  { name: 'Jio', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Reliance_Jio_Logo.svg'},
+  { name: 'Intel', logo: 'https://upload.wikimedia.org/wikipedia/commons/7/7d/Intel_logo_%282006-2020%29.svg' }
 ];
 
 export function CompanySlider() {
@@ -45,7 +36,7 @@ export function CompanySlider() {
         >
           {companies.map((company, index) => (
             <SwiperSlide key={index}>
-              <div className="flex items-center justify-center h-24 transition-all">
+              <div className="flex items-center justify-center h-24 grayscale hover:grayscale-0 transition-all">
                 <img
                   src={company.logo}
                   alt={company.name}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, MessageCircle, Github, Linkedin } from 'lucide-react';
+import { Mail, MessageCircle, Github } from 'lucide-react';
 
 export function Contact() {
   return (
@@ -23,17 +23,15 @@ export function Contact() {
             <p className="text-gray-600 text-center">Drop us a line anytime</p>
           </a>
           <a
-            href="https://www.linkedin.com/company/futuregptmeetup"
-            target='_blank'
+            href="#"
             className="flex flex-col items-center p-6 bg-purple-50 rounded-xl hover:bg-purple-100 transition-colors"
           >
-            <Linkedin className="h-8 w-8 text-purple-600 mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">LinkedIn</h3>
-            <p className="text-gray-600 text-center">Join our LinkedIn community</p>
+            <MessageCircle className="h-8 w-8 text-purple-600 mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Discord</h3>
+            <p className="text-gray-600 text-center">Join our community chat</p>
           </a>
           <a
-            href="https://github.com/futuregptblr"
-            target='_blank'
+            href="#"
             className="flex flex-col items-center p-6 bg-purple-50 rounded-xl hover:bg-purple-100 transition-colors"
           >
             <Github className="h-8 w-8 text-purple-600 mb-4" />

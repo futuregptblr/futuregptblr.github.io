@@ -8,15 +8,13 @@ import { Community } from './components/sections/Community';
 import { Contact } from './components/sections/Contact';
 import { ChaptersPage } from './pages/Chapters';
 import { TeamPage } from './pages/Team';
+import { Dashboard } from './pages/Dashboard';
 import { SocialFeed } from './components/social/SocialFeed';
 import { SignupForm } from './components/auth/SignupForm';
 import { MemberCount } from './components/sections/MemberCount';
 import { CompanySlider } from './components/sections/CompanySlider';
-// import { Gallery } from './components/sections/Gallery';
 import { EventCard } from './components/events/EventCard';
 import { upcomingEvents, pastEvents } from './data/events';
-import { GallerySection } from './components/sections/GallerySection';
-import { PastSpeakers } from './components/sections/PastSpeakers';
 
 function App() {
   return (
@@ -44,8 +42,6 @@ function App() {
                   </div>
                 </div>
               </section>
-              <PastSpeakers />
-              <GallerySection />
 
               <SocialFeed />
               <Community />
@@ -56,6 +52,7 @@ function App() {
           <Route path="/chapters" element={<ChaptersPage />} />
           <Route path="/team" element={<TeamPage />} />
           <Route path="/signup" element={<SignupForm />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           
           <Route path="/past-events" element={
             <div className="py-20">
