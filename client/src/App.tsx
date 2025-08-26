@@ -11,6 +11,8 @@ import { TeamPage } from './pages/Team';
 import { Dashboard } from './pages/Dashboard';
 import { SocialFeed } from './components/social/SocialFeed';
 import { SignupForm } from './components/auth/SignupForm';
+import { LoginForm } from './components/auth/LoginForm';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { MemberCount } from './components/sections/MemberCount';
 import { CompanySlider } from './components/sections/CompanySlider';
 import { EventCard } from './components/events/EventCard';
@@ -52,7 +54,12 @@ function App() {
           <Route path="/chapters" element={<ChaptersPage />} />
           <Route path="/team" element={<TeamPage />} />
           <Route path="/signup" element={<SignupForm />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
           
           <Route path="/past-events" element={
             <div className="py-20">
