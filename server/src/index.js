@@ -16,6 +16,7 @@ app.get('/health', (req, res) => {
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/user', require('./routes/user'));
+app.use('/api/payment', require('./routes/payment'));
 
 const port = process.env.PORT || 4000;
 
@@ -29,5 +30,3 @@ connectToDatabase()
     console.error('Failed to connect to database', error);
     process.exit(1);
   });
-
-

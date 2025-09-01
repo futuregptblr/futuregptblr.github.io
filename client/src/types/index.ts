@@ -38,3 +38,24 @@ export interface TeamMember {
   github?: string;
   website?: string;
 }
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  isPremium: boolean;
+  premiumPurchaseDate?: string;
+}
+
+export interface PaymentOrder {
+  orderId: string;
+  amount: number;
+  currency: string;
+  key: string;
+}
+
+export interface RazorpayResponse {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}

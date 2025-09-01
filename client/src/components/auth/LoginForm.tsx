@@ -19,6 +19,9 @@ export function LoginForm() {
     try {
       const data = await apiLogin(formData);
       localStorage.setItem('token', data.token);
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
       // Force page reload to update header authentication state
       window.location.href = '/dashboard';
     } catch (err: any) {

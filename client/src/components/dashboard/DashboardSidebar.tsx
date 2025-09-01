@@ -5,12 +5,13 @@ import {
   Calendar, 
   Users, 
   User, 
+  Crown,
   BookOpen,
   MessageSquare,
   Settings
 } from 'lucide-react';
 
-type DashboardSection = 'overview' | 'jobs' | 'events' | 'community' | 'profile';
+type DashboardSection = 'overview' | 'jobs' | 'events' | 'community' | 'profile' | 'premium';
 
 interface DashboardSidebarProps {
   activeSection: DashboardSection;
@@ -42,6 +43,12 @@ export function DashboardSidebar({ activeSection, onSectionChange }: DashboardSi
       label: 'Community Hub',
       icon: Users,
       description: 'Connect with members'
+    },
+    {
+      id: 'premium' as DashboardSection,
+      label: 'Premium',
+      icon: Crown,
+      description: 'Upgrade membership'
     },
     {
       id: 'profile' as DashboardSection,
@@ -102,4 +109,4 @@ export function DashboardSidebar({ activeSection, onSectionChange }: DashboardSi
       </div>
     </aside>
   );
-} 
+}
