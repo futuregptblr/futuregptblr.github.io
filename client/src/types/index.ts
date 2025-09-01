@@ -59,3 +59,38 @@ export interface RazorpayResponse {
   razorpay_payment_id: string;
   razorpay_signature: string;
 }
+
+export interface Company {
+  id: string;
+  name: string;
+  email: string;
+  description: string;
+  website?: string;
+  logo?: string;
+  industry: string;
+  size: string;
+  location: string;
+  isVerified: boolean;
+}
+
+export interface Job {
+  id: string;
+  companyId: string;
+  companyName: string;
+  title: string;
+  description: string;
+  requirements: string[];
+  location: string;
+  type: 'full-time' | 'part-time' | 'contract' | 'internship';
+  salary?: {
+    min: number;
+    max: number;
+    currency: string;
+  };
+  experience: string;
+  skills: string[];
+  benefits: string[];
+  isActive: boolean;
+  createdAt: string;
+  applications: number;
+}

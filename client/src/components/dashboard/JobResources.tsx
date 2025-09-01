@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Briefcase, 
   MapPin, 
@@ -13,60 +13,68 @@ import {
   Star,
   ExternalLink
 } from 'lucide-react';
+import { Job } from '../../types';
 
 export function JobResources() {
   const [activeTab, setActiveTab] = useState<'jobs' | 'resources' | 'network'>('jobs');
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState<string>('all');
 
-  const jobs = [
-    {
-      id: 1,
-      title: 'Senior Machine Learning Engineer',
-      company: 'TechCorp India',
-      location: 'Bangalore, India',
-      salary: '$80K - $120K',
-      type: 'Full-time',
-      posted: '2 days ago',
-      skills: ['Python', 'TensorFlow', 'AWS', 'MLOps'],
-      isPremium: true,
-      logo: '🏢'
-    },
-    {
-      id: 2,
-      title: 'AI Research Scientist',
-      company: 'InnovateAI',
-      location: 'Mumbai, India',
-      salary: '$90K - $140K',
-      type: 'Full-time',
-      posted: '3 days ago',
-      skills: ['Research', 'PyTorch', 'NLP', 'Computer Vision'],
-      isPremium: true,
-      logo: '🔬'
-    },
-    {
-      id: 3,
-      title: 'Data Scientist',
-      company: 'DataFlow Solutions',
-      location: 'Remote',
-      salary: '$70K - $100K',
-      type: 'Full-time',
-      posted: '1 week ago',
-      skills: ['Python', 'SQL', 'Statistics', 'Tableau'],
-      isPremium: false,
-      logo: '📊'
-    },
-    {
-      id: 4,
-      title: 'MLOps Engineer',
-      company: 'CloudTech',
-      location: 'Hyderabad, India',
-      salary: '$75K - $110K',
-      type: 'Full-time',
-      posted: '4 days ago',
-      skills: ['Docker', 'Kubernetes', 'CI/CD', 'AWS'],
-      isPremium: true,
-      logo: '☁️'
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const fetchJobs = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      console.log('Making API call to /api/company/jobs...');
+      const response = await fetch('/api/company/jobs');
+      console.log('API Response status:', response.status);
+      console.log('API Response headers:', response.headers);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('API Response data:', data);
+        console.log('Data type:', typeof data);
+        console.log('Is array:', Array.isArray(data));
+        
+        if (Array.isArray(data)) {
+          setJobs(data);
+        } else if (data.jobs && Array.isArray(data.jobs)) {
+          setJobs(data.jobs);
+        } else {
+          console.error('Unexpected data structure:', data);
+          setError('Invalid data format received from server');
+        }
+      } else {
+        const errorText = await response.text();
+        console.error('API Error response:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load job opportunities. Please try again later.';
+      setError(errorMessage);
+      console.error('Error fetching jobs:', err);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const filteredJobs = jobs.filter(job => {
+    const matchesSearch = 
+      job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesFilter = filterType === 'all' || job.type === filterType;
+    
+    return matchesSearch && matchesFilter;
+  });
 
   const resources = [
     {
@@ -138,6 +146,23 @@ export function JobResources() {
     }
   ];
 
+  const formatSalary = (salary?: { min: number; max: number; currency: string }) => {
+    if (!salary) return 'Salary not specified';
+    return `${salary.currency} ${salary.min.toLocaleString()} - ${salary.max.toLocaleString()}`;
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 1) return '1 day ago';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
+    return date.toLocaleDateString();
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -183,65 +208,125 @@ export function JobResources() {
                   <input
                     type="text"
                     placeholder="Search jobs, companies, or skills..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                   />
                 </div>
-                <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2">
-                  <Filter className="h-4 w-4" />
-                  <span>Filters</span>
-                </button>
+                <select
+                  value={filterType}
+                  onChange={(e) => setFilterType(e.target.value)}
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                >
+                  <option value="all">All Types</option>
+                  <option value="full-time">Full Time</option>
+                  <option value="part-time">Part Time</option>
+                  <option value="contract">Contract</option>
+                  <option value="internship">Internship</option>
+                </select>
               </div>
 
+              {/* Loading State */}
+              {loading && (
+                <div className="text-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto"></div>
+                  <p className="mt-4 text-gray-600">Loading job opportunities...</p>
+                </div>
+              )}
+
+              {/* Error State */}
+              {error && (
+                <div className="text-center py-12">
+                  <div className="text-red-500 mb-4">
+                    <Briefcase className="mx-auto h-12 w-12" />
+                  </div>
+                  <p className="text-red-600 mb-4">{error}</p>
+                  <button
+                    onClick={fetchJobs}
+                    className="bg-yellow-400 text-blue-900 px-4 py-2 rounded-lg font-medium hover:bg-yellow-300 transition-colors"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              )}
+
+              {/* No Jobs State */}
+              {!loading && !error && filteredJobs.length === 0 && (
+                <div className="text-center py-12">
+                  <Briefcase className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No jobs found</h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {searchTerm || filterType !== 'all' 
+                      ? 'Try adjusting your search or filters.'
+                      : 'Check back later for new opportunities.'
+                    }
+                  </p>
+                </div>
+              )}
+
               {/* Job Listings */}
-              <div className="space-y-4">
-                {jobs.map((job) => (
-                  <div key={job.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-4">
-                        <div className="text-2xl">{job.logo}</div>
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-2 mb-2">
-                            <h3 className="text-lg font-semibold text-gray-900">{job.title}</h3>
-                            {job.isPremium && (
-                              <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-medium">
-                                Premium
+              {!loading && !error && filteredJobs.length > 0 && (
+                <div className="space-y-4">
+                  {filteredJobs.map((job) => (
+                    <div key={job.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start space-x-4">
+                          <div className="text-2xl">🏢</div>
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-2 mb-2">
+                              <h3 className="text-lg font-semibold text-gray-900">{job.title}</h3>
+                              <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">
+                                {job.type.charAt(0).toUpperCase() + job.type.slice(1)}
                               </span>
-                            )}
-                          </div>
-                          <p className="text-gray-600 mb-2">{job.company}</p>
-                          <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
-                            <div className="flex items-center space-x-1">
-                              <MapPin className="h-4 w-4" />
-                              <span>{job.location}</span>
                             </div>
-                            <div className="flex items-center space-x-1">
-                              <DollarSign className="h-4 w-4" />
-                              <span>{job.salary}</span>
+                            <p className="text-gray-600 mb-2">{job.companyName}</p>
+                            <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                              <div className="flex items-center space-x-1">
+                                <MapPin className="h-4 w-4" />
+                                <span>{job.location}</span>
+                              </div>
+                              {job.salary && (
+                                <div className="flex items-center space-x-1">
+                                  <DollarSign className="h-4 w-4" />
+                                  <span>{formatSalary(job.salary)}</span>
+                                </div>
+                              )}
+                              <div className="flex items-center space-x-1">
+                                <Clock className="h-4 w-4" />
+                                <span>{job.experience}</span>
+                              </div>
                             </div>
-                            <div className="flex items-center space-x-1">
-                              <Clock className="h-4 w-4" />
-                              <span>{job.type}</span>
+                            <p className="text-gray-600 mb-3 text-sm">
+                              {job.description.length > 150 
+                                ? `${job.description.substring(0, 150)}...` 
+                                : job.description
+                              }
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {job.skills.slice(0, 5).map((skill, index) => (
+                                <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                                  {skill}
+                                </span>
+                              ))}
+                              {job.skills.length > 5 && (
+                                <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                                  +{job.skills.length - 5} more
+                                </span>
+                              )}
                             </div>
-                          </div>
-                          <div className="flex flex-wrap gap-2">
-                            {job.skills.map((skill) => (
-                              <span key={skill} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
-                                {skill}
-                              </span>
-                            ))}
                           </div>
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-gray-500 mb-2">{job.posted}</p>
-                        <button className="bg-yellow-400 text-blue-900 px-4 py-2 rounded-lg font-medium hover:bg-yellow-300 transition-colors">
-                          Apply Now
-                        </button>
+                        <div className="text-right">
+                          <p className="text-sm text-gray-500 mb-2">{formatDate(job.createdAt)}</p>
+                          <button className="bg-yellow-400 text-blue-900 px-4 py-2 rounded-lg font-medium hover:bg-yellow-300 transition-colors">
+                            Apply Now
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 

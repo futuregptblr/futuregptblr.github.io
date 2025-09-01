@@ -13,6 +13,10 @@ import { SocialFeed } from './components/social/SocialFeed';
 import { SignupForm } from './components/auth/SignupForm';
 import { LoginForm } from './components/auth/LoginForm';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { CompanySignupForm } from './components/auth/CompanySignupForm';
+import { CompanyLoginForm } from './components/auth/CompanyLoginForm';
+import { CompanyDashboard } from './pages/CompanyDashboard';
+import { JobsPage } from './pages/Jobs';
 import { MemberCount } from './components/sections/MemberCount';
 import { CompanySlider } from './components/sections/CompanySlider';
 import { EventCard } from './components/events/EventCard';
@@ -53,13 +57,17 @@ function App() {
           
           <Route path="/chapters" element={<ChaptersPage />} />
           <Route path="/team" element={<TeamPage />} />
+          <Route path="/jobs" element={<JobsPage />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/company-signup" element={<CompanySignupForm />} />
+          <Route path="/company-login" element={<CompanyLoginForm />} />
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
           } />
+          <Route path="/company-dashboard" element={<CompanyDashboard />} />
           
           <Route path="/past-events" element={
             <div className="py-20">

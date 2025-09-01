@@ -5,15 +5,22 @@ import { Brain, Menu, X, User, LogOut } from 'lucide-react';
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCompanyAuthenticated, setIsCompanyAuthenticated] = useState(false);
   const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const companyToken = localStorage.getItem('companyToken');
+    
     if (token) {
       setIsAuthenticated(true);
       // You could decode the JWT token here to get user info
       // For now, we'll just check if token exists
+    }
+    
+    if (companyToken) {
+      setIsCompanyAuthenticated(true);
     }
   }, []);
 
@@ -21,6 +28,13 @@ export function Header() {
     localStorage.removeItem('token');
     setIsAuthenticated(false);
     setUser(null);
+    navigate('/');
+  };
+
+  const handleCompanyLogout = () => {
+    localStorage.removeItem('companyToken');
+    localStorage.removeItem('company');
+    setIsCompanyAuthenticated(false);
     navigate('/');
   };
 
@@ -42,6 +56,9 @@ export function Header() {
             <Link to="/team" className="text-gray-700 hover:text-yellow-500 transition-colors">
               Team
             </Link>
+            <Link to="/jobs" className="text-gray-700 hover:text-yellow-500 transition-colors">
+              Jobs
+            </Link>
             <a href="#features" className="text-gray-700 hover:text-yellow-500 transition-colors">
               Features
             </a>
@@ -54,7 +71,23 @@ export function Header() {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
-            {isAuthenticated ? (
+            {isCompanyAuthenticated ? (
+              <>
+                <Link
+                  to="/company-dashboard"
+                  className="px-4 py-2 bg-purple-600 text-white rounded-full font-medium hover:bg-purple-700 transition-colors"
+                >
+                  Company Dashboard
+                </Link>
+                <button
+                  onClick={handleCompanyLogout}
+                  className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-full font-medium hover:bg-red-600 transition-colors"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </button>
+              </>
+            ) : isAuthenticated ? (
               <>
                 <Link
                   to="/dashboard"
@@ -72,18 +105,34 @@ export function Header() {
               </>
             ) : (
               <>
-                <Link
-                  to="/login"
-                  className="px-4 py-2 text-blue-600 hover:text-blue-700 transition-colors font-medium"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/signup"
-                  className="px-4 py-2 bg-yellow-400 text-blue-900 rounded-full font-medium hover:bg-yellow-300 transition-colors"
-                >
-                  Join Us
-                </Link>
+                <div className="flex items-center space-x-2">
+                  <Link
+                    to="/login"
+                    className="px-4 py-2 text-blue-600 hover:text-blue-700 transition-colors font-medium"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/company-login"
+                    className="px-4 py-2 text-purple-600 hover:text-purple-700 transition-colors font-medium"
+                  >
+                    Company Login
+                  </Link>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Link
+                    to="/signup"
+                    className="px-4 py-2 bg-yellow-400 text-blue-900 rounded-full font-medium hover:bg-yellow-300 transition-colors"
+                  >
+                    Join Us
+                  </Link>
+                  <Link
+                    to="/company-signup"
+                    className="px-4 py-2 bg-purple-600 text-white rounded-full font-medium hover:bg-purple-700 transition-colors"
+                  >
+                    Company Signup
+                  </Link>
+                </div>
               </>
             )}
           </div>
@@ -118,6 +167,13 @@ export function Header() {
               >
                 Team
               </Link>
+              <Link 
+                to="/jobs"
+                className="text-gray-700 hover:text-yellow-500 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Jobs
+              </Link>
               <a 
                 href="#features"
                 className="text-gray-700 hover:text-yellow-500 transition-colors"
@@ -141,7 +197,26 @@ export function Header() {
               </a>
 
               {/* Auth actions */}
-              {isAuthenticated ? (
+              {isCompanyAuthenticated ? (
+                <>
+                  <Link
+                    to="/company-dashboard"
+                    className="px-4 py-2 bg-purple-600 text-white rounded-full font-medium hover:bg-purple-700 transition-colors text-center"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Company Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleCompanyLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="px-4 py-2 bg-red-500 text-white rounded-full font-medium hover:bg-red-600 transition-colors text-center"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : isAuthenticated ? (
                 <>
                   <Link
                     to="/dashboard"
@@ -170,11 +245,25 @@ export function Header() {
                     Login
                   </Link>
                   <Link
+                    to="/company-login"
+                    className="text-purple-600 hover:text-purple-700 transition-colors font-medium text-center"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Company Login
+                  </Link>
+                  <Link
                     to="/signup"
-                    className="px-4 py-2 bg-yellow-400 text-blue-900 rounded-full font-medium hover:bg-yellow-300 transition-colors inline-block text-center"
+                    className="px-4 py-2 bg-yellow-400 text-blue-900 rounded-full font-medium hover:bg-yellow-300 transition-colors text-center"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Join Us
+                  </Link>
+                  <Link
+                    to="/company-signup"
+                    className="px-4 py-2 bg-purple-600 text-white rounded-full font-medium hover:bg-purple-700 transition-colors text-center"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Company Signup
                   </Link>
                 </>
               )}
