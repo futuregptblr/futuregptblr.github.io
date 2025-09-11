@@ -17,6 +17,7 @@ import { CompanySignupForm } from './components/auth/CompanySignupForm';
 import { CompanyLoginForm } from './components/auth/CompanyLoginForm';
 import { CompanyDashboard } from './pages/CompanyDashboard';
 import { JobsPage } from './pages/Jobs';
+import { JobDetailPage } from './pages/JobDetail';
 import { MemberCount } from './components/sections/MemberCount';
 import { CompanySlider } from './components/sections/CompanySlider';
 import { EventCard } from './components/events/EventCard';
@@ -58,6 +59,7 @@ function App() {
           <Route path="/chapters" element={<ChaptersPage />} />
           <Route path="/team" element={<TeamPage />} />
           <Route path="/jobs" element={<JobsPage />} />
+          <Route path="/jobs/:jobId" element={<JobDetailPage />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/company-signup" element={<CompanySignupForm />} />

@@ -22,10 +22,28 @@ const jobSchema = new mongoose.Schema(
     skills: [{ type: String }],
     benefits: [{ type: String }],
     isActive: { type: Boolean, default: true },
-    applications: { type: Number, default: 0 }
+    applications: { type: Number, default: 0 },
+    // Additional fields
+    department: { type: String, trim: true },
+    remotePolicy: { type: String, enum: ['remote', 'hybrid', 'onsite'], default: 'onsite' },
+    applicationDeadline: { type: Date },
+    startDate: { type: Date },
+    contractDuration: { type: String }, // For contract roles
+    visaSponsorship: { type: Boolean, default: false },
+    relocationAssistance: { type: Boolean, default: false },
+    // Application settings
+    allowCoverLetter: { type: Boolean, default: true },
+    requireResume: { type: Boolean, default: true },
+    maxApplications: { type: Number, default: 1000 } // Limit total applications
   },
   { timestamps: true }
 );
+
+// Index for efficient queries
+jobSchema.index({ companyId: 1, isActive: 1 });
+jobSchema.index({ location: 1, type: 1, isActive: 1 });
+jobSchema.index({ skills: 1, isActive: 1 });
+jobSchema.index({ createdAt: -1 });
 
 const Job = mongoose.model('Job', jobSchema);
 

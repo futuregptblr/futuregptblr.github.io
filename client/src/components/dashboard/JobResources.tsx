@@ -14,6 +14,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { Job } from '../../types';
+import { API_BASE_URL } from '../../lib/utils';
 
 export function JobResources() {
   const [activeTab, setActiveTab] = useState<'jobs' | 'resources' | 'network'>('jobs');
@@ -33,7 +34,7 @@ export function JobResources() {
       setError(null);
       
       console.log('Making API call to /api/company/jobs...');
-      const response = await fetch('/api/company/jobs');
+      const response = await fetch(`${API_BASE_URL}/api/company/jobs`);
       console.log('API Response status:', response.status);
       console.log('API Response headers:', response.headers);
       

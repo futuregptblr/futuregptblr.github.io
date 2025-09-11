@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Job } from '../../types';
+import { API_BASE_URL } from '../../lib/utils';
 
 interface CreateJobModalProps {
   onClose: () => void;
@@ -27,7 +28,7 @@ export function CreateJobModal({ onClose, onJobCreated }: CreateJobModalProps) {
 
     try {
       const token = localStorage.getItem('companyToken');
-      const response = await fetch('/api/company/jobs', {
+      const response = await fetch(`${API_BASE_URL}/api/company/jobs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

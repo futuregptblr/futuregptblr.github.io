@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, Building2, Globe, MapPin, Users, Briefcase } from 'lucide-react';
+import { API_BASE_URL } from '../../lib/utils';
 
 export function CompanySignupForm() {
   const [formData, setFormData] = useState({
@@ -55,7 +56,7 @@ export function CompanySignupForm() {
     setLoading(true);
     
     try {
-      const response = await fetch('/api/company/register', {
+      const response = await fetch(`${API_BASE_URL}/api/company/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

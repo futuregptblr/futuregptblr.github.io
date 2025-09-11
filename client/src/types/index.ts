@@ -45,6 +45,26 @@ export interface User {
   email: string;
   isPremium: boolean;
   premiumPurchaseDate?: string;
+  // Additional profile fields
+  phone?: string;
+  location?: string;
+  role?: string;
+  company?: string;
+  bio?: string;
+  skills?: string[];
+  interests?: string[];
+  resumeUrl?: string;
+  avatar?: string;
+  joinDate?: string;
+  // Privacy settings
+  profileVisibility?: 'public' | 'members' | 'private';
+  showOnlineStatus?: boolean;
+  allowDirectMessages?: boolean;
+  // Notification preferences
+  emailNotifications?: boolean;
+  pushNotifications?: boolean;
+  eventReminders?: boolean;
+  jobAlerts?: boolean;
 }
 
 export interface PaymentOrder {
@@ -93,4 +113,36 @@ export interface Job {
   isActive: boolean;
   createdAt: string;
   applications: number;
+  // Additional fields
+  department?: string;
+  remotePolicy?: 'remote' | 'hybrid' | 'onsite';
+  applicationDeadline?: string;
+  startDate?: string;
+  contractDuration?: string;
+  visaSponsorship?: boolean;
+  relocationAssistance?: boolean;
+  allowCoverLetter?: boolean;
+  requireResume?: boolean;
+  maxApplications?: number;
+}
+
+export interface JobApplication {
+  id: string;
+  jobId: string;
+  userId: string;
+  companyId: string;
+  status: 'pending' | 'reviewing' | 'shortlisted' | 'interviewed' | 'accepted' | 'rejected';
+  coverLetter?: string;
+  resumeUrl: string;
+  appliedAt: string;
+  companyNotes?: string;
+  interviewDate?: string;
+  interviewLocation?: string;
+  interviewType?: 'phone' | 'video' | 'onsite';
+  isWithdrawn: boolean;
+  withdrawnAt?: string;
+  // Populated fields
+  job?: Job;
+  user?: User;
+  company?: Company;
 }

@@ -10,6 +10,26 @@ const userSchema = new mongoose.Schema(
     premiumPurchaseDate: { type: Date },
     paymentId: { type: String },
     orderId: { type: String },
+    // Additional profile fields
+    phone: { type: String, trim: true },
+    location: { type: String, trim: true },
+    role: { type: String, trim: true },
+    company: { type: String, trim: true },
+    bio: { type: String, trim: true },
+    skills: [{ type: String, trim: true }],
+    interests: [{ type: String, trim: true }],
+    resumeUrl: { type: String, trim: true },
+    avatar: { type: String, default: '👨‍💻' },
+    joinDate: { type: Date, default: Date.now },
+    // Privacy settings
+    profileVisibility: { type: String, enum: ['public', 'members', 'private'], default: 'public' },
+    showOnlineStatus: { type: Boolean, default: true },
+    allowDirectMessages: { type: Boolean, default: true },
+    // Notification preferences
+    emailNotifications: { type: Boolean, default: true },
+    pushNotifications: { type: Boolean, default: true },
+    eventReminders: { type: Boolean, default: true },
+    jobAlerts: { type: Boolean, default: false }
   },
   { timestamps: true }
 );

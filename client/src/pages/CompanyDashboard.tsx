@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Building2,
@@ -13,6 +13,7 @@ import {
 import { Company, Job } from "../types";
 import { CreateJobModal } from "../components/company/CreateJobModal";
 import { EditProfileModal } from "../components/company/EditProfileModal";
+import { API_BASE_URL } from '../lib/utils';
 
 export function CompanyDashboard() {
   const [company, setCompany] = useState<Company | null>(null);
@@ -48,7 +49,7 @@ export function CompanyDashboard() {
   const fetchCompanyJobs = async () => {
     try {
       const token = localStorage.getItem("companyToken");
-      const response = await fetch("/api/company/jobs/company", {
+      const response = await fetch(`${API_BASE_URL}/api/company/jobs/company`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -74,7 +75,7 @@ export function CompanyDashboard() {
 
     try {
       const token = localStorage.getItem("companyToken");
-      const response = await fetch(`/api/company/jobs/${jobId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/company/jobs/${jobId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

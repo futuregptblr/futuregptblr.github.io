@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Company } from '../../types';
+import { API_BASE_URL } from '../../lib/utils';
 
 interface EditProfileModalProps {
   company: Company;
@@ -44,7 +45,7 @@ export function EditProfileModal({ company, onClose, onProfileUpdated }: EditPro
 
     try {
       const token = localStorage.getItem('companyToken');
-      const response = await fetch('/api/company/profile', {
+      const response = await fetch(`${API_BASE_URL}/api/company/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

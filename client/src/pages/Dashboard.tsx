@@ -8,6 +8,7 @@ import { UserProfile } from '../components/dashboard/UserProfile';
 import { DashboardStats } from '../components/dashboard/DashboardStats';
 import PremiumMembershipCard from '../components/premium/PremiumMembershipCard';
 import { User } from '../types';
+import { API_BASE_URL } from '../lib/utils';
 
 type DashboardSection = 'overview' | 'jobs' | 'events' | 'community' | 'profile' | 'premium';
 
@@ -24,7 +25,7 @@ export function Dashboard() {
     else {
       const token = localStorage.getItem('token');
       if (token) {
-        fetch('/api/user/profile', {
+        fetch(`${API_BASE_URL}/api/user/profile`, {
           headers: { 'Authorization': `Bearer ${token}` }
         })
           .then((res) => res.ok ? res.json() : Promise.reject(res))

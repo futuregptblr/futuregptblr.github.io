@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Briefcase, MapPin, Clock, DollarSign, Building2, Filter, Search } from 'lucide-react';
-import { Job } from '../types';
+import { Briefcase, MapPin, Clock, DollarSign, Building2, Filter, Search, ExternalLink } from 'lucide-react';
+import { Job, User } from '../types';
+import { JobApplicationModal } from '../components/dashboard/JobApplicationModal';
+import { API_BASE_URL } from '../lib/utils';
 
 export function JobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -8,14 +10,20 @@ export function JobsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
+  const [showApplicationModal, setShowApplicationModal] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [userApplications, setUserApplications] = useState<string[]>([]);
 
   useEffect(() => {
     fetchJobs();
+    fetchUserProfile();
+    fetchUserApplications();
   }, []);
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch('/api/company/jobs');
+      const response = await fetch(`${API_BASE_URL}/api/company/jobs`);
       if (response.ok) {
         const data = await response.json();
         setJobs(data);
@@ -24,6 +32,91 @@ export function JobsPage() {
       console.error('Error fetching jobs:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchUserProfile = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
+
+  const fetchUserApplications = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const response = await fetch(`${API_BASE_URL}/api/user/applications`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (response.ok) {
+          const applications = await response.json();
+          const jobIds = applications.map((app: any) => app.jobId);
+          setUserApplications(jobIds);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user applications:', error);
+    }
+  };
+
+  const handleApplyToJob = (job: Job) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // Redirect to login or show login modal
+      window.location.href = '/login';
+      return;
+    }
+    setSelectedJob(job);
+    setShowApplicationModal(true);
+  };
+
+  const handleJobApplication = async (applicationData: { coverLetter: string; resumeUrl: string }) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!selectedJob) return;
+
+      const response = await fetch(`${API_BASE_URL}/api/user/apply/${selectedJob.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(applicationData)
+      });
+
+      if (response.ok) {
+        // Update local state
+        setUserApplications(prev => [...prev, selectedJob.id]);
+        // Update job applications count
+        setJobs(prev => prev.map(job => 
+          job.id === selectedJob.id 
+            ? { ...job, applications: job.applications + 1 }
+            : job
+        ));
+        setShowApplicationModal(false);
+        setSelectedJob(null);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to apply');
+      }
+    } catch (error) {
+      console.error('Error applying to job:', error);
+      // You could show an error message here
     }
   };
 
@@ -142,7 +235,9 @@ export function JobsPage() {
                     <div className="flex items-start justify-between">
                       <div>
                         <h3 className="text-xl font-semibold text-gray-900 hover:text-purple-600 cursor-pointer">
-                          {job.title}
+                          <a href={`/jobs/${job.id}`} className="hover:underline">
+                            {job.title}
+                          </a>
                         </h3>
                         <div className="flex items-center mt-2 text-sm text-gray-600">
                           <Building2 className="h-4 w-4 mr-1" />
@@ -227,12 +322,34 @@ export function JobsPage() {
                   </div>
 
                   <div className="mt-6 lg:mt-0 lg:ml-6 flex flex-col space-y-2">
-                    <button className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium">
-                      Apply Now
-                    </button>
-                    <button className="px-6 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors font-medium">
-                      Save Job
-                    </button>
+                    {userApplications.includes(job.id) ? (
+                      <div className="text-center">
+                        <div className="px-6 py-2 bg-green-100 text-green-800 rounded-lg font-medium">
+                          ✓ Applied
+                        </div>
+                        <a 
+                          href={`/jobs/${job.id}`}
+                          className="block mt-2 text-sm text-blue-600 hover:text-blue-700"
+                        >
+                          View Details
+                        </a>
+                      </div>
+                    ) : (
+                      <>
+                        <button 
+                          onClick={() => handleApplyToJob(job)}
+                          className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+                        >
+                          Apply Now
+                        </button>
+                        <a 
+                          href={`/jobs/${job.id}`}
+                          className="px-6 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors font-medium text-center"
+                        >
+                          View Details
+                        </a>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -240,6 +357,20 @@ export function JobsPage() {
           </div>
         )}
       </div>
+
+      {/* Job Application Modal */}
+      {showApplicationModal && selectedJob && user && (
+        <JobApplicationModal
+          isOpen={showApplicationModal}
+          onClose={() => {
+            setShowApplicationModal(false);
+            setSelectedJob(null);
+          }}
+          job={selectedJob}
+          user={user}
+          onApply={handleJobApplication}
+        />
+      )}
     </div>
   );
 }

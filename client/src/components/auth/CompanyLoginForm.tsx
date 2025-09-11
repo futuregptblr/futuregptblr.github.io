@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, Building2 } from 'lucide-react';
+import { API_BASE_URL } from '../../lib/utils';
 
 export function CompanyLoginForm() {
   const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ export function CompanyLoginForm() {
     setLoading(true);
     
     try {
-      const response = await fetch('/api/company/login', {
+      const response = await fetch(`${API_BASE_URL}/api/company/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -73,7 +73,7 @@ const PremiumMembershipCard: React.FC<PremiumMembershipCardProps> = ({
         handler: async (response: RazorpayResponse) => {
           try {
             // Verify payment
-            const verifyResponse = await fetch('/api/payment/verify-payment', {
+            const verifyResponse = await fetch(`${API_BASE_URL}/api/payment/verify-payment`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
