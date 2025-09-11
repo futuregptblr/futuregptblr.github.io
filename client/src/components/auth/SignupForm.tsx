@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, User } from 'lucide-react';
-import { apiRegister } from '../../lib/api';
 
 export function SignupForm() {
   const [formData, setFormData] = useState({
@@ -9,23 +7,13 @@ export function SignupForm() {
     email: '',
     password: '',
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
-    try {
-      await apiRegister(formData);
-      alert('Signup successful! You can now log in.');
-      navigate('/login');
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    // Handle form submission
+    console.log('Form submitted:', formData);
+    // Show WhatsApp link after successful signup
+    alert('Thank you for signing up! Join our WhatsApp group: https://chat.whatsapp.com/future-gpt');
   };
 
   return (
@@ -35,9 +23,6 @@ export function SignupForm() {
       </h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">
-        {error && (
-          <div className="text-red-600 text-sm" role="alert">{error}</div>
-        )}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Full Name
@@ -88,10 +73,9 @@ export function SignupForm() {
 
         <button
           type="submit"
-          disabled={loading}
-          className="w-full bg-purple-600 text-white rounded-lg px-4 py-2 hover:bg-purple-700 transition-colors disabled:opacity-60"
+          className="w-full bg-purple-600 text-white rounded-lg px-4 py-2 hover:bg-purple-700 transition-colors"
         >
-          {loading ? 'Signing up...' : 'Sign Up'}
+          Sign Up
         </button>
       </form>
     </div>

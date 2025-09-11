@@ -25,23 +25,53 @@ export const chapters: Chapter[] = [
     city: "Bangalore",
     country: "India",
     leads: [chapterLeads[1]],
-    memberCount: 2500,
-    image: "https://images.unsplash.com/photo-1596176530529-78163a4f7af2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    memberCount: 18000,
+    image: "https://images.unsplash.com/photo-1596176530529-78163a4f7af2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    link: "https://www.meetup.com/futuregpt"
   },
   {
-    id: "delhi",
-    city: "Delhi",
+    id: "pune",
+    city: "Pune",
     country: "India",
     leads: [],
-    memberCount: 1800,
-    image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    memberCount: 2500,
+    image: "/chapter/pune.jpeg",
+    link: "https://www.meetup.com/futuregpt"
   },
   {
-    id: "mumbai",
+    id: "hyderabad",
+    city: "Hyderabad",
+    country: "India",
+    leads: [],
+    memberCount: 1500,
+    image: "/chapter/hyderabad.jpeg",
+    link: "https://www.meetup.com/futuregpt"
+  },
+  {
+    id: "chennai",
+    city: "Chennai",
+    country: "India",
+    leads: [],
+    memberCount: 1100,
+    image: "/chapter/chennai.jpeg",
+    link: "https://www.meetup.com/futuregpt"
+  },
+  {
+    id: "Mumbai",
     city: "Mumbai",
     country: "India",
     leads: [],
-    memberCount: 2000,
-    image: "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    memberCount: 1000,
+    image: "/chapter/mumbai.jpeg",
+    link: "https://www.meetup.com/futuregpt"
+  },
+  {
+    id: "Delhi",
+    city: "Delhi",
+    country: "India",
+    leads: [],
+    memberCount: 1000,
+    image: "/chapter/delhi.jpeg",
+    link: "https://www.meetup.com/futuregpt"
   }
 ];

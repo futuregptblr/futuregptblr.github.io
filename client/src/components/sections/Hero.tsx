@@ -14,7 +14,7 @@ export function Hero() {
           className="w-full h-full object-cover"
         >
           <source
-            src="https://cdn.coverr.co/videos/coverr-artificial-intelligence-network-9235/1080p.mp4"
+            src="/gif/as.mp4"
             type="video/mp4"
           />
         </video>
@@ -24,9 +24,9 @@ export function Hero() {
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <img
-          src="/futuregpt-logo.png"
+          src="/icons/fg.png"
           alt="FutureGPT"
-          className="w-32 h-32 mx-auto mb-8"
+          className="w-32 h-32 mx-auto"
         />
         <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
           Welcome to{' '}
@@ -38,11 +38,13 @@ export function Hero() {
           India's Premier Community for Emerging Technologies
         </p>
         <div className="flex justify-center gap-4">
-          <button className="px-8 py-3 bg-yellow-400 text-blue-900 rounded-full font-medium hover:bg-yellow-300 transition-colors flex items-center">
+          <button className="px-8 py-3 bg-yellow-400 text-blue-900 rounded-full font-medium hover:bg-yellow-300 transition-colors flex items-center"
+            onClick={() => {window.location.href = "https://www.meetup.com/futuregpt/"}}
+          >
             Join Community
             <ArrowRight className="ml-2 h-5 w-5" />
           </button>
-          <button className="px-8 py-3 border-2 border-white text-white rounded-full font-medium hover:bg-white/10 transition-colors">
+          <button className="px-8 py-3 border-2 border-white text-white rounded-full font-medium hover:bg-white/10 transition-colors" onClick={() => window.open("https://www.linkedin.com/company/futuregptmeetup/")}>
             Learn More
           </button>
         </div>

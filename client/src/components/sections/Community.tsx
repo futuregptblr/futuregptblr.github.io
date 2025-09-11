@@ -2,24 +2,46 @@ import React from 'react';
 
 const members = [
   {
-    name: 'Sarah Chen',
-    role: 'AI Researcher',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80',
+    name: 'Aarushi Goyal',
+    role: 'Senior Software Engineer',
+    image: '/community/aaru.jpeg',
   },
   {
-    name: 'Michael Rodriguez',
-    role: 'ML Engineer',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80',
+    name: 'Sanjeev Jaiswal',
+    role: 'Security Architect',
+    image: '/community/sanjeev.jpeg',
   },
   {
-    name: 'Emily Watson',
-    role: 'Data Scientist',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80',
+    name: 'Sivakumar (Shiva) Dhakshinamoorthy',
+    role: 'GenAI Leader',
+    image: '/community/siva.jpeg',
   },
   {
-    name: 'David Kim',
-    role: 'Developer',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80',
+    name: 'Vellanki Sriharsha',
+    role: 'Applied AI Leader',
+    image: '/community/vel.jpeg',
+  },
+  {
+    name: 'Harsh Sanghvi',
+    role: 'Red Team Lead',
+    image: '/community/harsh.jpeg',
+  },
+  
+  {
+    name: 'Prabhanjan Gururaj',
+    role: 'Director - Solution Engineering',
+    image: '/community/prab.jpeg',
+  },
+  {
+    name: 'Dhruv Jhalani',
+    role: 'Co-Founder & CTO at Dalnex',
+    image: '/community/dhruv.jpeg',
+  },
+
+  {
+    name: 'Ayush Jain',
+    role: 'CEO - Mindbowser Inc',
+    image: '/community/ayush.jpeg',
   },
 ];
 
