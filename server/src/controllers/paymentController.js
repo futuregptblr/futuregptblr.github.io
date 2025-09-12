@@ -1,81 +1,92 @@
-const Razorpay = require('razorpay');
-const crypto = require('crypto');
 const User = require('../models/User');
 
-// Initialize Razorpay instance
-const razorpay = new Razorpay({
-  key_id: "key_id",
-  key_secret: "secret",
-});
+// Try initialize PhonePe Backend SDK (optional)
+let phonePeSdkClient = null;
+try {
+  const clientId = process.env.PHONEPE_SDK_CLIENT_ID;
+  const clientSecret = process.env.PHONEPE_SDK_CLIENT_SECRET;
+  const clientVersion = process.env.PHONEPE_SDK_CLIENT_VERSION;
+  const envPref = process.env.PHONEPE_SDK_ENV || 'SANDBOX';
+  if (clientId && clientSecret) {
+    const { StandardCheckoutClient, Env } = require('pg-sdk-node');
+    const env = envPref === 'PRODUCTION' ? Env.PRODUCTION : Env.SANDBOX;
+    phonePeSdkClient = StandardCheckoutClient.getInstance(clientId, clientSecret, clientVersion, env);
+  }
+} catch (_) {
+  phonePeSdkClient = null;
+}
 
-// Create order for premium membership
-async function createOrder(req, res) {
+// Create PhonePe payment (redirect flow)
+async function createPhonePePayment(req, res) {
   try {
     const userId = req.user?.sub;
-    
-    // Check if user exists
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Check if user is already premium
     if (user.isPremium) {
       return res.status(400).json({ message: 'User already has premium membership' });
     }
 
-    const options = {
-      amount: 25000, // Amount in paise (INR 250)
-      currency: 'INR',
-      receipt: `premium_${userId}_${Date.now()}`,
-      notes: {
-        userId: userId,
-        membershipType: 'premium',
-        description: 'FutureGPT Premium Membership - One Time Fee'
-      }
-    };
+    const clientBase = process.env.CLIENT_BASE_URL || 'http://localhost:5173';
 
-    const order = await razorpay.orders.create(options);
-    
-    res.json({
-      orderId: order.id,
-      amount: order.amount,
-      currency: order.currency,
-      key: process.env.RAZORPAY_KEY_ID
-    });
+    const merchantTransactionId = `premium_${userId}_${Date.now()}`;
+    const amount = 100; // in paise
+    if (phonePeSdkClient) {
+      const { StandardCheckoutPayRequest, MetaInfo } = require('pg-sdk-node');
+      const metaInfo = MetaInfo.builder()
+        .udf1('premium')
+        .udf2(String(userId))
+        .build();
+      const request = StandardCheckoutPayRequest.builder()
+        .merchantOrderId(merchantTransactionId)
+        .amount(amount)
+        .redirectUrl(`${clientBase}/payment/callback?mtid=${merchantTransactionId}`)
+        .metaInfo(metaInfo)
+        .build();
+      const response = await phonePeSdkClient.pay(request);
+      const redirectUrl = response?.redirectUrl || response?.data?.redirectUrl || response?.data?.instrumentResponse?.redirectInfo?.url;
+      if (!redirectUrl) {
+        return res.status(500).json({ message: 'SDK: Missing redirect URL from PhonePe' });
+      }
+      return res.json({ redirectUrl, merchantTransactionId, amount, currency: 'INR' });
+    }
+    return res.status(500).json({ message: 'PhonePe SDK not configured on server' });
   } catch (error) {
-    const status = error?.statusCode || 500;
-    const message = error?.error?.description || error?.message || 'Failed to create payment order';
-    console.error('Error creating order:', message);
-    res.status(status).json({ message });
+    console.error('Error creating PhonePe payment:', error?.message || error);
+    res.status(500).json({ message: 'Failed to initiate payment' });
   }
 }
 
-// Verify payment and update user premium status
-async function verifyPayment(req, res) {
+// Verify PhonePe payment by checking transaction status
+async function verifyPhonePePayment(req, res) {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
     const userId = req.user?.sub;
-
-    // Verify signature
-    const body = razorpay_order_id + '|' + razorpay_payment_id;
-    const expectedSignature = crypto
-      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-      .update(body.toString())
-      .digest('hex');
-
-    if (expectedSignature !== razorpay_signature) {
-      return res.status(400).json({ message: 'Invalid payment signature' });
+    const merchantTransactionId = req.query.mtid || req.body?.merchantTransactionId;
+    if (!merchantTransactionId) {
+      return res.status(400).json({ message: 'merchantTransactionId is required' });
     }
 
-    // Update user premium status
+    if (!phonePeSdkClient) {
+      return res.status(500).json({ message: 'PhonePe SDK not configured on server' });
+    }
+
+    const statusResp = await phonePeSdkClient.getOrderStatus(merchantTransactionId);
+    const state = statusResp?.state || statusResp?.data?.state;
+    if (state !== 'COMPLETED') {
+      return res.status(400).json({ message: 'Payment not successful', providerResponse: statusResp });
+    }
+
+    const paymentId = statusResp?.transactionId || statusResp?.data?.transactionId || statusResp?.data?.providerReferenceId || merchantTransactionId;
+
     const user = await User.findByIdAndUpdate(
       userId,
       {
         isPremium: true,
         premiumPurchaseDate: new Date(),
-        paymentId: razorpay_payment_id,
-        orderId: razorpay_order_id
+        paymentId,
+        orderId: merchantTransactionId,
       },
       { new: true }
     );
@@ -91,14 +102,12 @@ async function verifyPayment(req, res) {
         name: user.name,
         email: user.email,
         isPremium: user.isPremium,
-        premiumPurchaseDate: user.premiumPurchaseDate
-      }
+        premiumPurchaseDate: user.premiumPurchaseDate,
+      },
     });
   } catch (error) {
-    const status = error?.statusCode || 500;
-    const message = error?.error?.description || error?.message || 'Payment verification failed';
-    console.error('Error verifying payment:', message);
-    res.status(status).json({ message });
+    console.error('Error verifying PhonePe payment:', error?.message || error);
+    res.status(500).json({ message: 'Payment verification failed' });
   }
 }
 
@@ -123,7 +132,7 @@ async function getPremiumStatus(req, res) {
 }
 
 module.exports = {
-  createOrder,
-  verifyPayment,
+  createPhonePePayment,
+  verifyPhonePePayment,
   getPremiumStatus
 };

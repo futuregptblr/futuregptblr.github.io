@@ -22,8 +22,11 @@ export function LoginForm() {
       if (data.user) {
         localStorage.setItem('user', JSON.stringify(data.user));
       }
-      // Force page reload to update header authentication state
-      window.location.href = '/dashboard';
+      // Start/refresh 24h membership offer window on login
+      try { localStorage.setItem('membershipOfferStartAt', String(Date.now())); } catch {}
+      // Redirect non-premium users to offer, premium to dashboard
+      const isPremium = Boolean(data?.user?.isPremium);
+      window.location.href = isPremium ? '/dashboard' : '/membership-offer';
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -32,7 +35,7 @@ export function LoginForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
+    <div className="pt-20 max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
       <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
         Log In
       </h2>
@@ -78,6 +81,17 @@ export function LoginForm() {
           {loading ? 'Logging in...' : 'Log In'}
         </button>
       </form>
+      <div className="mt-6 text-center">
+        <p className="text-sm text-gray-600">
+          Don't have an account?{' '}
+          <button
+            onClick={() => navigate('/signup')}
+            className="text-purple-600 hover:text-purple-700 font-medium"
+          >
+            Sign up here
+          </button>
+        </p>
+      </div>
     </div>
   );
 }

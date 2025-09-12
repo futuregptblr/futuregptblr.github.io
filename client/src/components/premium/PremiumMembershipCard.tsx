@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Crown, Check, Loader2 } from 'lucide-react';
-import { User, PaymentOrder, RazorpayResponse } from '../../types';
+import { User } from '../../types';
 import { API_BASE_URL } from '../../lib/utils';
 
 interface PremiumMembershipCardProps {
@@ -8,11 +8,7 @@ interface PremiumMembershipCardProps {
   onPurchaseSuccess: (updatedUser: User) => void;
 }
 
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
-}
+// No global SDK needed for PhonePe redirect
 
 const PremiumMembershipCard: React.FC<PremiumMembershipCardProps> = ({
   user,
@@ -29,7 +25,7 @@ const PremiumMembershipCard: React.FC<PremiumMembershipCardProps> = ({
     'Exclusive premium community channels',
     'Early access to new features',
     'Premium member badge',
-    'Lifetime membership benefits'
+    'Membership valid for 2 years'
   ];
 
   const handlePurchasePremium = async () => {
@@ -37,9 +33,9 @@ const PremiumMembershipCard: React.FC<PremiumMembershipCardProps> = ({
     setError(null);
 
     try {
-      // Create payment order
+      // Create PhonePe payment session
       const token = localStorage.getItem('token');
-      const orderResponse = await fetch(`${API_BASE_URL}/api/payment/create-order`, {
+      const orderResponse = await fetch(`${API_BASE_URL}/api/payment/create-payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,69 +54,16 @@ const PremiumMembershipCard: React.FC<PremiumMembershipCardProps> = ({
         throw new Error(errorMessage);
       }
 
-      const orderData: PaymentOrder = await orderResponse.json().catch(() => {
-        throw new Error('Invalid response from server while creating order');
+      const orderData = await orderResponse.json().catch(() => {
+        throw new Error('Invalid response from server while creating payment');
       });
 
-      // Initialize Razorpay payment
-      const options = {
-        key: orderData.key,
-        amount: orderData.amount,
-        currency: orderData.currency,
-        name: 'FutureGPT',
-        description: 'Premium Membership - One Time Fee',
-        order_id: orderData.orderId,
-        handler: async (response: RazorpayResponse) => {
-          try {
-            // Verify payment
-            const verifyResponse = await fetch(`${API_BASE_URL}/api/payment/verify-payment`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-              },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-              }),
-            });
+      if (!orderData?.redirectUrl) {
+        throw new Error('Payment initialization failed');
+      }
 
-            if (!verifyResponse.ok) {
-              const text = await verifyResponse.text().catch(() => '');
-              let errorMessage = 'Payment verification failed';
-              try {
-                const parsed = text ? JSON.parse(text) : null;
-                errorMessage = parsed?.message || errorMessage;
-              } catch (_) {}
-              throw new Error(errorMessage);
-            }
-
-            const verifyData = await verifyResponse.json().catch(() => {
-              throw new Error('Invalid response from server while verifying payment');
-            });
-            onPurchaseSuccess(verifyData.user);
-          } catch (error) {
-            console.error('Payment verification error:', error);
-            setError('Payment verification failed. Please contact support.');
-          }
-        },
-        prefill: {
-          name: user.name,
-          email: user.email,
-        },
-        theme: {
-          color: '#3B82F6',
-        },
-        modal: {
-          ondismiss: () => {
-            setIsLoading(false);
-          },
-        },
-      };
-
-      const razorpay = new window.Razorpay(options);
-      razorpay.open();
+      // Redirect to PhonePe pay page
+      window.location.href = orderData.redirectUrl;
     } catch (error) {
       console.error('Payment error:', error);
       setError(error instanceof Error ? error.message : 'Payment failed');
@@ -206,7 +149,7 @@ const PremiumMembershipCard: React.FC<PremiumMembershipCardProps> = ({
       </button>
 
       <p className="text-xs text-blue-600 text-center mt-3">
-        Secure payment powered by Razorpay
+        Secure payment powered by PhonePe
       </p>
     </div>
   );

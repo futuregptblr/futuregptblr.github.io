@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { X, Upload, Save, User, Mail, Phone, MapPin, Briefcase, Building, FileText, Eye, EyeOff, Bell, Shield, Globe } from 'lucide-react';
-import { User as UserType } from '../../types';
+import { X, Upload, Save, User, Mail, Phone, MapPin, Briefcase, Building, FileText, Eye, EyeOff, Bell, Shield, Globe, Plus, Trash2, Calendar as CalendarIcon } from 'lucide-react';
+import { User as UserType, Experience } from '../../types';
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -33,7 +33,8 @@ export function EditProfileModal({ isOpen, onClose, user, onSave }: EditProfileM
         emailNotifications: user.emailNotifications ?? true,
         pushNotifications: user.pushNotifications ?? true,
         eventReminders: user.eventReminders ?? true,
-        jobAlerts: user.jobAlerts ?? false
+        jobAlerts: user.jobAlerts ?? false,
+        experience: user.experience || []
       });
     }
   }, [user]);
@@ -53,6 +54,23 @@ export function EditProfileModal({ isOpen, onClose, user, onSave }: EditProfileM
   const handleInterestsChange = (interestsString: string) => {
     const interestsArray = interestsString.split(',').map(interest => interest.trim()).filter(interest => interest);
     setFormData(prev => ({ ...prev, interests: interestsArray }));
+  };
+
+  const addExperience = () => {
+    const newItem: Experience = { company: '', title: '', startDate: '', endDate: '', description: '' };
+    setFormData(prev => ({ ...prev, experience: [ ...(prev.experience || []), newItem ] }));
+  };
+
+  const removeExperience = (index: number) => {
+    setFormData(prev => ({ ...prev, experience: (prev.experience || []).filter((_, i) => i !== index) }));
+  };
+
+  const updateExperience = (index: number, field: keyof Experience, value: any) => {
+    setFormData(prev => {
+      const list = [...(prev.experience || [])];
+      list[index] = { ...list[index], [field]: value };
+      return { ...prev, experience: list };
+    });
   };
 
   const validateForm = () => {
@@ -299,6 +317,93 @@ export function EditProfileModal({ isOpen, onClose, user, onSave }: EditProfileM
                 />
                 <p className="mt-1 text-sm text-gray-500">Separate interests with commas</p>
               </div>
+            </div>
+          </div>
+
+          {/* Experience */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
+                <Briefcase className="h-5 w-5" />
+                <span>Experience</span>
+              </h3>
+              <button
+                type="button"
+                onClick={addExperience}
+                className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+              >
+                <Plus className="h-4 w-4" />
+                <span>Add</span>
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {(formData.experience || []).map((exp, index) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Company</label>
+                      <input
+                        type="text"
+                        value={exp.company || ''}
+                        onChange={(e) => updateExperience(index, 'company', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Company name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                      <input
+                        type="text"
+                        value={exp.title || ''}
+                        onChange={(e) => updateExperience(index, 'title', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Role title"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                      <input
+                        type="date"
+                        value={exp.startDate ? exp.startDate.substring(0, 10) : ''}
+                        onChange={(e) => updateExperience(index, 'startDate', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                      <input
+                        type="date"
+                        value={exp.endDate ? exp.endDate.substring(0, 10) : ''}
+                        onChange={(e) => updateExperience(index, 'endDate', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea
+                      rows={3}
+                      value={exp.description || ''}
+                      onChange={(e) => updateExperience(index, 'description', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="What did you work on?"
+                    />
+                  </div>
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => removeExperience(index)}
+                      className="px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg flex items-center space-x-2"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      <span>Remove</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
