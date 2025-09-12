@@ -78,3 +78,52 @@ export interface User {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface Job {
+  _id: string;
+  companyId: string | { _id: string; $oid?: string };
+  companyName: string;
+  title: string;
+  description: string;
+  requirements: string[];
+  location: string;
+  type: 'full-time' | 'part-time' | 'contract' | 'internship';
+  salary: {
+    min?: number;
+    max?: number;
+    currency?: string;
+  };
+  experience: string;
+  skills: string[];
+  benefits: string[];
+  isActive: boolean;
+  applications: number;
+  department?: string;
+  remotePolicy: 'remote' | 'hybrid' | 'onsite';
+  applicationDeadline?: string;
+  startDate?: string;
+  contractDuration?: string;
+  visaSponsorship: boolean;
+  relocationAssistance: boolean;
+  allowCoverLetter: boolean;
+  requireResume: boolean;
+  maxApplications: number;
+  industry?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Company {
+  _id: string;
+  name: string;
+  email: string;
+  website?: string;
+  industry: string;
+  size: string;
+  location: string;
+  description: string;
+  logo?: string;
+  isVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+}

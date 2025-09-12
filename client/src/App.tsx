@@ -16,6 +16,7 @@ import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import { CompanySignupForm } from "./components/auth/CompanySignupForm";
 import { CompanyLoginForm } from "./components/auth/CompanyLoginForm";
 import { CompanyDashboard } from "./pages/CompanyDashboard";
+import { CompanyProfilePage } from "./pages/CompanyProfile";
 import { JobsPage } from "./pages/Jobs";
 import { JobDetailPage } from "./pages/JobDetail";
 import { MemberCount } from "./components/sections/MemberCount";
@@ -117,6 +118,7 @@ function App() {
             element={<MembershipWaitlist user={null} />}
           />
           <Route path="/company-dashboard" element={<CompanyDashboard />} />
+          <Route path="/company/:companyId" element={<CompanyProfilePage />} />
 
           <Route path="/payment/callback" element={<PaymentCallback />} />
 

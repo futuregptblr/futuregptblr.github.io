@@ -13,6 +13,10 @@ export function EditProfileModal({ isOpen, onClose, user, onSave }: EditProfileM
   const [formData, setFormData] = useState<Partial<UserType>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  
+  // Separate state for raw input strings to handle comma input properly
+  const [skillsInput, setSkillsInput] = useState('');
+  const [interestsInput, setInterestsInput] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -36,6 +40,10 @@ export function EditProfileModal({ isOpen, onClose, user, onSave }: EditProfileM
         jobAlerts: user.jobAlerts ?? false,
         experience: user.experience || []
       });
+      
+      // Initialize input strings from arrays
+      setSkillsInput((user.skills || []).join(', '));
+      setInterestsInput((user.interests || []).join(', '));
     }
   }, [user]);
 
@@ -47,11 +55,15 @@ export function EditProfileModal({ isOpen, onClose, user, onSave }: EditProfileM
   };
 
   const handleSkillsChange = (skillsString: string) => {
+    setSkillsInput(skillsString);
+    // Convert to array for formData but keep the raw string for input
     const skillsArray = skillsString.split(',').map(skill => skill.trim()).filter(skill => skill);
     setFormData(prev => ({ ...prev, skills: skillsArray }));
   };
 
   const handleInterestsChange = (interestsString: string) => {
+    setInterestsInput(interestsString);
+    // Convert to array for formData but keep the raw string for input
     const interestsArray = interestsString.split(',').map(interest => interest.trim()).filter(interest => interest);
     setFormData(prev => ({ ...prev, interests: interestsArray }));
   };
@@ -296,7 +308,7 @@ export function EditProfileModal({ isOpen, onClose, user, onSave }: EditProfileM
                 </label>
                 <input
                   type="text"
-                  value={(formData.skills || []).join(', ')}
+                  value={skillsInput}
                   onChange={(e) => handleSkillsChange(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="JavaScript, React, Node.js"
@@ -310,7 +322,7 @@ export function EditProfileModal({ isOpen, onClose, user, onSave }: EditProfileM
                 </label>
                 <input
                   type="text"
-                  value={(formData.interests || []).join(', ')}
+                  value={interestsInput}
                   onChange={(e) => handleInterestsChange(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="AI, Open Source, Mentoring"

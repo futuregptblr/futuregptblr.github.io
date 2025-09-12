@@ -108,7 +108,7 @@ export function CompanyDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      {/* <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
@@ -140,10 +140,10 @@ export function CompanyDashboard() {
             </div>
           </div>
         </div>
-      </header>
+      </header> */}
 
       {/* Navigation Tabs */}
-      <div className="bg-white border-b">
+      <div className="pt-20 bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8">
             {[

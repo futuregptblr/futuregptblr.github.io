@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const companyController = require('../controllers/companyController');
 const companyAuth = require('../middleware/companyAuth');
+const Company = require('../models/Company');
 const Job = require('../models/Job');
 const JobApplication = require('../models/JobApplication');
 
@@ -33,6 +34,40 @@ router.get('/jobs/:jobId', async (req, res) => {
     res.json(job);
   } catch (error) {
     console.error('Get job error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Public routes for company profiles
+router.get('/public/:companyId', async (req, res) => {
+  try {
+    const { companyId } = req.params;
+    
+    const company = await Company.findById(companyId).select('-password -email');
+    
+    if (!company) {
+      return res.status(404).json({ message: 'Company not found' });
+    }
+
+    res.json(company);
+  } catch (error) {
+    console.error('Get public company error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get company jobs (public)
+router.get('/public/:companyId/jobs', async (req, res) => {
+  try {
+    const { companyId } = req.params;
+    
+    const jobs = await Job.find({ companyId, isActive: true })
+      .sort({ createdAt: -1 })
+      .select('-applications -maxApplications -allowCoverLetter -requireResume');
+
+    res.json(jobs);
+  } catch (error) {
+    console.error('Get company jobs error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

@@ -427,7 +427,13 @@ export function JobDetailPage() {
               </div>
 
               <button
-                onClick={() => navigate(`/company/${job.companyId}`)}
+                onClick={() => {
+                  // Handle both string and ObjectId formats
+                  const companyId = typeof job.companyId === 'string' 
+                    ? job.companyId 
+                    : job.companyId?._id || job.companyId?.$oid || job.companyId;
+                  navigate(`/company/${companyId}`);
+                }}
                 className="w-full mt-4 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium"
               >
                 View Company Profile
