@@ -7,6 +7,7 @@ import { Community } from "./components/sections/Community";
 import { Contact } from "./components/sections/Contact";
 import { ChaptersPage } from "./pages/Chapters";
 import { TeamPage } from "./pages/Team";
+import { AboutPage } from "./pages/About";
 import { Dashboard } from "./pages/Dashboard";
 import { SocialFeed } from "./components/social/SocialFeed";
 import { SignupForm } from "./components/auth/SignupForm";
@@ -19,6 +20,7 @@ import { JobsPage } from "./pages/Jobs";
 import { JobDetailPage } from "./pages/JobDetail";
 import { MemberCount } from "./components/sections/MemberCount";
 import { CompanySlider } from "./components/sections/CompanySlider";
+import { PremiumBanner } from "./components/sections/PremiumBanner";
 // import { Gallery } from './components/sections/Gallery';
 import { EventCard } from "./components/events/EventCard";
 import { upcomingEvents, pastEvents } from "./data/events";
@@ -26,7 +28,10 @@ import { GallerySection } from "./components/sections/GallerySection";
 import { PastSpeakers } from "./components/sections/PastSpeakers";
 import PaymentCallback from "./components/premium/PaymentCallback.tsx";
 import MembershipOffer from "./components/premium/MembershipOffer";
+import MembershipWaitlist from "./components/premium/MembershipWaitlist";
 import { PremiumProtectedRoute } from "./components/auth/PremiumProtectedRoute";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import ErrorPage from "./pages/Error";
 
 function App() {
@@ -41,6 +46,7 @@ function App() {
               <main>
                 <Hero />
                 <MemberCount />
+                <PremiumBanner />
                 <Features />
                 <CompanySlider />
 
@@ -69,6 +75,7 @@ function App() {
 
           <Route path="/chapters" element={<ChaptersPage />} />
           <Route path="/team" element={<TeamPage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/company-signup" element={<CompanySignupForm />} />
@@ -105,6 +112,10 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/membership-waitlist"
+            element={<MembershipWaitlist user={null} />}
+          />
           <Route path="/company-dashboard" element={<CompanyDashboard />} />
 
           <Route path="/payment/callback" element={<PaymentCallback />} />
@@ -130,6 +141,18 @@ function App() {
           <Route path="*" element={<ErrorPage />} />
         </Routes>
         <Footer />
+        <ToastContainer
+          position="top-right"
+          autoClose={4000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </Router>
   );

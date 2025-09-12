@@ -9,7 +9,7 @@ try {
   const envPref = process.env.PHONEPE_SDK_ENV || 'SANDBOX';
   if (clientId && clientSecret) {
     const { StandardCheckoutClient, Env } = require('pg-sdk-node');
-    const env = Env.PRODUCTION;
+    const env = envPref === 'PRODUCTION' ? Env.PRODUCTION : Env.SANDBOX;
     phonePeSdkClient = StandardCheckoutClient.getInstance(clientId, clientSecret, clientVersion, env);
   }
 } catch (_) {

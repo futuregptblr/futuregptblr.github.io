@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
 import { apiLogin } from '../../lib/api';
+import { toast } from 'react-toastify';
 
 export function LoginForm() {
   const [formData, setFormData] = useState({
@@ -24,18 +25,37 @@ export function LoginForm() {
       }
       // Start/refresh 24h membership offer window on login
       try { localStorage.setItem('membershipOfferStartAt', String(Date.now())); } catch {}
-      // Redirect non-premium users to offer, premium to dashboard
+      
+      // Show success toast
+      toast.success(`Welcome back, ${data.user?.name || 'User'}!`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      
+      // Redirect non-premium users to waitlist, premium to dashboard
       const isPremium = Boolean(data?.user?.isPremium);
-      window.location.href = isPremium ? '/dashboard' : '/membership-offer';
+      window.location.href = isPremium ? '/dashboard' : '/membership-waitlist';
     } catch (err: any) {
       setError(err.message);
+      toast.error(err.message || "Please check your credentials and try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="pt-20 max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
+    <div className="pt-20 mb-20 max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
       <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
         Log In
       </h2>

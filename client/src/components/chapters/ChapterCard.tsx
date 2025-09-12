@@ -1,6 +1,7 @@
-import React from 'react';
-import { MapPin } from 'lucide-react';
-import { Chapter } from '../../types';
+import React from "react";
+import { MapPin } from "lucide-react";
+import { Chapter } from "../../types";
+import { Link } from "react-router-dom";
 
 interface ChapterCardProps {
   chapter: Chapter;
@@ -9,8 +10,8 @@ interface ChapterCardProps {
 export function ChapterCard({ chapter }: ChapterCardProps) {
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-      <img 
-        src={chapter.image} 
+      <img
+        src={chapter.image}
         alt={`${chapter.city} Chapter`}
         className="w-full h-48 object-cover"
       />
@@ -25,9 +26,11 @@ export function ChapterCard({ chapter }: ChapterCardProps) {
           {chapter.memberCount.toLocaleString()} members
         </p>
         <div className="flex justify-between items-center">
-          <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors" onClick={() => window.open(chapter.link)}>
-            Join Chapter
-          </button>
+          <Link to="/signup">
+            <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+              Join Chapter
+            </button>
+          </Link>
           {chapter.leads.length > 0 && (
             <div className="flex -space-x-2">
               {chapter.leads.map((lead, index) => (

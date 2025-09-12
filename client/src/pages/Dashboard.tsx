@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
-import { DashboardHeader } from '../components/dashboard/DashboardHeader';
+// import { DashboardHeader } from '../components/dashboard/DashboardHeader';
 import { JobResources } from '../components/dashboard/JobResources';
 import { SpecialEvents } from '../components/dashboard/SpecialEvents';
 import { CommunityHub } from '../components/dashboard/CommunityHub';
@@ -107,8 +107,8 @@ export function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <DashboardHeader />
+    <div className="pt-14 min-h-screen bg-gray-50">
+      {/* <DashboardHeader /> */}
       <div className="flex">
         <DashboardSidebar 
           activeSection={activeSection} 

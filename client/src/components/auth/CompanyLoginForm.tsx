@@ -47,7 +47,7 @@ export function CompanyLoginForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
+    <div className="pt-20 mb-20 max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
       <div className="text-center mb-8">
         <Building2 className="mx-auto h-12 w-12 text-purple-600 mb-4" />
         <h2 className="text-2xl font-bold text-gray-900">

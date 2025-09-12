@@ -7,6 +7,7 @@ const authRoutes = require("./src/routes/auth");
 const userRoutes = require("./src/routes/user");
 const paymentRoutes = require("./src/routes/payment");
 const companyRoutes = require("./src/routes/company");
+const waitlistRoutes = require("./src/routes/waitlist");
 const connectToDatabase = require("./src/lib/db");
 
 const app = express();
@@ -22,6 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/company", companyRoutes);
+app.use("/api/waitlist", waitlistRoutes);
 
 const port = process.env.PORT || 5000;
 

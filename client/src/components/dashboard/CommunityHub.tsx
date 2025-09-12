@@ -29,7 +29,7 @@ export function CommunityHub() {
       category: 'Machine Learning',
       replies: 24,
       likes: 156,
-      time: '2 hours ago',
+      time: '2 days ago',
       isPinned: true,
       tags: ['MLOps', 'Production', 'Best Practices']
     },
@@ -42,7 +42,7 @@ export function CommunityHub() {
       category: 'Career Advice',
       replies: 18,
       likes: 89,
-      time: '5 hours ago',
+      time: '15 hours ago',
       isPinned: false,
       tags: ['Career', 'Transition', 'Skills']
     },

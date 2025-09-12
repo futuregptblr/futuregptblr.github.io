@@ -15,7 +15,7 @@ export function PremiumProtectedRoute({ children }: PremiumProtectedRouteProps) 
 	}
 
 	if (!user?.isPremium) {
-		return <Navigate to="/membership-offer" replace />;
+		return <Navigate to="/membership-waitlist" replace />;
 	}
 
 	return <>{children}</>;

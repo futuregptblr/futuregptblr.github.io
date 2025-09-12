@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { Crown, CheckCircle2, Clock } from 'lucide-react';
 import PremiumMembershipCard from './PremiumMembershipCard';
 import type { User } from '../../types';
@@ -78,6 +79,11 @@ const MembershipOffer: React.FC<MembershipOfferProps> = ({ user: initialUser }) 
 				</div>
 			</div>
 		);
+	}
+
+	// Redirect non-premium users to waitlist
+	if (user && !user.isPremium) {
+		return <Navigate to="/membership-waitlist" replace />;
 	}
 
 	return (

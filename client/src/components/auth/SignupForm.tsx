@@ -1,29 +1,62 @@
 import React, { useState } from "react";
 import { Mail, Lock, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { apiRegister } from "../../lib/api";
+import { toast } from "react-toastify";
 
 export function SignupForm() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formData);
-    // Show WhatsApp link after successful signup
-    alert(
-      "Thank you for signing up! Join our WhatsApp group: https://chat.whatsapp.com/future-gpt"
-    );
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      const data = await apiRegister(formData);
+      
+      // Store token and user data in localStorage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      
+      // Show success toast
+      toast.success("Account Created Successfully! Welcome to FutureGPT!", {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      
+      // Redirect to dashboard
+      navigate("/dashboard");
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      setError(error.message || "Failed to create account. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="pt-20 max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
+    <div className="pt-20 mb-20 max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
       <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
         Join FutureGPT Community
       </h2>
+
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
@@ -82,9 +115,10 @@ export function SignupForm() {
 
         <button
           type="submit"
-          className="w-full bg-purple-600 text-white rounded-lg px-4 py-2 hover:bg-purple-700 transition-colors"
+          disabled={isSubmitting}
+          className="w-full bg-purple-600 text-white rounded-lg px-4 py-2 hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Sign Up
+          {isSubmitting ? "Creating Account..." : "Sign Up"}
         </button>
       </form>
       <div className="mt-6 text-center">

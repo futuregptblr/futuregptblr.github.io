@@ -20,9 +20,9 @@ export function SpecialEvents() {
   const upcomingEvents = [
     {
       id: 1,
-      title: 'AI Innovation Summit 2024',
+      title: 'AI Innovation Summit 2025',
       description: 'Join industry leaders for a day of cutting-edge AI discussions, workshops, and networking opportunities.',
-      date: 'March 15, 2024',
+      date: 'November 15, 2025',
       time: '9:00 AM - 6:00 PM',
       location: 'Taj Palace, Mumbai',
       type: 'Conference',
@@ -119,12 +119,12 @@ export function SpecialEvents() {
           <div className="flex items-center justify-between">
             <div>
               <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium">Featured Event</span>
-              <h2 className="text-2xl font-bold mt-2">AI Innovation Summit 2024</h2>
+              <h2 className="text-2xl font-bold mt-2">AI Innovation Summit 2025</h2>
               <p className="text-white/90 mt-2">The biggest AI event of the year with industry leaders and innovators</p>
             </div>
             <div className="text-right">
               <div className="text-3xl">🎯</div>
-              <p className="text-sm opacity-90">March 15, 2024</p>
+              <p className="text-sm opacity-90">November 15, 2025</p>
             </div>
           </div>
         </div>
@@ -139,14 +139,14 @@ export function SpecialEvents() {
                 <Clock className="h-4 w-4" />
                 <span>9:00 AM - 6:00 PM</span>
               </div>
-              <div className="flex items-center space-x-1">
+              {/* <div className="flex items-center space-x-1">
                 <Users className="h-4 w-4" />
                 <span>156/200 registered</span>
-              </div>
+              </div> */}
             </div>
-            <button className="bg-yellow-400 text-blue-900 px-6 py-2 rounded-lg font-medium hover:bg-yellow-300 transition-colors">
+            {/* <button className="bg-yellow-400 text-blue-900 px-6 py-2 rounded-lg font-medium hover:bg-yellow-300 transition-colors">
               Register Now
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
@@ -239,14 +239,14 @@ export function SpecialEvents() {
 
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium text-gray-900">{event.price}</span>
-                          <span className="text-sm text-gray-500">•</span>
+                          {/* <span className="text-sm font-medium text-gray-900">{event.price}</span> */}
+                          {/* <span className="text-sm text-gray-500">•</span> */}
                           <span className="text-sm text-gray-500">{event.type}</span>
                         </div>
-                        <div className="flex items-center space-x-1 text-sm text-gray-500">
+                        {/* <div className="flex items-center space-x-1 text-sm text-gray-500">
                           <Users className="h-4 w-4" />
                           <span>{event.registered}/{event.capacity}</span>
-                        </div>
+                        </div> */}
                       </div>
 
                       <div className="flex flex-wrap gap-2 mb-4">
@@ -261,7 +261,7 @@ export function SpecialEvents() {
                         <div className="text-sm text-gray-600">
                           <span className="font-medium">Speakers:</span> {event.speakers.join(', ')}
                         </div>
-                        <button className="bg-yellow-400 text-blue-900 px-4 py-2 rounded-lg font-medium hover:bg-yellow-300 transition-colors">
+                        <button disabled className="bg-gray-200 text-yellow-520 px-4 py-2 rounded-lg font-medium transition-colors">
                           Register
                         </button>
                       </div>

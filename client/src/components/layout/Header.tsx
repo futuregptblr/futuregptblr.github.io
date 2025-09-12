@@ -56,10 +56,22 @@ export function Header() {
 
           <nav className="hidden md:flex space-x-8">
             <Link
+              to="/about"
+              className="text-gray-700 hover:text-yellow-500 transition-colors"
+            >
+              About
+            </Link>
+            <Link
               to="/chapters"
               className="text-gray-700 hover:text-yellow-500 transition-colors"
             >
               Chapters
+            </Link>
+            <Link
+              to="/past-events"
+              className="text-gray-700 hover:text-yellow-500 transition-colors"
+            >
+              Past Events
             </Link>
             <Link
               to="/team"
@@ -67,21 +79,14 @@ export function Header() {
             >
               Team
             </Link>
-            <a href="#features" className="text-gray-700 hover:text-yellow-500 transition-colors">
-              Features
-            </a>
             <Link
-              to="/past-events"
-              className="text-gray-700 hover:text-yellow-500 transition-colors"
+              to="/membership-waitlist"
+              className="relative text-gray-700 hover:text-yellow-500 transition-colors font-medium group"
             >
-              Past Events
+              <span className="relative z-10">Premium</span>
+              <span className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+              <span className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"></span>
             </Link>
-            <a
-              href="#contact"
-              className="text-gray-700 hover:text-yellow-500 transition-colors"
-            >
-              Contact
-            </a>
           </nav>
 
           <div className="hidden md:flex items-center space-x-3">
@@ -180,6 +185,13 @@ export function Header() {
           <div className="md:hidden py-4">
             <div className="flex flex-col space-y-4">
               <Link
+                to="/about"
+                className="text-gray-700 hover:text-yellow-500 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                About
+              </Link>
+              <Link
                 to="/chapters"
                 className="text-gray-700 hover:text-yellow-500 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
@@ -193,13 +205,6 @@ export function Header() {
               >
                 Team
               </Link>
-              <a 
-                href="/#features"
-                className="text-gray-700 hover:text-yellow-500 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Features
-              </a>
               <Link
                 to="/past-events"
                 className="text-gray-700 hover:text-yellow-500 transition-colors"
@@ -207,13 +212,15 @@ export function Header() {
               >
                 Past Events
               </Link>
-              <a
-                href="/#contact"
-                className="text-gray-700 hover:text-yellow-500 transition-colors"
+              <Link
+                to="/membership-waitlist"
+                className="relative text-gray-700 hover:text-yellow-500 transition-colors font-medium group"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Contact
-              </a>
+                <span className="relative z-10">Premium</span>
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                <span className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"></span>
+              </Link>
               {isCompanyAuthenticated ? (
                 <>
                   <Link
