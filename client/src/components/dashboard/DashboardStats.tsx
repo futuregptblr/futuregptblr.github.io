@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../lib/store';
 import { 
   Users, 
   Calendar, 
@@ -11,6 +13,7 @@ import {
 } from 'lucide-react';
 
 export function DashboardStats() {
+  const name = useSelector((s: RootState) => s.user.currentUser?.name) || 'there';
   const stats = [
     {
       title: 'Community Members',
@@ -77,7 +80,7 @@ export function DashboardStats() {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-yellow-400 to-blue-600 rounded-xl p-6 text-white">
-        <h1 className="text-2xl font-bold mb-2">Welcome back, John! 👋</h1>
+        <h1 className="text-2xl font-bold mb-2">Welcome back, {name}! 👋</h1>
         <p className="text-white/90">Here's what's happening in your FutureGPT community today.</p>
       </div>
 

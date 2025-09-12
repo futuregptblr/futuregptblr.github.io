@@ -19,6 +19,15 @@ const userSchema = new mongoose.Schema(
     skills: [{ type: String, trim: true }],
     interests: [{ type: String, trim: true }],
     resumeUrl: { type: String, trim: true },
+    experience: [
+      {
+        company: { type: String, trim: true },
+        title: { type: String, trim: true },
+        startDate: { type: Date },
+        endDate: { type: Date },
+        description: { type: String, trim: true }
+      }
+    ],
     avatar: { type: String, default: '👨‍💻' },
     joinDate: { type: Date, default: Date.now },
     // Privacy settings

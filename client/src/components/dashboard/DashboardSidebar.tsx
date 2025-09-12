@@ -18,7 +18,12 @@ interface DashboardSidebarProps {
   onSectionChange: (section: DashboardSection) => void;
 }
 
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../lib/store';
+
 export function DashboardSidebar({ activeSection, onSectionChange }: DashboardSidebarProps) {
+  const isPremium = useSelector((s: RootState) => Boolean(s.user.currentUser?.isPremium));
+
   const menuItems = [
     {
       id: 'overview' as DashboardSection,
@@ -46,9 +51,9 @@ export function DashboardSidebar({ activeSection, onSectionChange }: DashboardSi
     },
     {
       id: 'premium' as DashboardSection,
-      label: 'Premium',
+      label: isPremium ? 'Premium Status' : 'Premium',
       icon: Crown,
-      description: 'Upgrade membership'
+      description: isPremium ? 'You are a premium member' : 'Upgrade membership'
     },
     {
       id: 'profile' as DashboardSection,
@@ -58,11 +63,15 @@ export function DashboardSidebar({ activeSection, onSectionChange }: DashboardSi
     }
   ];
 
+  const visibleMenuItems = isPremium 
+    ? menuItems.filter((item) => item.id !== 'premium')
+    : menuItems;
+
   return (
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
       <div className="p-6">
         <nav className="space-y-2">
-          {menuItems.map((item) => {
+          {visibleMenuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.id;
             

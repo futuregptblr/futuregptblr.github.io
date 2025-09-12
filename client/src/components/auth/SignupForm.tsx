@@ -1,27 +1,30 @@
-import React, { useState } from 'react';
-import { Mail, Lock, User } from 'lucide-react';
+import React, { useState } from "react";
+import { Mail, Lock, User } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function SignupForm() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
+    name: "",
+    email: "",
+    password: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
     // Show WhatsApp link after successful signup
-    alert('Thank you for signing up! Join our WhatsApp group: https://chat.whatsapp.com/future-gpt');
+    alert(
+      "Thank you for signing up! Join our WhatsApp group: https://chat.whatsapp.com/future-gpt"
+    );
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
+    <div className="pt-20 max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
       <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
         Join FutureGPT Community
       </h2>
-      
+
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -32,7 +35,9 @@ export function SignupForm() {
             <input
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               className="pl-10 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
               required
             />
@@ -48,7 +53,9 @@ export function SignupForm() {
             <input
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               className="pl-10 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
               required
             />
@@ -64,7 +71,9 @@ export function SignupForm() {
             <input
               type="password"
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
               className="pl-10 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
               required
             />
@@ -78,6 +87,17 @@ export function SignupForm() {
           Sign Up
         </button>
       </form>
+      <div className="mt-6 text-center">
+        <p className="text-sm text-gray-600">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-purple-600 hover:text-purple-700 font-medium"
+          >
+            Log in here
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

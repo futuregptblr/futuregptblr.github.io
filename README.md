@@ -15,9 +15,13 @@ Create a `.env` file inside `server/` with:
 # server/.env
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=super_secret_jwt_key
-PORT=4000
-RAZORPAY_KEY_ID=your_razorpay_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+PORT=5000
+PHONEPE_SDK_CLIENT_ID=phone_pay_gateway_client_id
+PHONEPE_SDK_CLIENT_SECRET=phone_pay_gateway_client_secret
+PHONEPE_SDK_CLIENT_VERSION=phone_pay_gateway_client_version
+PHONEPE_SDK_ENV=SANDBOX(for development) or PRODUCTION
+PHONEPE_MERCHANT_ID=phone_pay_gateway_merchant_id
+CLIENT_BASE_URL=frontent_url
 ```
 
  create a `.env` file inside `client/`:

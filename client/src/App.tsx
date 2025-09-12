@@ -24,6 +24,10 @@ import { EventCard } from "./components/events/EventCard";
 import { upcomingEvents, pastEvents } from "./data/events";
 import { GallerySection } from "./components/sections/GallerySection";
 import { PastSpeakers } from "./components/sections/PastSpeakers";
+import PaymentCallback from "./components/premium/PaymentCallback.tsx";
+import MembershipOffer from "./components/premium/MembershipOffer";
+import { PremiumProtectedRoute } from "./components/auth/PremiumProtectedRoute";
+import ErrorPage from "./pages/Error";
 
 function App() {
   return (
@@ -65,8 +69,6 @@ function App() {
 
           <Route path="/chapters" element={<ChaptersPage />} />
           <Route path="/team" element={<TeamPage />} />
-          <Route path="/jobs" element={<JobsPage />} />
-          <Route path="/jobs/:jobId" element={<JobDetailPage />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/company-signup" element={<CompanySignupForm />} />
@@ -74,12 +76,38 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <PremiumProtectedRoute>
                 <Dashboard />
+              </PremiumProtectedRoute>
+            }
+          />
+          <Route
+            path="/jobs"
+            element={
+              <PremiumProtectedRoute>
+                <JobsPage />
+              </PremiumProtectedRoute>
+            }
+          />
+          <Route
+            path="/jobs/:jobId"
+            element={
+              <PremiumProtectedRoute>
+                <JobDetailPage />
+              </PremiumProtectedRoute>
+            }
+          />
+          <Route
+            path="/membership-offer"
+            element={
+              <ProtectedRoute>
+                <MembershipOffer user={null} />
               </ProtectedRoute>
             }
           />
           <Route path="/company-dashboard" element={<CompanyDashboard />} />
+
+          <Route path="/payment/callback" element={<PaymentCallback />} />
 
           <Route
             path="/past-events"
@@ -98,6 +126,8 @@ function App() {
               </div>
             }
           />
+          {/* Catch-all */}
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
         <Footer />
       </div>
