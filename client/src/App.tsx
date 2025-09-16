@@ -34,6 +34,8 @@ import { PremiumProtectedRoute } from "./components/auth/PremiumProtectedRoute";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ErrorPage from "./pages/Error";
+import PrivacyPolicyPage from "./pages/PrivacyPolicy";
+import TermsConditionsPage from "./pages/TermsConditions";
 
 function App() {
   return (
@@ -139,6 +141,8 @@ function App() {
               </div>
             }
           />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms" element={<TermsConditionsPage />} />
           {/* Catch-all */}
           <Route path="*" element={<ErrorPage />} />
         </Routes>
