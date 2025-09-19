@@ -8,6 +8,8 @@ const userRoutes = require("./src/routes/user");
 const paymentRoutes = require("./src/routes/payment");
 const companyRoutes = require("./src/routes/company");
 const waitlistRoutes = require("./src/routes/waitlist");
+const cloudinaryRoutes = require("./src/routes/cloudinary");
+const teamRoutes = require("./src/routes/team");
 const connectToDatabase = require("./src/lib/db");
 
 const app = express();
@@ -24,6 +26,8 @@ app.use("/api/user", userRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/company", companyRoutes);
 app.use("/api/waitlist", waitlistRoutes);
+app.use("/api/cloudinary", cloudinaryRoutes);
+app.use("/api/team", teamRoutes);
 
 const port = process.env.PORT || 5000;
 

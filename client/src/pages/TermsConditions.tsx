@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function TermsConditionsPage() {
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
@@ -168,26 +166,17 @@ export default function TermsConditionsPage() {
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-900 mb-3">
-            12. Refund & Cancellation Policy
+            12. Payments & Refunds
           </h2>
-          <p className="text-gray-700 mb-2">
-            Unless an event/page specifies otherwise, the following applies to
-            paid events, trainings, or services:
-          </p>
           <ul className="list-disc pl-6 text-gray-700 space-y-2">
             <li>
-              More than 30 days before start: 80% refund (less non-refundable
-              costs).
-            </li>
-            <li>15–29 days before start: 50% refund.</li>
-            <li>Less than 15 days / no-show: No refund.</li>
-            <li>
-              If FutureGPT cancels or postpones, you may receive a full refund
-              or reschedule.
+              Payments are handled by Be4Breach, our parent organization. Your
+              invoices and bank/statement entries may reflect the business name
+              as Be4Breach.
             </li>
             <li>
-              Non-refundable: third-party fees already incurred (e.g., travel,
-              licenses, exams) where providers do not refund.
+              Approved refunds are credited to the original payment method
+              within 7 business days.
             </li>
           </ul>
         </section>

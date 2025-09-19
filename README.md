@@ -22,6 +22,11 @@ PHONEPE_SDK_CLIENT_VERSION=phone_pay_gateway_client_version
 PHONEPE_SDK_ENV=SANDBOX(for development) or PRODUCTION
 PHONEPE_MERCHANT_ID=phone_pay_gateway_merchant_id
 CLIENT_BASE_URL=frontent_url
+ADMIN_EMAIL=admin_email_address
+ADMIN_PASSWORD=admin_password
+CLOUDINARY_CLOUD_NAME=cloudinary_name
+CLOUDINARY_API_KEY=cloudinary_api_key
+CLOUDINARY_API_SECRET=cloudinary_api_secret
 ```
 
  create a `.env` file inside `client/`:

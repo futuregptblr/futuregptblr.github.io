@@ -16,20 +16,19 @@ export function Footer() {
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold mb-4">Resources</h3>
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Documentation</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Tutorials</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+              <li><a href="/membership-waitlist" className="text-gray-400 hover:text-white transition-colors">Premium</a></li>
+              <li><a href="/about" className="text-gray-400 hover:text-white transition-colors">About</a></li>
+              <li><a href="/team" className="text-gray-400 hover:text-white transition-colors">Team</a></li>
             </ul>
           </div>
           
           <div>
             <h3 className="text-lg font-semibold mb-4">Community</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Discord</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">GitHub</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Twitter</a></li>
+              <li><a href="https://www.linkedin.com/company/futuregptmeetup" className="text-gray-400 hover:text-white transition-colors">Linkedin</a></li>
+              <li><a href="https://github.com/futuregptblr" className="text-gray-400 hover:text-white transition-colors">GitHub</a></li>
             </ul>
           </div>
           

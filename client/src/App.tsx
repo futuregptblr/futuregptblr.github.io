@@ -36,6 +36,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import ErrorPage from "./pages/Error";
 import PrivacyPolicyPage from "./pages/PrivacyPolicy";
 import TermsConditionsPage from "./pages/TermsConditions";
+import AdminPage from "./pages/Admin";
 
 function App() {
   return (
@@ -78,6 +79,7 @@ function App() {
 
           <Route path="/chapters" element={<ChaptersPage />} />
           <Route path="/team" element={<TeamPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/login" element={<LoginForm />} />
