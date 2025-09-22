@@ -9,6 +9,14 @@ import { ChaptersPage } from "./pages/Chapters";
 import { TeamPage } from "./pages/Team";
 import { AboutPage } from "./pages/About";
 import { Dashboard } from "./pages/Dashboard";
+import { DashboardStats } from "./components/dashboard/DashboardStats";
+import { JobResources } from "./components/dashboard/JobResources";
+import { SpecialEvents } from "./components/dashboard/SpecialEvents";
+import { CommunityHub } from "./components/dashboard/CommunityHub";
+import { UserProfile } from "./components/dashboard/UserProfile";
+import PremiumMembershipCard from "./components/premium/PremiumMembershipCard";
+import { useSelector } from 'react-redux';
+import type { RootState } from './lib/store';
 import { SocialFeed } from "./components/social/SocialFeed";
 import { SignupForm } from "./components/auth/SignupForm";
 import { LoginForm } from "./components/auth/LoginForm";
@@ -92,23 +100,35 @@ function App() {
                 <Dashboard />
               </PremiumProtectedRoute>
             }
-          />
-          <Route
-            path="/jobs"
-            element={
-              <PremiumProtectedRoute>
-                <JobsPage />
-              </PremiumProtectedRoute>
-            }
-          />
-          <Route
-            path="/jobs/:jobId"
-            element={
-              <PremiumProtectedRoute>
-                <JobDetailPage />
-              </PremiumProtectedRoute>
-            }
-          />
+          >
+            <Route index element={<DashboardStats />} />
+            <Route path="overview" element={<DashboardStats />} />
+            <Route path="jobs" element={<JobResources />} />
+            <Route path="jobs/:jobId" element={<JobDetailPage />} />
+            <Route path="events" element={<SpecialEvents />} />
+            <Route path="community" element={<CommunityHub />} />
+            <Route path="profile" element={<UserProfile />} />
+            <Route
+              path="premium"
+              element={
+                // Inline wrapper to access store for user
+                <PremiumProtectedRoute>
+                  {(() => {
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
+                    const user = (useSelector((s: RootState) => s.user.currentUser));
+                    return user ? (
+                      <div className="max-w-2xl mx-auto">
+                        <PremiumMembershipCard user={user} onPurchaseSuccess={() => {}} />
+                      </div>
+                    ) : (
+                      <div>Loading...</div>
+                    );
+                  })()}
+                </PremiumProtectedRoute>
+              }
+            />
+          </Route>
+          
           <Route
             path="/membership-offer"
             element={

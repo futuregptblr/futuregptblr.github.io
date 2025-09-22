@@ -1,159 +1,72 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   Users, 
   MessageSquare, 
   Hash, 
-  Heart, 
-  Share2, 
-  MoreHorizontal,
   Search,
-  Filter,
   Plus,
-  TrendingUp,
-  Bookmark,
-  UserPlus,
-  Calendar,
-  Award
+  Bookmark
 } from 'lucide-react';
+import { apiAddComment, apiCreateDiscussion, apiCreateGroup, apiListDiscussions, apiListGroups } from '../../lib/api';
 
 export function CommunityHub() {
-  const [activeTab, setActiveTab] = useState<'discussions' | 'groups' | 'members'>('discussions');
+  const [activeTab, setActiveTab] = useState<'discussions' | 'groups'>('discussions');
+  const [discussions, setDiscussions] = useState<any[]>([]);
+  const [groups, setGroups] = useState<any[]>([]);
+  const [membersCount, setMembersCount] = useState<number>(0);
+  const [showNewDiscussion, setShowNewDiscussion] = useState(false);
+  const [newDiscussion, setNewDiscussion] = useState({ title: '', content: '' });
+  const [showNewGroup, setShowNewGroup] = useState(false);
+  const [newGroup, setNewGroup] = useState({ name: '', description: '' });
+  const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
 
-  const discussions = [
-    {
-      id: 1,
-      title: 'Best practices for deploying ML models in production',
-      author: 'Sarah Chen',
-      authorAvatar: '👩‍💻',
-      content: 'I\'ve been working on deploying ML models and wanted to share some insights about best practices for production environments...',
-      category: 'Machine Learning',
-      replies: 24,
-      likes: 156,
-      time: '2 days ago',
-      isPinned: true,
-      tags: ['MLOps', 'Production', 'Best Practices']
-    },
-    {
-      id: 2,
-      title: 'Career advice: Transitioning from Data Analyst to Data Scientist',
-      author: 'Rajesh Kumar',
-      authorAvatar: '👨‍💼',
-      content: 'I\'m currently working as a Data Analyst and looking to transition into a Data Scientist role. Any advice on skills to focus on?',
-      category: 'Career Advice',
-      replies: 18,
-      likes: 89,
-      time: '15 hours ago',
-      isPinned: false,
-      tags: ['Career', 'Transition', 'Skills']
-    },
-    {
-      id: 3,
-      title: 'Latest developments in Large Language Models',
-      author: 'Priya Sharma',
-      authorAvatar: '👩‍🔬',
-      content: 'Let\'s discuss the latest breakthroughs in LLMs and their implications for various industries...',
-      category: 'AI Research',
-      replies: 32,
-      likes: 203,
-      time: '1 day ago',
-      isPinned: false,
-      tags: ['LLM', 'Research', 'AI']
-    }
-  ];
+  useEffect(() => {
+    (async () => {
+      try {
+        const base = (await import('../../lib/utils')).API_BASE_URL;
+        const [d, g, s] = await Promise.all([
+          apiListDiscussions(),
+          apiListGroups(),
+          fetch(`${base}/api/community/stats`).then(r => r.json()),
+        ]);
+        setDiscussions(d || []);
+        setGroups(g || []);
+        setMembersCount(Math.max(0, s?.members || 0));
+      } catch (e: any) {
+        console.error(e);
+      }
+    })();
+  }, []);
 
-  const groups = [
-    {
-      id: 1,
-      name: 'ML Engineers Network',
-      description: 'Connect with fellow ML engineers, share experiences, and discuss technical challenges.',
-      members: 847,
-      isPrivate: false,
-      category: 'Professional',
-      avatar: '🤖',
-      recentActivity: 'New discussion about MLOps tools',
-      tags: ['Machine Learning', 'Engineering', 'Networking']
-    },
-    {
-      id: 2,
-      name: 'AI Research Community',
-      description: 'For researchers and academics working on cutting-edge AI projects.',
-      members: 234,
-      isPrivate: true,
-      category: 'Research',
-      avatar: '🧠',
-      recentActivity: 'Paper discussion: "Advances in Transformer Architecture"',
-      tags: ['Research', 'Academic', 'AI']
-    },
-    {
-      id: 3,
-      name: 'Data Science Career Growth',
-      description: 'Career development, job opportunities, and professional growth in data science.',
-      members: 1567,
-      isPrivate: false,
-      category: 'Career',
-      avatar: '📊',
-      recentActivity: 'New job posting: Senior DS at TechCorp',
-      tags: ['Career', 'Jobs', 'Growth']
-    },
-    {
-      id: 4,
-      name: 'Startup Founders Circle',
-      description: 'Exclusive group for AI startup founders to share insights and network.',
-      members: 89,
-      isPrivate: true,
-      category: 'Entrepreneurship',
-      avatar: '🚀',
-      recentActivity: 'Pitch deck review session',
-      tags: ['Startups', 'Entrepreneurship', 'Networking']
+  async function handleCreateDiscussion() {
+    try {
+      const token = localStorage.getItem('token') || '';
+      const created = await apiCreateDiscussion(token, {
+        title: newDiscussion.title.trim(),
+        content: newDiscussion.content.trim(),
+      });
+      setDiscussions((prev) => [created, ...prev]);
+      setNewDiscussion({ title: '', content: '' });
+      setShowNewDiscussion(false);
+    } catch (e: any) {
+      console.error(e);
     }
-  ];
+  }
 
-  const members = [
-    {
-      id: 1,
-      name: 'Dr. Sarah Chen',
-      role: 'Senior ML Engineer at Google',
-      avatar: '👩‍💻',
-      location: 'Bangalore, India',
-      skills: ['Machine Learning', 'Python', 'TensorFlow', 'MLOps'],
-      isOnline: true,
-      mutualConnections: 12,
-      joined: '2 years ago'
-    },
-    {
-      id: 2,
-      name: 'Rajesh Kumar',
-      role: 'AI Research Lead at Microsoft',
-      avatar: '👨‍💼',
-      location: 'Mumbai, India',
-      skills: ['AI Research', 'PyTorch', 'NLP', 'Computer Vision'],
-      isOnline: false,
-      mutualConnections: 8,
-      joined: '1 year ago'
-    },
-    {
-      id: 3,
-      name: 'Priya Sharma',
-      role: 'Data Science Manager at Amazon',
-      avatar: '👩‍🔬',
-      location: 'Delhi, India',
-      skills: ['Data Science', 'Leadership', 'Statistics', 'Business Intelligence'],
-      isOnline: true,
-      mutualConnections: 15,
-      joined: '3 years ago'
-    },
-    {
-      id: 4,
-      name: 'Alex Johnson',
-      role: 'Startup Founder - AI Solutions',
-      avatar: '👨‍💻',
-      location: 'Hyderabad, India',
-      skills: ['Entrepreneurship', 'Product Management', 'AI Strategy'],
-      isOnline: false,
-      mutualConnections: 5,
-      joined: '6 months ago'
+  async function handleCreateGroup() {
+    try {
+      const token = localStorage.getItem('token') || '';
+      const created = await apiCreateGroup(token, {
+        name: newGroup.name.trim(),
+        description: newGroup.description.trim(),
+      });
+      setGroups((prev) => [created, ...prev]);
+      setNewGroup({ name: '', description: '' });
+      setShowNewGroup(false);
+    } catch (e: any) {
+      console.error(e);
     }
-  ];
+  }
 
   return (
     <div className="space-y-6">
@@ -164,41 +77,32 @@ export function CommunityHub() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-white rounded-lg p-4 border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Members</p>
-              <p className="text-2xl font-bold text-gray-900">2,847</p>
+              <p className="text-2xl font-bold text-gray-900">{membersCount}</p>
             </div>
             <Users className="h-8 w-8 text-blue-600" />
           </div>
         </div>
-        <div className="bg-white rounded-lg p-4 border border-gray-200">
+        {/* <div className="bg-white rounded-lg p-4 border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Active Groups</p>
-              <p className="text-2xl font-bold text-gray-900">24</p>
+              <p className="text-2xl font-bold text-gray-900">{groups.length}</p>
             </div>
             <Hash className="h-8 w-8 text-yellow-600" />
           </div>
-        </div>
+        </div> */}
         <div className="bg-white rounded-lg p-4 border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Discussions</p>
-              <p className="text-2xl font-bold text-gray-900">156</p>
+              <p className="text-2xl font-bold text-gray-900">{discussions.length}</p>
             </div>
             <MessageSquare className="h-8 w-8 text-green-600" />
-          </div>
-        </div>
-        <div className="bg-white rounded-lg p-4 border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Online Now</p>
-              <p className="text-2xl font-bold text-gray-900">342</p>
-            </div>
-            <TrendingUp className="h-8 w-8 text-purple-600" />
           </div>
         </div>
       </div>
@@ -209,12 +113,11 @@ export function CommunityHub() {
           <nav className="flex space-x-8 px-6">
             {[
               { id: 'discussions', label: 'Discussions', count: discussions.length },
-              { id: 'groups', label: 'Groups', count: groups.length },
-              { id: 'members', label: 'Members', count: members.length }
+              // { id: 'groups', label: 'Groups', count: groups.length },
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as 'discussions' | 'groups')}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab.id
                     ? 'border-yellow-400 text-yellow-600'
@@ -243,18 +146,48 @@ export function CommunityHub() {
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                   />
                 </div>
-                <button className="px-4 py-2 bg-yellow-400 text-blue-900 rounded-lg font-medium hover:bg-yellow-300 transition-colors flex items-center space-x-2">
+                <button onClick={() => setShowNewDiscussion((s) => !s)} className="px-4 py-2 bg-yellow-400 text-blue-900 rounded-lg font-medium hover:bg-yellow-300 transition-colors flex items-center space-x-2">
                   <Plus className="h-4 w-4" />
                   <span>New Post</span>
                 </button>
               </div>
 
+              {showNewDiscussion && (
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="grid gap-3">
+                    <input
+                      type="text"
+                      value={newDiscussion.title}
+                      onChange={(e) => setNewDiscussion((p) => ({ ...p, title: e.target.value }))}
+                      placeholder="Title"
+                      className="w-full px-3 py-2 border border-gray-300 rounded"
+                    />
+                    <textarea
+                      value={newDiscussion.content}
+                      onChange={(e) => setNewDiscussion((p) => ({ ...p, content: e.target.value }))}
+                      placeholder="What's on your mind?"
+                      className="w-full px-3 py-2 border border-gray-300 rounded min-h-[100px]"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleCreateDiscussion}
+                        disabled={!newDiscussion.title.trim() || !newDiscussion.content.trim()}
+                        className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+                      >
+                        Post
+                      </button>
+                      <button onClick={() => setShowNewDiscussion(false)} className="px-4 py-2 bg-gray-100 rounded">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Discussion List */}
               <div className="space-y-4">
-                {discussions.map((discussion) => (
-                  <div key={discussion.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                {discussions.map((discussion: any) => (
+                  <div key={discussion._id || discussion.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
                     <div className="flex items-start space-x-4">
-                      <div className="text-2xl">{discussion.authorAvatar}</div>
+                      <div className="text-2xl">💬</div>
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
                           <h3 className="text-lg font-semibold text-gray-900">{discussion.title}</h3>
@@ -265,38 +198,54 @@ export function CommunityHub() {
                           )}
                         </div>
                         <p className="text-gray-600 mb-3">{discussion.content}</p>
-                        <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
-                          <span>By {discussion.author}</span>
-                          <span>•</span>
-                          <span>{discussion.time}</span>
-                          <span>•</span>
-                          <span className="text-blue-600">{discussion.category}</span>
-                        </div>
+                        {Boolean(discussion.category) && (
+                          <div className="flex items-center space-x-2 text-sm text-gray-500 mb-3">
+                            <span className="text-blue-600">{discussion.category}</span>
+                          </div>
+                        )}
                         <div className="flex flex-wrap gap-2 mb-4">
-                          {discussion.tags.map((tag) => (
+                          {(discussion.tags || []).map((tag: string) => (
                             <span key={tag} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
                               {tag}
                             </span>
                           ))}
                         </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-4">
-                            <button className="flex items-center space-x-1 text-gray-500 hover:text-red-500">
-                              <Heart className="h-4 w-4" />
-                              <span>{discussion.likes}</span>
-                            </button>
-                            <button className="flex items-center space-x-1 text-gray-500 hover:text-blue-500">
-                              <MessageSquare className="h-4 w-4" />
-                              <span>{discussion.replies}</span>
-                            </button>
-                            <button className="flex items-center space-x-1 text-gray-500 hover:text-green-500">
-                              <Share2 className="h-4 w-4" />
-                              <span>Share</span>
+                        <div className="mt-4">
+                          <div className="space-y-2">
+                            {(discussion.comments || []).map((c: any, idx: number) => (
+                              <div key={idx} className="text-sm text-gray-700">
+                                <span className="font-medium">{c.authorName || 'Member'}</span>
+                                <span className="mx-1 text-gray-400">•</span>
+                                <span>{c.content}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="flex gap-2 mt-3">
+                            <input
+                              type="text"
+                              value={commentInputs[discussion._id || discussion.id] || ''}
+                              onChange={(e) => setCommentInputs((p) => ({ ...p, [discussion._id || discussion.id]: e.target.value }))}
+                              placeholder="Add a comment"
+                              className="flex-1 px-3 py-2 border border-gray-300 rounded"
+                            />
+                            <button
+                              onClick={async () => {
+                                const text = (commentInputs[discussion._id || discussion.id] || '').trim();
+                                if (!text) return;
+                                try {
+                                  const token = localStorage.getItem('token') || '';
+                                  const updated = await apiAddComment(token, discussion._id || discussion.id, text);
+                                  setDiscussions((prev) => prev.map((d: any) => (d._id === updated._id ? updated : d)));
+                                  setCommentInputs((p) => ({ ...p, [discussion._id || discussion.id]: '' }));
+                                } catch (e: any) {
+                                  console.error(e);
+                                }
+                              }}
+                              className="px-3 py-2 bg-blue-600 text-white rounded"
+                            >
+                              Post
                             </button>
                           </div>
-                          <button className="text-gray-400 hover:text-gray-600">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </button>
                         </div>
                       </div>
                     </div>
@@ -310,17 +259,48 @@ export function CommunityHub() {
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-semibold text-gray-900">Available Groups</h3>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center space-x-2">
+                <button onClick={() => setShowNewGroup((s) => !s)} className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center space-x-2">
                   <Plus className="h-4 w-4" />
                   <span>Create Group</span>
                 </button>
               </div>
 
+              {showNewGroup && (
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <input
+                      type="text"
+                      value={newGroup.name}
+                      onChange={(e) => setNewGroup((p) => ({ ...p, name: e.target.value }))}
+                      placeholder="Group name"
+                      className="w-full px-3 py-2 border border-gray-300 rounded"
+                    />
+                    <input
+                      type="text"
+                      value={newGroup.description}
+                      onChange={(e) => setNewGroup((p) => ({ ...p, description: e.target.value }))}
+                      placeholder="Description (optional)"
+                      className="w-full px-3 py-2 border border-gray-300 rounded"
+                    />
+                  </div>
+                  <div className="flex gap-2 mt-3">
+                    <button
+                      onClick={handleCreateGroup}
+                      disabled={!newGroup.name.trim()}
+                      className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+                    >
+                      Create
+                    </button>
+                    <button onClick={() => setShowNewGroup(false)} className="px-4 py-2 bg-gray-100 rounded">Cancel</button>
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {groups.map((group) => (
-                  <div key={group.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                {groups.map((group: any) => (
+                  <div key={group._id || group.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
                     <div className="flex items-start justify-between mb-4">
-                      <div className="text-3xl">{group.avatar}</div>
+                      <div className="text-3xl">#</div>
                       <div className="flex items-center space-x-2">
                         {group.isPrivate && (
                           <span className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
@@ -339,13 +319,13 @@ export function CommunityHub() {
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center space-x-2">
                         <Users className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm text-gray-600">{group.members} members</span>
+                        <span className="text-sm text-gray-600">{group.members || 0} members</span>
                       </div>
                       <span className="text-sm text-gray-500">{group.category}</span>
                     </div>
 
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {group.tags.map((tag) => (
+                      {(group.tags || []).map((tag: string) => (
                         <span key={tag} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
                           {tag}
                         </span>
@@ -357,62 +337,6 @@ export function CommunityHub() {
                       <button className="bg-yellow-400 text-blue-900 px-4 py-2 rounded-lg font-medium hover:bg-yellow-300 transition-colors">
                         Join Group
                       </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'members' && (
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-gray-900">Community Members</h3>
-                <button className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center space-x-2">
-                  <UserPlus className="h-4 w-4" />
-                  <span>Invite Friends</span>
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {members.map((member) => (
-                  <div key={member.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                    <div className="flex items-start space-x-4">
-                      <div className="relative">
-                        <div className="text-3xl">{member.avatar}</div>
-                        {member.isOnline && (
-                          <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></div>
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-900">{member.name}</h3>
-                        <p className="text-gray-600 text-sm mb-2">{member.role}</p>
-                        <p className="text-gray-500 text-sm mb-3">{member.location}</p>
-                        
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {member.skills.slice(0, 3).map((skill) => (
-                            <span key={skill} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
-                              {skill}
-                            </span>
-                          ))}
-                          {member.skills.length > 3 && (
-                            <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
-                              +{member.skills.length - 3} more
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <div className="text-sm text-gray-500">
-                            <span>{member.mutualConnections} mutual connections</span>
-                            <span className="mx-2">•</span>
-                            <span>Joined {member.joined}</span>
-                          </div>
-                          <button className="text-blue-600 hover:text-blue-700 font-medium text-sm">
-                            Connect
-                          </button>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 ))}

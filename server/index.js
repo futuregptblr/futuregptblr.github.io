@@ -10,7 +10,10 @@ const companyRoutes = require("./src/routes/company");
 const waitlistRoutes = require("./src/routes/waitlist");
 const cloudinaryRoutes = require("./src/routes/cloudinary");
 const teamRoutes = require("./src/routes/team");
+const eventRoutes = require("./src/routes/events");
+const statsRoutes = require("./src/routes/stats");
 const connectToDatabase = require("./src/lib/db");
+const communityRoutes = require("./src/routes/community");
 
 const app = express();
 
@@ -28,6 +31,9 @@ app.use("/api/company", companyRoutes);
 app.use("/api/waitlist", waitlistRoutes);
 app.use("/api/cloudinary", cloudinaryRoutes);
 app.use("/api/team", teamRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/stats", statsRoutes);
+app.use("/api/community", communityRoutes);
 
 const port = process.env.PORT || 5000;
 

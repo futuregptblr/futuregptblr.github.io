@@ -65,8 +65,16 @@ export function JobsPage() {
         });
         if (response.ok) {
           const applications = await response.json();
-          const jobIds = applications.map((app: any) => app.jobId);
-          setUserApplications(jobIds);
+          const jobIds = applications
+            .map((app: any) => {
+              const jid = app?.jobId;
+              if (!jid) return undefined;
+              // jobId can be a string/ObjectId or a populated object
+              return typeof jid === 'string' ? jid : (jid?._id || jid?.id);
+            })
+            .filter(Boolean)
+            .map((id: any) => String(id));
+          setUserApplications(jobIds as string[]);
         }
       }
     } catch (error) {
@@ -90,7 +98,8 @@ export function JobsPage() {
       const token = localStorage.getItem('token');
       if (!selectedJob) return;
 
-      const response = await fetch(`${API_BASE_URL}/api/user/apply/${selectedJob.id}`, {
+      const selectedJobId = (selectedJob as any).id || (selectedJob as any)._id;
+      const response = await fetch(`${API_BASE_URL}/api/user/apply/${selectedJobId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -101,11 +110,11 @@ export function JobsPage() {
 
       if (response.ok) {
         // Update local state
-        setUserApplications(prev => [...prev, selectedJob.id]);
+        setUserApplications(prev => [...prev, String(selectedJobId)]);
         // Update job applications count
         setJobs(prev => prev.map(job => 
-          job.id === selectedJob.id 
-            ? { ...job, applications: job.applications + 1 }
+          ((job as any).id || (job as any)._id) === selectedJobId 
+            ? { ...job, applications: (job.applications || 0) + 1 }
             : job
         ));
         setShowApplicationModal(false);
@@ -228,14 +237,16 @@ export function JobsPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredJobs.map((job) => (
-              <div key={job.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            {filteredJobs.map((job) => {
+              const jobId = String((job as any).id || (job as any)._id);
+              return (
+              <div key={jobId} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                   <div className="flex-1">
                     <div className="flex items-start justify-between">
                       <div>
                         <h3 className="text-xl font-semibold text-gray-900 hover:text-purple-600 cursor-pointer">
-                          <a href={`/jobs/${job.id}`} className="hover:underline">
+                          <a href={`/jobs/${jobId}`} className="hover:underline">
                             {job.title}
                           </a>
                         </h3>
@@ -322,13 +333,13 @@ export function JobsPage() {
                   </div>
 
                   <div className="mt-6 lg:mt-0 lg:ml-6 flex flex-col space-y-2">
-                    {userApplications.includes(job.id) ? (
+                    {userApplications.includes(jobId) ? (
                       <div className="text-center">
                         <div className="px-6 py-2 bg-green-100 text-green-800 rounded-lg font-medium">
                           ✓ Applied
                         </div>
                         <a 
-                          href={`/jobs/${job.id}`}
+                          href={`/jobs/${jobId}`}
                           className="block mt-2 text-sm text-blue-600 hover:text-blue-700"
                         >
                           View Details
@@ -343,7 +354,7 @@ export function JobsPage() {
                           Apply Now
                         </button>
                         <a 
-                          href={`/jobs/${job.id}`}
+                          href={`/jobs/${jobId}`}
                           className="px-6 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors font-medium text-center"
                         >
                           View Details
@@ -353,7 +364,7 @@ export function JobsPage() {
                   </div>
                 </div>
               </div>
-            ))}
+            );})}
           </div>
         )}
       </div>

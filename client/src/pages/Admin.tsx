@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { apiAdminLogin, apiCloudinarySign, apiCreateTeamMember, apiDeleteTeamMember, apiGetTeam, apiUpdateTeamMember } from '../lib/api';
+import { apiAdminLogin, apiCloudinarySign, apiCreateTeamMember, apiDeleteTeamMember, apiGetTeam, apiUpdateTeamMember, apiListEvents, apiCreateEvent, apiAdminListAllEvents } from '../lib/api';
 import type { TeamMember } from '../types';
 
 export default function AdminPage() {
@@ -7,6 +7,11 @@ export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('adminToken'));
   const [team, setTeam] = useState<TeamMember[]>([]);
+  const [events, setEvents] = useState<any[]>([]);
+  const [eventFormOpen, setEventFormOpen] = useState(false);
+  const [eventForm, setEventForm] = useState<{ title: string; description: string; date: string; startTime: string; endTime: string; location: string; chapter: string; type: string; file?: File | null; }>({
+    title: '', description: '', date: '', startTime: '', endTime: '', location: '', chapter: '', type: 'Meetup', file: null
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -42,6 +47,7 @@ export default function AdminPage() {
     (async () => {
       const data = await apiGetTeam();
       setTeam(data);
+      try { setEvents(await apiAdminListAllEvents(token)); } catch { try { setEvents(await apiListEvents('all' as any)); } catch {} }
     })();
   }, [token]);
 
@@ -160,11 +166,121 @@ export default function AdminPage() {
   return (
     <div className="pt-20 max-w-5xl mx-auto px-4">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Admin: Team Manager</h1>
+        <h1 className="text-2xl font-bold">Admin</h1>
         <div className="space-x-2">
-          <button className="bg-gray-200 px-3 py-2 rounded" onClick={async () => setTeam(await apiGetTeam())}>Refresh</button>
+          <button className="bg-gray-200 px-3 py-2 rounded" onClick={async () => { setTeam(await apiGetTeam()); try { setEvents(await apiAdminListAllEvents(token!)); } catch { try { setEvents(await apiListEvents('all' as any)); } catch {} } }}>Refresh</button>
           <button className="bg-black text-white px-3 py-2 rounded" onClick={() => openForm(null)}>Add Member</button>
+          <button className="bg-blue-600 text-white px-3 py-2 rounded" onClick={() => setEventFormOpen(true)}>Add Event</button>
           <button className="bg-red-600 text-white px-3 py-2 rounded" onClick={() => { setToken(null); localStorage.removeItem('adminToken'); }}>Logout</button>
+        </div>
+      </div>
+
+      {eventFormOpen && (
+        <form onSubmit={async (e) => {
+          e.preventDefault();
+          if (!token) return;
+          // Upload image if a file is selected
+          let imageUrl = '';
+          try {
+            if (eventForm.file) {
+              const sign = await apiCloudinarySign(token, { folder: 'futuregpt/events' });
+              const fd = new FormData();
+              fd.append('file', eventForm.file);
+              fd.append('api_key', sign.apiKey);
+              fd.append('timestamp', String(sign.timestamp));
+              fd.append('folder', sign.folder);
+              fd.append('signature', sign.signature);
+              const res = await fetch(`https://api.cloudinary.com/v1_1/${sign.cloudName}/image/upload`, { method: 'POST', body: fd });
+              if (!res.ok) throw new Error('Upload failed');
+              const json = await res.json();
+              imageUrl = json.secure_url as string;
+            }
+          } catch (uploadErr) {
+            console.error(uploadErr);
+          }
+
+          const payload: any = {
+            title: eventForm.title,
+            description: eventForm.description || undefined,
+            date: eventForm.date ? new Date(eventForm.date).toISOString() : undefined,
+            startTime: eventForm.startTime || undefined,
+            endTime: eventForm.endTime || undefined,
+            location: eventForm.location,
+            chapter: eventForm.chapter || undefined,
+            type: eventForm.type || undefined,
+            capacity: Number(eventForm.capacity) || 0,
+            isPremium: true,
+            image: imageUrl || undefined,
+          };
+          await apiCreateEvent(token, payload);
+          try {
+            const [up, past] = await Promise.all([apiListEvents('upcoming'), apiListEvents('past')]);
+            const byId: Record<string, any> = {};
+            [...up, ...past].forEach(e => { byId[e._id] = e; });
+            setEvents(Object.values(byId));
+          } catch {
+            setEvents(await apiListEvents('all' as any));
+          }
+          setEventFormOpen(false);
+          setEventForm({ title: '', description: '', date: '', startTime: '', endTime: '', location: '', chapter: '', type: 'Meetup', file: null });
+        }} className="mb-8 border rounded p-4 bg-white">
+          <h2 className="text-lg font-semibold mb-3">Add Event</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">Title</label>
+              <input className="w-full border px-3 py-2 rounded" value={eventForm.title} onChange={e => setEventForm(f => ({ ...f, title: e.target.value }))} required />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">Date</label>
+              <input type="date" className="w-full border px-3 py-2 rounded" value={eventForm.date} onChange={e => setEventForm(f => ({ ...f, date: e.target.value }))} required />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">Start Time</label>
+              <input className="w-full border px-3 py-2 rounded" placeholder="09:00" value={eventForm.startTime} onChange={e => setEventForm(f => ({ ...f, startTime: e.target.value }))} />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">End Time</label>
+              <input className="w-full border px-3 py-2 rounded" placeholder="18:00" value={eventForm.endTime} onChange={e => setEventForm(f => ({ ...f, endTime: e.target.value }))} />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">Location</label>
+              <input className="w-full border px-3 py-2 rounded" value={eventForm.location} onChange={e => setEventForm(f => ({ ...f, location: e.target.value }))} required />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">Chapter</label>
+              <input className="w-full border px-3 py-2 rounded" value={eventForm.chapter} onChange={e => setEventForm(f => ({ ...f, chapter: e.target.value }))} />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm text-gray-700 mb-1">Description</label>
+              <textarea className="w-full border px-3 py-2 rounded" rows={3} value={eventForm.description} onChange={e => setEventForm(f => ({ ...f, description: e.target.value }))} />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">Image</label>
+              <input type="file" accept="image/*" onChange={e => setEventForm(f => ({ ...f, file: e.target.files?.[0] || null }))} />
+            </div>
+          </div>
+          <div className="mt-4 flex gap-2">
+            <button className="bg-blue-600 text-white px-4 py-2 rounded" type="submit">Save Event</button>
+            <button type="button" className="px-4 py-2 rounded border" onClick={() => setEventFormOpen(false)}>Cancel</button>
+          </div>
+        </form>
+      )}
+
+      {/* Events overview */}
+      <div className="mb-10">
+        <h2 className="text-xl font-semibold mb-3">Events</h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          {events.map(ev => (
+            <div key={ev._id} className="border rounded p-3 bg-white">
+              <div className="flex items-center justify-between">
+                <div className="font-semibold">{ev.title}</div>
+                <div className="text-sm text-gray-500">{new Date(ev.date).toLocaleDateString()}</div>
+              </div>
+              <div className="text-sm text-gray-600">{ev.location}</div>
+              <div className="text-xs text-gray-500 mt-1">{ev.registrationsCount || 0} registrations</div>
+            </div>
+          ))}
+          {events.length === 0 && <div className="text-gray-600">No events yet.</div>}
         </div>
       </div>
 

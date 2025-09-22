@@ -149,9 +149,9 @@ export function UserProfile() {
           <nav className="flex space-x-8 px-6">
             {[
               { id: "profile", label: "Profile", icon: User },
-              { id: "settings", label: "Settings", icon: Settings },
+              // { id: "settings", label: "Settings", icon: Settings },
               { id: "subscription", label: "Subscription", icon: CreditCard },
-              { id: "achievements", label: "Achievements", icon: Award },
+              // { id: "achievements", label: "Achievements", icon: Award },
             ].map((tab) => {
               const Icon = tab.icon;
               return (

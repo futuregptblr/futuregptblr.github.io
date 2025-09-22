@@ -1,4 +1,4 @@
-import React from 'react';
+ 
 import { 
   LayoutDashboard, 
   Briefcase, 
@@ -13,16 +13,14 @@ import {
 
 type DashboardSection = 'overview' | 'jobs' | 'events' | 'community' | 'profile' | 'premium';
 
-interface DashboardSidebarProps {
-  activeSection: DashboardSection;
-  onSectionChange: (section: DashboardSection) => void;
-}
-
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../lib/store';
+import { Link, useLocation } from 'react-router-dom';
 
-export function DashboardSidebar({ activeSection, onSectionChange }: DashboardSidebarProps) {
+export function DashboardSidebar() {
   const isPremium = useSelector((s: RootState) => Boolean(s.user.currentUser?.isPremium));
+  const location = useLocation();
+  const path = location.pathname.replace(/\/$/, '');
 
   const menuItems = [
     {
@@ -39,7 +37,7 @@ export function DashboardSidebar({ activeSection, onSectionChange }: DashboardSi
     },
     {
       id: 'events' as DashboardSection,
-      label: 'Special Events',
+      label: 'Events',
       icon: Calendar,
       description: 'Exclusive events'
     },
@@ -73,12 +71,15 @@ export function DashboardSidebar({ activeSection, onSectionChange }: DashboardSi
         <nav className="space-y-2">
           {visibleMenuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeSection === item.id;
+            const target = `/dashboard/${item.id === 'overview' ? '' : item.id}`.replace(/\/$/, '');
+            const isActive = path === '/dashboard'
+              ? item.id === 'overview'
+              : path === target || (item.id === 'jobs' && path.startsWith('/dashboard/jobs'));
             
             return (
-              <button
+              <Link
                 key={item.id}
-                onClick={() => onSectionChange(item.id)}
+                to={target || '/dashboard'}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                   isActive
                     ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 shadow-lg'
@@ -92,13 +93,13 @@ export function DashboardSidebar({ activeSection, onSectionChange }: DashboardSi
                     {item.description}
                   </div>
                 </div>
-              </button>
+              </Link>
             );
           })}
         </nav>
 
         {/* Quick Actions */}
-        <div className="mt-8 pt-6 border-t border-gray-200">
+        {/* <div className="mt-8 pt-6 border-t border-gray-200">
           <h3 className="text-sm font-medium text-gray-900 mb-3">Quick Actions</h3>
           <div className="space-y-2">
             <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
@@ -114,7 +115,7 @@ export function DashboardSidebar({ activeSection, onSectionChange }: DashboardSi
               <span className="text-sm">Settings</span>
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     </aside>
   );

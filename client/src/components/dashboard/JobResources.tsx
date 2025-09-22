@@ -1,28 +1,28 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Briefcase,
   MapPin,
   DollarSign,
   Clock,
   Search,
-  ExternalLink,
 } from "lucide-react";
 import { Job } from "../../types";
 import { API_BASE_URL } from "../../lib/utils";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export function JobResources() {
-  const [activeTab, setActiveTab] = useState<"jobs" | "resources" | "network">(
-    "jobs"
-  );
+  const [activeTab, setActiveTab] = useState<"jobs" | "applied">("jobs");
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
+  const [applications, setApplications] = useState<any[]>([]);
 
   useEffect(() => {
     fetchJobs();
+    fetchApplied();
   }, []);
 
   const fetchJobs = async () => {
@@ -60,9 +60,25 @@ export function JobResources() {
           ? err.message
           : "Failed to load job opportunities. Please try again later.";
       setError(errorMessage);
+      toast.error(errorMessage);
       console.error("Error fetching jobs:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchApplied = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const res = await fetch(`${API_BASE_URL}/api/user/applications`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error("Failed to load applications");
+      const data = await res.json();
+      setApplications(Array.isArray(data) ? data : []);
+    } catch (e: any) {
+      console.error(e);
     }
   };
 
@@ -79,85 +95,29 @@ export function JobResources() {
     return matchesSearch && matchesFilter;
   });
 
-  const resources = [
-    {
-      title: "Resume Builder",
-      description: "Create professional resumes with AI-powered suggestions",
-      icon: "📝",
-      category: "Career Tools",
-    },
-    {
-      title: "Interview Prep",
-      description: "Practice with AI mock interviews and get feedback",
-      icon: "🎯",
-      category: "Career Tools",
-    },
-    {
-      title: "Salary Negotiation Guide",
-      description: "Learn strategies for negotiating better compensation",
-      icon: "💰",
-      category: "Career Tools",
-    },
-    {
-      title: "Networking Events",
-      description: "Connect with industry professionals at exclusive events",
-      icon: "🤝",
-      category: "Networking",
-    },
-    {
-      title: "Mentorship Program",
-      description: "Get paired with experienced professionals in your field",
-      icon: "👨‍🏫",
-      category: "Networking",
-    },
-    {
-      title: "Skill Assessment",
-      description: "Evaluate your skills and get personalized learning paths",
-      icon: "📈",
-      category: "Career Tools",
-    },
-  ];
+  const appliedJobIdSet = useMemo(() => {
+    const set = new Set<string>();
+    applications.forEach((a: any) => {
+      const id = typeof a.jobId === "string" ? a.jobId : a.jobId?._id;
+      if (id) set.add(String(id));
+    });
+    return set;
+  }, [applications]);
 
-  const networkContacts = [
-    {
-      name: "Sarah Chen",
-      role: "Senior ML Engineer at Google",
-      avatar: "👩‍💻",
-      mutualConnections: 12,
-      isOnline: true,
-    },
-    {
-      name: "Rajesh Kumar",
-      role: "AI Research Lead at Microsoft",
-      avatar: "👨‍💼",
-      mutualConnections: 8,
-      isOnline: false,
-    },
-    {
-      name: "Priya Sharma",
-      role: "Data Science Manager at Amazon",
-      avatar: "👩‍🔬",
-      mutualConnections: 15,
-      isOnline: true,
-    },
-    {
-      name: "Alex Johnson",
-      role: "Startup Founder - AI Solutions",
-      avatar: "👨‍💻",
-      mutualConnections: 5,
-      isOnline: false,
-    },
-  ];
+  const appliedJobs = useMemo(() => {
+    // Try to use populated job objects from applications; fallback to matching in jobs list
+    const list: Job[] = [] as any;
+    applications.forEach((a: any) => {
+      const jobObj = typeof a.jobId === "object" && a.jobId?._id ? a.jobId : jobs.find(j => j._id === a.jobId);
+      if (jobObj) list.push(jobObj as Job);
+    });
+    return list;
+  }, [applications, jobs]);
 
-  const formatSalary = (salary?: {
-    min: number;
-    max: number;
-    currency: string;
-  }) => {
-    if (!salary) return "Salary not specified";
-    return `${
-      salary.currency
-    } ${salary.min.toLocaleString()} - ${salary.max.toLocaleString()}`;
+  const formatSalary = (salary?: { min?: number; max?: number; currency?: string; }) => {
+    if (!salary || salary.min == null || salary.max == null) return "Salary not specified";
+    const currency = salary.currency || "₹";
+    return `${currency} ${salary.min.toLocaleString()} - ${salary.max.toLocaleString()}`;
   };
 
   const formatDate = (dateString: string) => {
@@ -189,16 +149,7 @@ export function JobResources() {
           <nav className="flex space-x-8 px-6">
             {[
               { id: "jobs", label: "Job Opportunities", count: jobs.length },
-              {
-                id: "resources",
-                label: "Career Resources",
-                count: resources.length,
-              },
-              {
-                id: "network",
-                label: "Professional Network",
-                count: networkContacts.length,
-              },
+              { id: "applied", label: "Applied Jobs", count: applications.length },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -290,9 +241,11 @@ export function JobResources() {
               {/* Job Listings */}
               {!loading && !error && filteredJobs.length > 0 && (
                 <div className="space-y-4">
-                  {filteredJobs.map((job) => (
+                  {filteredJobs.map((job) => {
+                    const jobId = String((job as any).id || (job as any)._id);
+                    return (
                     <div
-                      key={job.id}
+                      key={jobId}
                       className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-start justify-between">
@@ -353,10 +306,56 @@ export function JobResources() {
                           <p className="text-sm text-gray-500 mb-2">
                             {formatDate(job.createdAt)}
                           </p>
-                          <Link to={`/jobs/${job.id}`}>
+                          <Link to={`/dashboard/jobs/${jobId}`}>
                             <button className="bg-yellow-400 text-blue-900 px-4 py-2 rounded-lg font-medium hover:bg-yellow-300 transition-colors">
-                              View details
+                              {appliedJobIdSet.has(String(jobId)) ? "Applied" : "View details"}
                             </button>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  );})}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === "applied" && (
+            <div className="space-y-4">
+              {!applications.length && (
+                <div className="text-center py-12">
+                  <Briefcase className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No applications yet</h3>
+                  <p className="mt-1 text-sm text-gray-500">Apply to jobs to see them here.</p>
+                </div>
+              )}
+              {!!applications.length && (
+                <div className="space-y-4">
+                  {appliedJobs.map((job) => (
+                    <div key={(job as any)._id || (job as any).id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start space-x-4">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-2 mb-2">
+                              <h3 className="text-lg font-semibold text-gray-900">{(job as any).title}</h3>
+                              <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">Applied</span>
+                            </div>
+                            <p className="text-gray-600 mb-2">{(job as any).companyName}</p>
+                            <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                              <div className="flex items-center space-x-1">
+                                <MapPin className="h-4 w-4" />
+                                <span>{(job as any).location}</span>
+                              </div>
+                              <div className="flex items-center space-x-1">
+                                <Clock className="h-4 w-4" />
+                                <span>{(job as any).type}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <Link to={`/dashboard/jobs/${(job as any)._id || (job as any).id}`}>
+                            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">View</button>
                           </Link>
                         </div>
                       </div>
@@ -364,75 +363,6 @@ export function JobResources() {
                   ))}
                 </div>
               )}
-            </div>
-          )}
-
-          {activeTab === "resources" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {resources.map((resource, index) => (
-                <div
-                  key={index}
-                  className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
-                >
-                  <div className="text-3xl mb-4">{resource.icon}</div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {resource.title}
-                  </h3>
-                  <p className="text-gray-600 mb-4">{resource.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                      {resource.category}
-                    </span>
-                    <button className="text-yellow-600 hover:text-yellow-700 font-medium text-sm flex items-center space-x-1">
-                      <span>Access</span>
-                      <ExternalLink className="h-3 w-3" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {activeTab === "network" && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Your Professional Network
-                </h3>
-                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                  Connect with More
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {networkContacts.map((contact, index) => (
-                  <div
-                    key={index}
-                    className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="relative">
-                        <div className="text-2xl">{contact.avatar}</div>
-                        {contact.isOnline && (
-                          <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></div>
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900">
-                          {contact.name}
-                        </h4>
-                        <p className="text-sm text-gray-600">{contact.role}</p>
-                        <p className="text-xs text-gray-500">
-                          {contact.mutualConnections} mutual connections
-                        </p>
-                      </div>
-                      <button className="text-blue-600 hover:text-blue-700 font-medium text-sm">
-                        Message
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           )}
         </div>
