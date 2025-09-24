@@ -48,7 +48,30 @@ export function JobApplications({ jobId }: JobApplicationsProps) {
 
       if (response.ok) {
         const data = await response.json();
-        setApplications(data);
+        const mapped = (data || []).map((raw: any) => {
+          const id = raw.id || raw._id;
+          const user = raw.userId && typeof raw.userId === 'object' ? raw.userId : raw.user;
+          const job = raw.jobId && typeof raw.jobId === 'object' ? raw.jobId : raw.job;
+          return {
+            id,
+            jobId: typeof raw.jobId === 'string' ? raw.jobId : raw.jobId?._id || raw.jobId || raw.job?._id,
+            userId: typeof raw.userId === 'string' ? raw.userId : raw.userId?._id || raw.user?._id,
+            companyId: typeof raw.companyId === 'string' ? raw.companyId : raw.companyId?._id || raw.company?._id,
+            status: raw.status,
+            coverLetter: raw.coverLetter,
+            resumeUrl: raw.resumeUrl,
+            appliedAt: raw.appliedAt,
+            companyNotes: raw.companyNotes,
+            interviewDate: raw.interviewDate,
+            interviewLocation: raw.interviewLocation,
+            interviewType: raw.interviewType,
+            isWithdrawn: raw.isWithdrawn,
+            withdrawnAt: raw.withdrawnAt,
+            user,
+            job,
+          } as any;
+        });
+        setApplications(mapped);
       }
     } catch (error) {
       console.error('Error fetching applications:', error);
@@ -73,11 +96,10 @@ export function JobApplications({ jobId }: JobApplicationsProps) {
 
       if (response.ok) {
         // Update local state
-        setApplications(prev => prev.map(app => 
-          app.id === applicationId 
-            ? { ...app, status: status as any, companyNotes: notes }
-            : app
-        ));
+        setApplications(prev => prev.map(app => {
+          const matches = app.id === applicationId || (app as any)._id === applicationId;
+          return matches ? { ...app, status: status as any, companyNotes: notes } : app;
+        }));
       }
     } catch (error) {
       console.error('Error updating application status:', error);

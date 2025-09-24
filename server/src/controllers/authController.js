@@ -14,6 +14,20 @@ async function register(req, res) {
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Name, email and password are required' });
     }
+
+    // Password policy: min 8 chars, upper, lower, digit, special
+    const passwordPolicy = {
+      minLength: password.length >= 8,
+      upper: /[A-Z]/.test(password),
+      lower: /[a-z]/.test(password),
+      digit: /\d/.test(password),
+      special: /[^A-Za-z0-9]/.test(password)
+    };
+    if (!passwordPolicy.minLength || !passwordPolicy.upper || !passwordPolicy.lower || !passwordPolicy.digit || !passwordPolicy.special) {
+      return res.status(400).json({
+        message: 'Password must be at least 8 characters and include upper, lower, number, and special character'
+      });
+    }
     const existing = await User.findOne({ email });
     if (existing) {
       return res.status(409).json({ message: 'Email already registered' });

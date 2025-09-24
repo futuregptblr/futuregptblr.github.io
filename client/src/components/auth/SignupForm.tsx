@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Mail, Lock, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { apiRegister } from "../../lib/api";
@@ -14,10 +14,33 @@ export function SignupForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  const passwordRules = useMemo(() => ({
+    minLength: formData.password.length >= 8,
+    upper: /[A-Z]/.test(formData.password),
+    lower: /[a-z]/.test(formData.password),
+    digit: /\d/.test(formData.password),
+    special: /[^A-Za-z0-9]/.test(formData.password),
+  }), [formData.password]);
+
+  const isPasswordValid =
+    passwordRules.minLength &&
+    passwordRules.upper &&
+    passwordRules.lower &&
+    passwordRules.digit &&
+    passwordRules.special;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError("");
+
+    if (!isPasswordValid) {
+      setIsSubmitting(false);
+      setError(
+        "Password must be at least 8 characters and include upper, lower, number, and special character."
+      );
+      return;
+    }
 
     try {
       const data = await apiRegister(formData);
@@ -110,6 +133,13 @@ export function SignupForm() {
               className="pl-10 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
               required
             />
+          </div>
+          <div className="mt-2 text-xs text-gray-600 space-y-1" aria-live="polite">
+            <div className={`${passwordRules.minLength ? 'text-green-700' : 'text-gray-600'}`}>• At least 8 characters</div>
+            <div className={`${passwordRules.upper ? 'text-green-700' : 'text-gray-600'}`}>• At least one uppercase letter (A-Z)</div>
+            <div className={`${passwordRules.lower ? 'text-green-700' : 'text-gray-600'}`}>• At least one lowercase letter (a-z)</div>
+            <div className={`${passwordRules.digit ? 'text-green-700' : 'text-gray-600'}`}>• At least one number (0-9)</div>
+            <div className={`${passwordRules.special ? 'text-green-700' : 'text-gray-600'}`}>• At least one special character (!@#$...)</div>
           </div>
         </div>
 

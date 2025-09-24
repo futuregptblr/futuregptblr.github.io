@@ -11,6 +11,7 @@ import {
   Eye,
 } from "lucide-react";
 import { Company, Job } from "../types";
+import { JobApplications } from "../components/company/JobApplications";
 import { CreateJobModal } from "../components/company/CreateJobModal";
 import { EditProfileModal } from "../components/company/EditProfileModal";
 import { API_BASE_URL } from '../lib/utils';
@@ -24,6 +25,7 @@ export function CompanyDashboard() {
   const [showCreateJob, setShowCreateJob] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showApplicationsForJobId, setShowApplicationsForJobId] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -290,6 +292,14 @@ export function CompanyDashboard() {
                               {job.isActive ? "Active" : "Inactive"}
                             </span>
                             <button
+                              onClick={() => setShowApplicationsForJobId((job as any)._id || (job as any).id)}
+                              className="text-purple-600 hover:text-purple-700 inline-flex items-center text-sm"
+                              title="Show Applications"
+                            >
+                              <Eye className="h-4 w-4 mr-1" />
+                              Show Applications
+                            </button>
+                            <button
                               onClick={() => handleDeleteJob(job.id)}
                               className="text-red-600 hover:text-red-700"
                             >
@@ -388,6 +398,13 @@ export function CompanyDashboard() {
                             </div>
                           </div>
                           <div className="ml-6 flex items-center space-x-2">
+                            <button
+                              onClick={() => setShowApplicationsForJobId((job as any)._id || (job as any).id)}
+                              className="text-purple-600 hover:text-purple-700 inline-flex items-center text-sm"
+                            >
+                              <Eye className="h-4 w-4 mr-1" />
+                              Show Applications
+                            </button>
                             <button className="text-gray-400 hover:text-gray-600">
                               <Edit3 className="h-4 w-4" />
                             </button>
@@ -405,6 +422,27 @@ export function CompanyDashboard() {
                 </ul>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Job-wise applications modal */}
+        {showApplicationsForJobId && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900">Applications</h3>
+                <button
+                  onClick={() => setShowApplicationsForJobId(null)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <span className="sr-only">Close</span>
+                  ✕
+                </button>
+              </div>
+              <div className="p-6">
+                <JobApplications jobId={showApplicationsForJobId} />
+              </div>
+            </div>
           </div>
         )}
 

@@ -127,3 +127,23 @@ export interface Company {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface JobApplication {
+  id: string;
+  jobId: string;
+  userId: string;
+  companyId: string;
+  status: 'pending' | 'reviewing' | 'shortlisted' | 'interviewed' | 'accepted' | 'rejected';
+  coverLetter?: string;
+  resumeUrl: string;
+  appliedAt: string;
+  companyNotes?: string;
+  interviewDate?: string;
+  interviewLocation?: string;
+  interviewType?: 'phone' | 'video' | 'onsite';
+  isWithdrawn?: boolean;
+  withdrawnAt?: string | null;
+  // Populated relations (when API populates)
+  user?: Partial<User>;
+  job?: Partial<Job>;
+}
