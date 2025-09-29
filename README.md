@@ -27,6 +27,8 @@ ADMIN_PASSWORD=admin_password
 CLOUDINARY_CLOUD_NAME=cloudinary_name
 CLOUDINARY_API_KEY=cloudinary_api_key
 CLOUDINARY_API_SECRET=cloudinary_api_secret
+SMTP_USER=Gmail SMTP username (email address)
+SMTP_PASS=Gmail app password
 ```
 
  create a `.env` file inside `client/`:

@@ -111,6 +111,14 @@ export function LoginForm() {
             Sign up here
           </button>
         </p>
+        <p className="text-sm text-gray-600 mt-3">
+          <button
+            onClick={() => navigate('/forgot-password')}
+            className="text-purple-600 hover:text-purple-700 font-medium"
+          >
+            Forgot your password?
+          </button>
+        </p>
       </div>
     </div>
   );

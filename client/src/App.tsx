@@ -45,6 +45,8 @@ import ErrorPage from "./pages/Error";
 import PrivacyPolicyPage from "./pages/PrivacyPolicy";
 import TermsConditionsPage from "./pages/TermsConditions";
 import AdminPage from "./pages/Admin";
+import ForgotPasswordPage from "./pages/ForgotPassword";
+import ResetPasswordPage from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -91,6 +93,8 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/company-signup" element={<CompanySignupForm />} />
           <Route path="/company-login" element={<CompanyLoginForm />} />
           <Route

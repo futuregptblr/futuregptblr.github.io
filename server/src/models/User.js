@@ -38,7 +38,10 @@ const userSchema = new mongoose.Schema(
     emailNotifications: { type: Boolean, default: true },
     pushNotifications: { type: Boolean, default: true },
     eventReminders: { type: Boolean, default: true },
-    jobAlerts: { type: Boolean, default: false }
+    jobAlerts: { type: Boolean, default: false },
+    // Password reset fields
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date }
   },
   { timestamps: true }
 );

@@ -48,6 +48,32 @@ export async function apiAdminLogin(payload: LoginPayload) {
   return res.json();
 }
 
+export async function apiForgotPassword(email: string) {
+  const res = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || 'Failed to request password reset');
+  }
+  return res.json();
+}
+
+export async function apiResetPassword(params: { token: string; email: string; password: string }) {
+  const res = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || 'Failed to reset password');
+  }
+  return res.json();
+}
+
 // Admin: Cloudinary sign
 export async function apiCloudinarySign(token: string, body: { folder?: string; public_id?: string; eager?: string; invalidate?: boolean }) {
   const res = await fetch(`${API_BASE_URL}/api/cloudinary/sign`, {
