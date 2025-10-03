@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Briefcase, MapPin, Clock, DollarSign, Building2, Filter, Search, ExternalLink } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Briefcase, MapPin, Clock, DollarSign, Building2, Search } from 'lucide-react';
 import { Job, User } from '../types';
 import { JobApplicationModal } from '../components/dashboard/JobApplicationModal';
 import { API_BASE_URL } from '../lib/utils';
@@ -276,7 +276,7 @@ export function JobsPage() {
                         <Clock className="h-4 w-4 mr-2" />
                         <span>{job.experience}</span>
                       </div>
-                      {job.salary && (
+                      {job.salary && typeof job.salary.min === 'number' && typeof job.salary.max === 'number' && (
                         <div className="flex items-center">
                           <DollarSign className="h-4 w-4 mr-2" />
                           <span>

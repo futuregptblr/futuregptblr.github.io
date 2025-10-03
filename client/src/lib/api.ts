@@ -88,6 +88,37 @@ export async function apiCloudinarySign(token: string, body: { folder?: string; 
   return res.json();
 }
 
+// Resume upload sign
+export async function apiCloudinarySignResume(token: string, body: { public_id?: string; timestamp?: number }) {
+  const res = await fetch(`${API_BASE_URL}/api/cloudinary/sign-resume`, {
+    method: 'POST',
+    headers: authHeaders(token),
+    body: JSON.stringify(body || {}),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || 'Failed to sign resume upload');
+  }
+  return res.json();
+}
+
+// Server-side resume upload (no Cloudinary signature required on client)
+export async function apiUploadResume(token: string, file: File): Promise<{ url: string; public_id: string; resource_type: string; }> {
+  const form = new FormData();
+  form.append('file', file);
+
+  const res = await fetch(`${API_BASE_URL}/api/cloudinary/upload-resume`, {
+    method: 'POST',
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    body: form,
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || 'Failed to upload resume');
+  }
+  return res.json();
+}
+
 // Team
 import type { TeamMember } from '../types';
 

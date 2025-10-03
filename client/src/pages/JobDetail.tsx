@@ -15,6 +15,9 @@ import {
   XCircle,
 } from "lucide-react";
 import { Job, User } from "../types";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../lib/store";
+import { setUser } from "../slices/userSlice";
 import { toast } from "react-toastify";
 import { JobApplicationModal } from "../components/dashboard/JobApplicationModal";
 
@@ -22,7 +25,8 @@ export function JobDetailPage() {
   const { jobId } = useParams<{ jobId: string }>();
   const navigate = useNavigate();
   const [job, setJob] = useState<Job | null>(null);
-  const [user] = useState<User | null>(null);
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
@@ -34,6 +38,55 @@ export function JobDetailPage() {
       checkUserApplication();
     }
   }, [jobId]);
+
+  // Ensure we have a fresh user profile (including resumeUrl) if missing
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    const needsProfile = !currentUser || !currentUser.resumeUrl;
+    if (needsProfile) {
+      fetch(`${API_BASE_URL}/api/user/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+        .then((data) => {
+          if (data && (data._id || data.id)) {
+            dispatch(
+              setUser({
+                _id: data._id || data.id,
+                name: data.name,
+                email: data.email,
+                isPremium: Boolean(data.isPremium),
+                premiumPurchaseDate: data.premiumPurchaseDate ?? null,
+                paymentId: data.paymentId ?? null,
+                orderId: data.orderId ?? null,
+                phone: data.phone,
+                location: data.location,
+                role: data.role,
+                company: data.company,
+                bio: data.bio,
+                skills: data.skills,
+                interests: data.interests,
+                resumeUrl: data.resumeUrl,
+                experience: data.experience,
+                avatar: data.avatar,
+                joinDate: data.joinDate,
+                profileVisibility: data.profileVisibility,
+                showOnlineStatus: data.showOnlineStatus,
+                allowDirectMessages: data.allowDirectMessages,
+                emailNotifications: data.emailNotifications,
+                pushNotifications: data.pushNotifications,
+                eventReminders: data.eventReminders,
+                jobAlerts: data.jobAlerts,
+                createdAt: data.createdAt,
+                updatedAt: data.updatedAt,
+              } as User)
+            );
+          }
+        })
+        .catch(() => {});
+    }
+  }, [currentUser]);
 
   const fetchJobDetails = async () => {
     try {
@@ -443,7 +496,7 @@ export function JobDetailPage() {
           isOpen={showApplicationModal}
           onClose={() => setShowApplicationModal(false)}
           job={job as Job}
-          user={user || ({} as User)}
+          user={(currentUser as User) || ({} as User)}
           onApply={handleApply}
         />
       ) : null}
