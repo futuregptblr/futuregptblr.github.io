@@ -5,7 +5,7 @@ import { Card } from '../../components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../../components/ui/carousel';
 import { useInView } from 'react-intersection-observer';
 import Autoplay from 'embla-carousel-autoplay';
-import { title } from 'framer-motion/client';
+
 
 const galleryImages = [
   {
@@ -55,7 +55,7 @@ export function GallerySection() {
   return (
     <section id="gallery" className="py-20 bg-background/50">
       <div className="container mx-auto px-4">
-        <motion.h2 
+        <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl font-bold text-center mb-12"
@@ -80,19 +80,13 @@ export function GallerySection() {
                     animate={inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <Card className="overflow-hidden group cursor-pointer">
-                      <div className="relative aspect-square">
+                    <Card className="overflow-hidden">
+                      <div className="relative h-64 md:h-72 lg:h-80">
                         <img
                           src={image.src}
                           alt={image.title}
-                          className="object-cover transition-transform duration-300 group-hover:scale-110"
+                          className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="absolute bottom-0 left-0 right-0 p-4">
-                            <h3 className="text-lg font-semibold text-white">{image.title}</h3>
-                            {/* <p className="text-sm text-white/80">{image.category}</p> */}
-                          </div>
-                        </div>
                       </div>
                     </Card>
                   </motion.div>

@@ -44,11 +44,11 @@ export function SignupForm() {
 
     try {
       const data = await apiRegister(formData);
-      
+
       // Store token and user data in localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      
+
       // Show success toast
       toast.success("Account Created Successfully! Welcome to FutureGPT!", {
         position: "top-right",
@@ -58,7 +58,7 @@ export function SignupForm() {
         pauseOnHover: true,
         draggable: true,
       });
-      
+
       // Redirect to dashboard
       navigate("/dashboard");
     } catch (error: any) {
@@ -70,97 +70,99 @@ export function SignupForm() {
   };
 
   return (
-    <div className="pt-20 mb-20 max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
-      <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
-        Join FutureGPT Community
-      </h2>
+    <div className="py-24 px-4">
+      <div className="max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
+        <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
+          Join FutureGPT Community
+        </h2>
 
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Full Name
-          </label>
-          <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              className="pl-10 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
-              required
-            />
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            {error}
           </div>
-        </div>
+        )}
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Email Address
-          </label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              className="pl-10 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
-              required
-            />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Full Name
+            </label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                className="pl-10 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                required
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Password
-          </label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input
-              type="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              className="pl-10 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
-              required
-            />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Email Address
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                className="pl-10 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                required
+              />
+            </div>
           </div>
-          <div className="mt-2 text-xs text-gray-600 space-y-1" aria-live="polite">
-            <div className={`${passwordRules.minLength ? 'text-green-700' : 'text-gray-600'}`}>• At least 8 characters</div>
-            <div className={`${passwordRules.upper ? 'text-green-700' : 'text-gray-600'}`}>• At least one uppercase letter (A-Z)</div>
-            <div className={`${passwordRules.lower ? 'text-green-700' : 'text-gray-600'}`}>• At least one lowercase letter (a-z)</div>
-            <div className={`${passwordRules.digit ? 'text-green-700' : 'text-gray-600'}`}>• At least one number (0-9)</div>
-            <div className={`${passwordRules.special ? 'text-green-700' : 'text-gray-600'}`}>• At least one special character (!@#$...)</div>
-          </div>
-        </div>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-purple-600 text-white rounded-lg px-4 py-2 hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? "Creating Account..." : "Sign Up"}
-        </button>
-      </form>
-      <div className="mt-6 text-center">
-        <p className="text-sm text-gray-600">
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-purple-600 hover:text-purple-700 font-medium"
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Password
+            </label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                className="pl-10 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                required
+              />
+            </div>
+            <div className="mt-2 text-xs text-gray-600 space-y-1" aria-live="polite">
+              <div className={`${passwordRules.minLength ? 'text-green-700' : 'text-gray-600'}`}>• At least 8 characters</div>
+              <div className={`${passwordRules.upper ? 'text-green-700' : 'text-gray-600'}`}>• At least one uppercase letter (A-Z)</div>
+              <div className={`${passwordRules.lower ? 'text-green-700' : 'text-gray-600'}`}>• At least one lowercase letter (a-z)</div>
+              <div className={`${passwordRules.digit ? 'text-green-700' : 'text-gray-600'}`}>• At least one number (0-9)</div>
+              <div className={`${passwordRules.special ? 'text-green-700' : 'text-gray-600'}`}>• At least one special character (!@#$...)</div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-purple-600 text-white rounded-lg px-4 py-2 hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Log in here
-          </Link>
-        </p>
+            {isSubmitting ? "Creating Account..." : "Sign Up"}
+          </button>
+        </form>
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-purple-600 hover:text-purple-700 font-medium"
+            >
+              Log in here
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

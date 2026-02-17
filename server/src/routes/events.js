@@ -1,6 +1,6 @@
-const express = require('express');
-const auth = require('../middleware/auth');
-const requireAdmin = require('../middleware/admin');
+const express = require("express");
+const auth = require("../middleware/auth");
+const requireAdmin = require("../middleware/admin");
 const {
   listEvents,
   getEvent,
@@ -11,25 +11,34 @@ const {
   listMyRegistrations,
   adminListRegistrations,
   adminListAllEvents,
-} = require('../controllers/eventController');
+  updateRegistrationStatus,
+} = require("../controllers/eventController");
 
 const router = express.Router();
 
 // Public
-router.get('/', listEvents);
-router.get('/:id', getEvent);
+// Public
+router.get("/", listEvents);
+
+// Specific routes before parameterized routes
+router.get("/me/registrations", auth, listMyRegistrations);
+router.get("/admin/all", auth, requireAdmin, adminListAllEvents);
+
+router.get("/:id", getEvent);
 
 // Authenticated user
-router.post('/:id/register', auth, registerForEvent);
-router.get('/me/registrations', auth, listMyRegistrations);
+router.post("/:id/register", auth, registerForEvent);
 
 // Admin
-router.post('/', auth, requireAdmin, createEvent);
-router.put('/:id', auth, requireAdmin, updateEvent);
-router.delete('/:id', auth, requireAdmin, deleteEvent);
-router.get('/:id/registrations', auth, requireAdmin, adminListRegistrations);
-router.get('/admin/all', auth, requireAdmin, adminListAllEvents);
+router.post("/", auth, requireAdmin, createEvent);
+router.put("/:id", auth, requireAdmin, updateEvent);
+router.delete("/:id", auth, requireAdmin, deleteEvent);
+router.get("/:id/registrations", auth, requireAdmin, adminListRegistrations);
+router.put(
+  "/registrations/:id/status",
+  auth,
+  requireAdmin,
+  updateRegistrationStatus,
+);
 
 module.exports = router;
-
-

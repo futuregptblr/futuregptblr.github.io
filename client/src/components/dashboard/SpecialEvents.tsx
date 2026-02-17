@@ -48,10 +48,10 @@ export function SpecialEvents() {
       .filter(Boolean);
   }, [myRegs, upcomingEvents, pastEvents]);
 
-  const registeredEventIdSet = useMemo(() => {
-    const set = new Set<string>();
-    myRegs.forEach((r: any) => set.add(String(r.eventId?._id || r.eventId)));
-    return set;
+  const registeredEventStatusMap = useMemo(() => {
+    const map = new Map<string, string>();
+    myRegs.forEach((r: any) => map.set(String(r.eventId?._id || r.eventId), r.status));
+    return map;
   }, [myRegs]);
 
   const filteredUpcoming = useMemo(() => {
@@ -77,51 +77,6 @@ export function SpecialEvents() {
         </p>
       </div>
 
-      {/* Featured Event */}
-      {/* <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-6 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium">
-                Featured Event
-              </span>
-              <h2 className="text-2xl font-bold mt-2">
-                AI Innovation Summit 2025
-              </h2>
-              <p className="text-white/90 mt-2">
-                The biggest AI event of the year with industry leaders and
-                innovators
-              </p>
-            </div>
-            <div className="text-right">
-              <div className="text-3xl">🎯</div>
-              <p className="text-sm opacity-90">November 15, 2025</p>
-            </div>
-          </div>
-        </div>
-        <div className="p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4 text-sm text-gray-600">
-              <div className="flex items-center space-x-1">
-                <MapPin className="h-4 w-4" />
-                <span>Taj Palace, Mumbai</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Clock className="h-4 w-4" />
-                <span>9:00 AM - 6:00 PM</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Users className="h-4 w-4" />
-                <span>156/200 registered</span>
-              </div>
-            </div>
-            <button className="bg-yellow-400 text-blue-900 px-6 py-2 rounded-lg font-medium hover:bg-yellow-300 transition-colors">
-              Register Now
-            </button>
-          </div>
-        </div>
-      </div> */}
-
       {/* Tabs */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
         <div className="border-b border-gray-200">
@@ -142,11 +97,10 @@ export function SpecialEvents() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === tab.id
-                    ? "border-yellow-400 text-yellow-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
-                }`}
+                className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
+                  ? "border-yellow-400 text-yellow-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+                  }`}
               >
                 {tab.label}
                 <span className="ml-2 bg-gray-100 text-gray-900 py-0.5 px-2 rounded-full text-xs">
@@ -174,10 +128,6 @@ export function SpecialEvents() {
                     onChange={(e) => setSearch(e.target.value)}
                   />
                 </div>
-                {/* <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2">
-                  <Filter className="h-4 w-4" />
-                  <span>Filters</span>
-                </button> */}
               </div>
 
               {/* Event Cards */}
@@ -274,12 +224,12 @@ export function SpecialEvents() {
                             </div>
                             <RegisterButton
                               eventId={event._id}
-                              isRegistered={registeredEventIdSet.has(event._id)}
+                              status={registeredEventStatusMap.get(event._id)}
                               onRegistered={() => {
-                                toast.success("Registered for event");
+                                toast.success("Request sent!");
                                 setMyRegs((m) => [
                                   ...m,
-                                  { eventId: event._id },
+                                  { eventId: event._id, status: 'pending' },
                                 ]);
                               }}
                             />
@@ -299,40 +249,48 @@ export function SpecialEvents() {
 
           {activeTab === "registered" && (
             <div className="space-y-4">
-              {registeredEvents.map((event) => (
-                <div
-                  key={event._id}
-                  className="border border-gray-200 rounded-lg p-6"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="text-2xl w-24">
-                        {event.image &&
-                        String(event.image).startsWith("http") ? (
-                          <img
-                            src={event.image}
-                            alt={event.title}
-                            className="w-24 h-16 object-cover rounded"
-                          />
-                        ) : null}
+              {registeredEvents.map((event) => {
+                const status = registeredEventStatusMap.get(event._id);
+                return (
+                  <div
+                    key={event._id}
+                    className="border border-gray-200 rounded-lg p-6"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="text-2xl w-24">
+                          {event.image &&
+                            String(event.image).startsWith("http") ? (
+                            <img
+                              src={event.image}
+                              alt={event.title}
+                              className="w-24 h-16 object-cover rounded"
+                            />
+                          ) : null}
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {event.title}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {new Date(event.date).toLocaleDateString()}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          {event.title}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          {new Date(event.date).toLocaleDateString()}
-                        </p>
+                      <div className="flex items-center space-x-4">
+                        <span className={`text-sm font-medium ${status === 'pending' ? 'text-yellow-600' :
+                          (status === 'approved' || status === 'registered') ? 'text-green-600' :
+                            status === 'rejected' ? 'text-red-600' : 'text-gray-600'
+                          }`}>
+                          {status === 'pending' ? 'Pending Approval' :
+                            (status === 'approved' || status === 'registered') ? 'Registered' :
+                              status === 'rejected' ? 'Rejected' : status}
+                        </span>
                       </div>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                      <span className="text-sm text-green-600 font-medium">
-                        Registered
-                      </span>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
 
@@ -353,10 +311,6 @@ export function SpecialEvents() {
                         />
                       ) : null}
                     </div>
-                    {/* <div className="flex items-center space-x-1">
-                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-medium">{event.registrationsCount || 0}</span>
-                    </div> */}
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">
                     {event.title}
@@ -381,51 +335,58 @@ export function SpecialEvents() {
 
 function RegisterButton({
   eventId,
-  isRegistered,
+  status,
   onRegistered,
 }: {
   eventId: string;
-  isRegistered?: boolean;
+  status?: string;
   onRegistered?: () => void;
 }) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
   async function register() {
     try {
       setLoading(true);
       setMessage(null);
       const token = localStorage.getItem("token");
       if (!token) {
-        setMessage("Please login to register");
         toast.info("Please login to register");
         return;
       }
       const { apiRegisterForEvent } = await import("../../lib/api");
       await apiRegisterForEvent(eventId, token);
-      setMessage("Registered");
       if (onRegistered) onRegistered();
     } catch (e: any) {
+      if (e?.message !== "Already registered") {
+        toast.error(e?.message || "Failed to register");
+      }
       setMessage(e?.message || "Failed to register");
-      toast.error(e?.message || "Failed to register");
     } finally {
       setLoading(false);
     }
   }
+
+  if (status === 'pending') {
+    return <span className="text-sm text-yellow-600 font-medium">Pending Approval</span>;
+  }
+  if (status === 'approved' || status === 'registered') {
+    return <span className="text-sm text-green-600 font-medium">Registered</span>;
+  }
+  if (status === 'rejected') {
+    return <span className="text-sm text-red-600 font-medium">Rejected</span>;
+  }
+
   return (
     <div className="flex items-center gap-3">
-      {isRegistered ? (
-        <span className="text-sm text-green-600 font-medium">Registered</span>
-      ) : (
-        <button
-          onClick={register}
-          disabled={loading}
-          className={`bg-yellow-400 text-blue-900 px-4 py-2 rounded-lg font-medium transition-colors ${
-            loading ? "opacity-70" : ""
+      <button
+        onClick={register}
+        disabled={loading}
+        className={`bg-yellow-400 text-blue-900 px-4 py-2 rounded-lg font-medium transition-colors ${loading ? "opacity-70" : ""
           }`}
-        >
-          {loading ? "Registering..." : "Register"}
-        </button>
-      )}
+      >
+        {loading ? "Processing..." : "Register"}
+      </button>
       {message && <span className="text-sm text-gray-600">{message}</span>}
     </div>
   );

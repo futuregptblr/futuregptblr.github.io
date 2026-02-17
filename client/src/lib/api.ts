@@ -1,7 +1,9 @@
-import { API_BASE_URL } from './utils';
+import { API_BASE_URL } from "./utils";
 
 function authHeaders(token?: string) {
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
   if (token) headers.Authorization = `Bearer ${token}`;
   return headers;
 }
@@ -11,157 +13,185 @@ type LoginPayload = { email: string; password: string };
 
 export async function apiRegister(payload: RegisterPayload) {
   const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Registration failed');
+    throw new Error(data.message || "Registration failed");
   }
   return res.json();
 }
 
 export async function apiLogin(payload: LoginPayload) {
   const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Login failed');
+    throw new Error(data.message || "Login failed");
   }
   return res.json();
 }
 
 export async function apiAdminLogin(payload: LoginPayload) {
   const res = await fetch(`${API_BASE_URL}/api/auth/admin-login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Admin login failed');
+    throw new Error(data.message || "Admin login failed");
   }
   return res.json();
 }
 
 export async function apiForgotPassword(email: string) {
   const res = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to request password reset');
+    throw new Error(data.message || "Failed to request password reset");
   }
   return res.json();
 }
 
-export async function apiResetPassword(params: { token: string; email: string; password: string }) {
+export async function apiResetPassword(params: {
+  token: string;
+  email: string;
+  password: string;
+}) {
   const res = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(params),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to reset password');
+    throw new Error(data.message || "Failed to reset password");
   }
   return res.json();
 }
 
 // Admin: Cloudinary sign
-export async function apiCloudinarySign(token: string, body: { folder?: string; public_id?: string; eager?: string; invalidate?: boolean }) {
+export async function apiCloudinarySign(
+  token: string,
+  body: {
+    folder?: string;
+    public_id?: string;
+    eager?: string;
+    invalidate?: boolean;
+  },
+) {
   const res = await fetch(`${API_BASE_URL}/api/cloudinary/sign`, {
-    method: 'POST',
+    method: "POST",
     headers: authHeaders(token),
     body: JSON.stringify(body || {}),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to sign upload');
+    throw new Error(data.message || "Failed to sign upload");
   }
   return res.json();
 }
 
 // Resume upload sign
-export async function apiCloudinarySignResume(token: string, body: { public_id?: string; timestamp?: number }) {
+export async function apiCloudinarySignResume(
+  token: string,
+  body: { public_id?: string; timestamp?: number },
+) {
   const res = await fetch(`${API_BASE_URL}/api/cloudinary/sign-resume`, {
-    method: 'POST',
+    method: "POST",
     headers: authHeaders(token),
     body: JSON.stringify(body || {}),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to sign resume upload');
+    throw new Error(data.message || "Failed to sign resume upload");
   }
   return res.json();
 }
 
 // Server-side resume upload (no Cloudinary signature required on client)
-export async function apiUploadResume(token: string, file: File): Promise<{ url: string; public_id: string; resource_type: string; }> {
+export async function apiUploadResume(
+  token: string,
+  file: File,
+): Promise<{ url: string; public_id: string; resource_type: string }> {
   const form = new FormData();
-  form.append('file', file);
+  form.append("file", file);
 
   const res = await fetch(`${API_BASE_URL}/api/cloudinary/upload-resume`, {
-    method: 'POST',
+    method: "POST",
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
     body: form,
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to upload resume');
+    throw new Error(data.message || "Failed to upload resume");
   }
   return res.json();
 }
 
 // Team
-import type { TeamMember } from '../types';
+import type { TeamMember } from "../types";
 
 export async function apiGetTeam(): Promise<TeamMember[]> {
   const res = await fetch(`${API_BASE_URL}/api/team`);
-  if (!res.ok) throw new Error('Failed to load team');
+  if (!res.ok) throw new Error("Failed to load team");
   return res.json();
 }
 
-export async function apiCreateTeamMember(token: string, payload: Partial<TeamMember> & { image: string }): Promise<TeamMember> {
+export async function apiCreateTeamMember(
+  token: string,
+  payload: Partial<TeamMember> & { image: string },
+): Promise<TeamMember> {
   const res = await fetch(`${API_BASE_URL}/api/team`, {
-    method: 'POST',
+    method: "POST",
     headers: authHeaders(token),
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to create');
+    throw new Error(data.message || "Failed to create");
   }
   return res.json();
 }
 
-export async function apiUpdateTeamMember(token: string, id: string, payload: Partial<TeamMember>): Promise<TeamMember> {
+export async function apiUpdateTeamMember(
+  token: string,
+  id: string,
+  payload: Partial<TeamMember>,
+): Promise<TeamMember> {
   const res = await fetch(`${API_BASE_URL}/api/team/${id}`, {
-    method: 'PUT',
+    method: "PUT",
     headers: authHeaders(token),
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to update');
+    throw new Error(data.message || "Failed to update");
   }
   return res.json();
 }
 
-export async function apiDeleteTeamMember(token: string, id: string): Promise<{ success: boolean }> {
+export async function apiDeleteTeamMember(
+  token: string,
+  id: string,
+): Promise<{ success: boolean }> {
   const res = await fetch(`${API_BASE_URL}/api/team/${id}`, {
-    method: 'DELETE',
+    method: "DELETE",
     headers: authHeaders(token),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to delete');
+    throw new Error(data.message || "Failed to delete");
   }
   return res.json();
 }
@@ -186,30 +216,34 @@ export type EventDto = {
   registrationsCount?: number;
 };
 
-export async function apiListEvents(scope: 'upcoming' | 'past' | 'all' = 'upcoming'): Promise<EventDto[]> {
+export async function apiListEvents(
+  scope: "upcoming" | "past" | "all" = "upcoming",
+): Promise<EventDto[]> {
   const params = new URLSearchParams();
-  if (scope && scope !== 'all') params.set('scope', scope);
+  if (scope && scope !== "all") params.set("scope", scope);
   const res = await fetch(`${API_BASE_URL}/api/events?${params.toString()}`);
-  if (!res.ok) throw new Error('Failed to load events');
+  if (!res.ok) throw new Error("Failed to load events");
   return res.json();
 }
 
-export async function apiAdminListAllEvents(token: string): Promise<EventDto[]> {
+export async function apiAdminListAllEvents(
+  token: string,
+): Promise<EventDto[]> {
   const res = await fetch(`${API_BASE_URL}/api/events/admin/all`, {
     headers: authHeaders(token),
   });
-  if (!res.ok) throw new Error('Failed to load all events');
+  if (!res.ok) throw new Error("Failed to load all events");
   return res.json();
 }
 
 export async function apiRegisterForEvent(eventId: string, token: string) {
   const res = await fetch(`${API_BASE_URL}/api/events/${eventId}/register`, {
-    method: 'POST',
+    method: "POST",
     headers: authHeaders(token),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Registration failed');
+    throw new Error(data.message || "Registration failed");
   }
   return res.json();
 }
@@ -220,32 +254,79 @@ export async function apiListMyEventRegistrations(token: string) {
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to load registrations');
+    throw new Error(data.message || "Failed to load registrations");
   }
   return res.json();
 }
 
-export async function apiCreateEvent(token: string, payload: Partial<EventDto>) {
+export async function apiCreateEvent(
+  token: string,
+  payload: Partial<EventDto>,
+) {
   const res = await fetch(`${API_BASE_URL}/api/events`, {
-    method: 'POST',
+    method: "POST",
     headers: authHeaders(token),
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to create event');
+    throw new Error(data.message || "Failed to create event");
   }
   return res.json();
 }
 
-export async function apiGetStats(): Promise<{ users: number; premiumUsers: number; jobs: number; upcomingEvents: number; teamMembers: number; waitlist: number; }> {
+export async function apiAdminListRegistrations(
+  token: string,
+  eventId: string,
+) {
+  const res = await fetch(
+    `${API_BASE_URL}/api/events/${eventId}/registrations`,
+    {
+      headers: authHeaders(token),
+    },
+  );
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || "Failed to load registrations");
+  }
+  return res.json();
+}
+
+export async function apiUpdateRegistrationStatus(
+  token: string,
+  registrationId: string,
+  status: string,
+) {
+  const res = await fetch(
+    `${API_BASE_URL}/api/events/registrations/${registrationId}/status`,
+    {
+      method: "PUT",
+      headers: authHeaders(token),
+      body: JSON.stringify({ status }),
+    },
+  );
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || "Failed to update status");
+  }
+  return res.json();
+}
+
+export async function apiGetStats(): Promise<{
+  users: number;
+  premiumUsers: number;
+  jobs: number;
+  upcomingEvents: number;
+  teamMembers: number;
+  waitlist: number;
+}> {
   const res = await fetch(`${API_BASE_URL}/api/stats`);
-  if (!res.ok) throw new Error('Failed to load stats');
+  if (!res.ok) throw new Error("Failed to load stats");
   return res.json();
 }
 
 export type ActivityItem = {
-  type: 'event' | 'job' | 'discussion' | 'user';
+  type: "event" | "job" | "discussion" | "user";
   title: string;
   description: string;
   createdAt: string;
@@ -254,7 +335,7 @@ export type ActivityItem = {
 
 export async function apiGetRecentActivity(): Promise<ActivityItem[]> {
   const res = await fetch(`${API_BASE_URL}/api/stats/recent`);
-  if (!res.ok) throw new Error('Failed to load activity');
+  if (!res.ok) throw new Error("Failed to load activity");
   return res.json();
 }
 
@@ -275,32 +356,42 @@ export type DiscussionDto = {
 
 export async function apiListDiscussions(): Promise<DiscussionDto[]> {
   const res = await fetch(`${API_BASE_URL}/api/community/discussions`);
-  if (!res.ok) throw new Error('Failed to load discussions');
+  if (!res.ok) throw new Error("Failed to load discussions");
   return res.json();
 }
 
-export async function apiCreateDiscussion(token: string, payload: Partial<DiscussionDto> & { title: string; content: string }): Promise<DiscussionDto> {
+export async function apiCreateDiscussion(
+  token: string,
+  payload: Partial<DiscussionDto> & { title: string; content: string },
+): Promise<DiscussionDto> {
   const res = await fetch(`${API_BASE_URL}/api/community/discussions`, {
-    method: 'POST',
+    method: "POST",
     headers: authHeaders(token),
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to create discussion');
+    throw new Error(data.message || "Failed to create discussion");
   }
   return res.json();
 }
 
-export async function apiAddComment(token: string, discussionId: string, content: string): Promise<DiscussionDto> {
-  const res = await fetch(`${API_BASE_URL}/api/community/discussions/${discussionId}/comments`, {
-    method: 'POST',
-    headers: authHeaders(token),
-    body: JSON.stringify({ content }),
-  });
+export async function apiAddComment(
+  token: string,
+  discussionId: string,
+  content: string,
+): Promise<DiscussionDto> {
+  const res = await fetch(
+    `${API_BASE_URL}/api/community/discussions/${discussionId}/comments`,
+    {
+      method: "POST",
+      headers: authHeaders(token),
+      body: JSON.stringify({ content }),
+    },
+  );
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to add comment');
+    throw new Error(data.message || "Failed to add comment");
   }
   return res.json();
 }
@@ -320,20 +411,22 @@ export type GroupDto = {
 
 export async function apiListGroups(): Promise<GroupDto[]> {
   const res = await fetch(`${API_BASE_URL}/api/community/groups`);
-  if (!res.ok) throw new Error('Failed to load groups');
+  if (!res.ok) throw new Error("Failed to load groups");
   return res.json();
 }
 
-export async function apiCreateGroup(token: string, payload: Partial<GroupDto> & { name: string }): Promise<GroupDto> {
+export async function apiCreateGroup(
+  token: string,
+  payload: Partial<GroupDto> & { name: string },
+): Promise<GroupDto> {
   const res = await fetch(`${API_BASE_URL}/api/community/groups`, {
-    method: 'POST',
+    method: "POST",
     headers: authHeaders(token),
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to create group');
+    throw new Error(data.message || "Failed to create group");
   }
   return res.json();
 }
-
