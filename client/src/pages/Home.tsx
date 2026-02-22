@@ -1,6 +1,7 @@
 import { Hero } from "../components/sections/Hero";
 import { MemberCount } from "../components/sections/MemberCount";
 import { PremiumBanner } from "../components/sections/PremiumBanner";
+import { GitexBanner } from "../components/sections/GitexBanner";
 import { Features } from "../components/sections/Features";
 import { CompanySlider } from "../components/sections/CompanySlider";
 import { EventCard } from "../components/events/EventCard";
@@ -15,6 +16,7 @@ export function HomePage() {
     return (
         <main>
             <Hero />
+            <GitexBanner />
             <MemberCount />
             <PremiumBanner />
             <Features />
