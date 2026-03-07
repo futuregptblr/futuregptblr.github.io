@@ -252,9 +252,8 @@ export function EditProfileModal({
                   type="text"
                   value={formData.name || ""}
                   onChange={(e) => handleInputChange("name", e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.name ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.name ? "border-red-500" : "border-gray-300"
+                    }`}
                   placeholder="Enter your full name"
                 />
                 {errors.name && (
@@ -308,9 +307,8 @@ export function EditProfileModal({
                     type="tel"
                     value={formData.phone || ""}
                     onChange={(e) => handleInputChange("phone", e.target.value)}
-                    className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                      errors.phone ? "border-red-500" : "border-gray-300"
-                    }`}
+                    className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.phone ? "border-red-500" : "border-gray-300"
+                      }`}
                     placeholder="+91 98765 43210"
                   />
                 </div>
@@ -399,11 +397,10 @@ export function EditProfileModal({
                   />
                   <label
                     htmlFor="resume-upload"
-                    className={`flex items-center justify-center w-full px-4 py-3 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
-                      isUploading
-                        ? "border-gray-300 bg-gray-50 cursor-not-allowed"
-                        : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
-                    }`}
+                    className={`flex items-center justify-center w-full px-4 py-3 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${isUploading
+                      ? "border-gray-300 bg-gray-50 cursor-not-allowed"
+                      : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
+                      }`}
                   >
                     <div className="text-center">
                       <CloudUpload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
@@ -732,8 +729,8 @@ export function EditProfileModal({
                 {isLoading
                   ? "Saving..."
                   : isUploading
-                  ? "Uploading..."
-                  : "Save Changes"}
+                    ? "Uploading..."
+                    : "Save Changes"}
               </span>
             </button>
           </div>

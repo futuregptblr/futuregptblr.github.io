@@ -140,7 +140,7 @@ export async function apiUploadResume(
 }
 
 // Team
-import type { TeamMember } from "../types";
+import type { TeamMember, User } from "../types";
 
 export async function apiGetTeam(): Promise<TeamMember[]> {
   const res = await fetch(`${API_BASE_URL}/api/team`);
@@ -205,6 +205,7 @@ export type EventDto = {
   startTime?: string;
   endTime?: string;
   location: string;
+  locationUrl?: string;
   chapter?: string;
   type?: string;
   capacity?: number;
@@ -214,6 +215,7 @@ export type EventDto = {
   speakers?: string[];
   tags?: string[];
   registrationsCount?: number;
+  registrationLink?: string;
 };
 
 export async function apiListEvents(
@@ -427,6 +429,32 @@ export async function apiCreateGroup(
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
     throw new Error(data.message || "Failed to create group");
+  }
+  return res.json();
+}
+export async function apiUpdateProfile(
+  token: string,
+  payload: Partial<User>,
+): Promise<User> {
+  const res = await fetch(`${API_BASE_URL}/api/user/profile`, {
+    method: "PUT",
+    headers: authHeaders(token),
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || "Failed to update profile");
+  }
+  return res.json();
+}
+
+export async function apiGetProfile(token: string): Promise<User> {
+  const res = await fetch(`${API_BASE_URL}/api/user/profile`, {
+    headers: authHeaders(token),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || "Failed to load profile");
   }
   return res.json();
 }

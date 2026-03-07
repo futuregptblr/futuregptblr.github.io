@@ -48,6 +48,7 @@ export function SignupForm() {
       // Store token and user data in localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      window.dispatchEvent(new Event("auth-change"));
 
       // Show success toast
       toast.success("Account Created Successfully! Welcome to FutureGPT!", {
@@ -59,8 +60,8 @@ export function SignupForm() {
         draggable: true,
       });
 
-      // Redirect to dashboard
-      navigate("/dashboard");
+      // Redirect to onboarding
+      navigate("/onboarding");
     } catch (error: any) {
       console.error("Signup error:", error);
       setError(error.message || "Failed to create account. Please try again.");

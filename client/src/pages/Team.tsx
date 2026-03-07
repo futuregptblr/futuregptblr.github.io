@@ -36,20 +36,28 @@ export function TeamPage() {
           {loading && <p className="text-center text-gray-600">Loading...</p>}
           {error && <p className="text-center text-red-600">{error}</p>}
           {!loading && !error && (
-            <div className="space-y-12">
+            <div className="space-y-20">
               {[
-                { title: 'Global Community & Bangalore Chapter', chapters: ['Global', 'Bangalore'] },
-                { title: 'Pune Chapter', chapters: ['Pune'] },
-                { title: 'Hyderabad Chapter', chapters: ['Hyderabad'] },
-                { title: 'Chennai Chapter', chapters: ['Chennai'] },
-              ].map((group) => {
-                const groupMembers = members.filter((m) => group.chapters.includes((m.chapter || '').trim()));
-                if (groupMembers.length === 0) return null;
+                {
+                  title: 'Leadership Team',
+                  filter: (m: TeamMember) => ['nikhil', 'nayyan', 'raviteja'].some(name => m.name?.toLowerCase().includes(name)),
+                  borderColor: 'border-yellow-400'
+                },
+                {
+                  title: 'Chapter Leads',
+                  filter: (m: TeamMember) => !['nikhil', 'nayyan', 'raviteja'].some(name => m.name?.toLowerCase().includes(name)),
+                  borderColor: 'border-blue-400'
+                },
+              ].map((section) => {
+                const sectionMembers = members.filter(section.filter);
+                if (sectionMembers.length === 0) return null;
                 return (
-                  <div key={group.title}>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">{group.title}</h2>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                      {groupMembers.map((member) => (
+                  <div key={section.title}>
+                    <h2 className={`text-3xl font-bold text-gray-900 mb-8 border-b-4 ${section.borderColor} pb-2 inline-block`}>
+                      {section.title}
+                    </h2>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                      {sectionMembers.map((member) => (
                         <TeamMemberCard key={member.id || member.name} member={member} />
                       ))}
                     </div>

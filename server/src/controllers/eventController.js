@@ -93,9 +93,9 @@ async function registerForEvent(req, res) {
       userId,
       userName: req.user?.name || undefined,
       userEmail: req.user?.email || undefined,
-      status: "pending",
+      status: "pending", // Set to pending for admin approval
     });
-    // await Event.findByIdAndUpdate(id, { $inc: { registrationsCount: 1 } });
+
     res.status(201).json(registration);
   } catch (err) {
     if (err?.code === 11000) {
@@ -169,7 +169,10 @@ async function adminListRegistrations(req, res) {
   try {
     const regs = await EventRegistration.find({
       eventId: req.params.id,
-    }).populate("userId", "name email");
+    }).populate(
+      "userId",
+      "name email role company bio skills interests avatar experience location phone resumeUrl createdAt",
+    );
     res.json(regs);
   } catch (err) {
     console.error("adminListRegistrations error", err);

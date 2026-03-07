@@ -10,30 +10,35 @@ export function Header() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const companyToken = localStorage.getItem("companyToken");
+    const checkAuth = () => {
+      setIsAuthenticated(!!localStorage.getItem("token"));
+      setIsCompanyAuthenticated(!!localStorage.getItem("companyToken"));
+    };
 
-    if (token) {
-      setIsAuthenticated(true);
-      // You could decode the JWT token here to get user info
-      // For now, we'll just check if token exists
-    }
+    checkAuth();
 
-    if (companyToken) {
-      setIsCompanyAuthenticated(true);
-    }
+    // Listen for storage changes from other tabs
+    window.addEventListener("storage", checkAuth);
+    // Listen for custom event from same tab
+    window.addEventListener("auth-change", checkAuth);
+
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+      window.removeEventListener("auth-change", checkAuth);
+    };
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setIsAuthenticated(false);
+    localStorage.removeItem("user");
+    window.dispatchEvent(new Event("auth-change"));
     navigate("/");
   };
 
   const handleCompanyLogout = () => {
     localStorage.removeItem("companyToken");
     localStorage.removeItem("company");
-    setIsCompanyAuthenticated(false);
+    window.dispatchEvent(new Event("auth-change"));
     navigate("/");
   };
   return (

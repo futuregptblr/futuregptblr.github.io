@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const eventSchema = new mongoose.Schema(
   {
@@ -8,23 +8,33 @@ const eventSchema = new mongoose.Schema(
     startTime: { type: String, trim: true },
     endTime: { type: String, trim: true },
     location: { type: String, required: true, trim: true },
+    locationUrl: { type: String, trim: true },
     chapter: { type: String, trim: true },
-    type: { type: String, enum: ['Conference', 'Workshop', 'Networking', 'Career Fair', 'Webinar', 'Meetup'], default: 'Meetup' },
+    type: {
+      type: String,
+      enum: [
+        "Conference",
+        "Workshop",
+        "Networking",
+        "Career Fair",
+        "Webinar",
+        "Meetup",
+      ],
+      default: "Meetup",
+    },
     capacity: { type: Number, default: 0 },
     isPremium: { type: Boolean, default: false },
     price: { type: Number, default: 0 },
     image: { type: String, trim: true },
     speakers: [{ type: String, trim: true }],
     tags: [{ type: String, trim: true }],
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     published: { type: Boolean, default: true },
     registrationsCount: { type: Number, default: 0 },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 eventSchema.index({ date: 1, published: 1 });
 
-module.exports = mongoose.model('Event', eventSchema);
-
-
+module.exports = mongoose.model("Event", eventSchema);

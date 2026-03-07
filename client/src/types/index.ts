@@ -12,6 +12,7 @@ export interface Event {
   title: string;
   date: string;
   location: string;
+  locationUrl?: string;
   chapter: string;
   description: string;
   image: string;
@@ -68,7 +69,7 @@ export interface User {
   experience?: Experience[];
   avatar?: string;
   joinDate?: string;
-  profileVisibility?: 'public' | 'members' | 'private';
+  profileVisibility?: "public" | "members" | "private";
   showOnlineStatus?: boolean;
   allowDirectMessages?: boolean;
   emailNotifications?: boolean;
@@ -87,7 +88,7 @@ export interface Job {
   description: string;
   requirements: string[];
   location: string;
-  type: 'full-time' | 'part-time' | 'contract' | 'internship';
+  type: "full-time" | "part-time" | "contract" | "internship";
   salary: {
     min?: number;
     max?: number;
@@ -99,7 +100,7 @@ export interface Job {
   isActive: boolean;
   applications: number;
   department?: string;
-  remotePolicy: 'remote' | 'hybrid' | 'onsite';
+  remotePolicy: "remote" | "hybrid" | "onsite";
   applicationDeadline?: string;
   startDate?: string;
   contractDuration?: string;
@@ -133,14 +134,20 @@ export interface JobApplication {
   jobId: string;
   userId: string;
   companyId: string;
-  status: 'pending' | 'reviewing' | 'shortlisted' | 'interviewed' | 'accepted' | 'rejected';
+  status:
+    | "pending"
+    | "reviewing"
+    | "shortlisted"
+    | "interviewed"
+    | "accepted"
+    | "rejected";
   coverLetter?: string;
   resumeUrl: string;
   appliedAt: string;
   companyNotes?: string;
   interviewDate?: string;
   interviewLocation?: string;
-  interviewType?: 'phone' | 'video' | 'onsite';
+  interviewType?: "phone" | "video" | "onsite";
   isWithdrawn?: boolean;
   withdrawnAt?: string | null;
   // Populated relations (when API populates)

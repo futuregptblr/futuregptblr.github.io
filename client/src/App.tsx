@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
 import { HomePage } from "./pages/Home";
@@ -9,11 +9,13 @@ import { Dashboard } from "./pages/Dashboard";
 import { DashboardStats } from "./components/dashboard/DashboardStats";
 import { JobResources } from "./components/dashboard/JobResources";
 import { SpecialEvents } from "./components/dashboard/SpecialEvents";
+import { EventDetail } from "./components/dashboard/EventDetail";
 import { CommunityHub } from "./components/dashboard/CommunityHub";
 import { UserProfile } from "./components/dashboard/UserProfile";
 import PremiumMembershipCard from "./components/premium/PremiumMembershipCard";
 import { useSelector } from 'react-redux';
 import type { RootState } from './lib/store';
+import Onboarding from "./pages/Onboarding";
 import { SignupForm } from "./components/auth/SignupForm";
 import { LoginForm } from "./components/auth/LoginForm";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
@@ -36,6 +38,18 @@ import ForgotPasswordPage from "./pages/ForgotPassword";
 import ResetPasswordPage from "./pages/ResetPassword";
 import { PastEventsPage } from "./pages/PastEvents";
 
+const DashboardIndexRedirect = () => {
+  const userRaw = localStorage.getItem('user');
+  let user = null;
+  try {
+    user = userRaw ? JSON.parse(userRaw) : null;
+  } catch (e) { }
+  if (user?.isPremium) {
+    return <Navigate to="/dashboard/overview" replace />;
+  }
+  return <Navigate to="/dashboard/events" replace />;
+};
+
 function AppContent() {
   const location = useLocation();
   const isAdminPage = location.pathname === '/admin';
@@ -50,6 +64,7 @@ function AppContent() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/signup" element={<SignupForm />} />
+        <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
@@ -59,17 +74,17 @@ function AppContent() {
         <Route
           path="/dashboard"
           element={
-            <PremiumProtectedRoute>
+            <ProtectedRoute>
               <Dashboard />
-            </PremiumProtectedRoute>
+            </ProtectedRoute>
           }
         >
-          <Route index element={<DashboardStats />} />
-          <Route path="overview" element={<DashboardStats />} />
-          <Route path="jobs" element={<JobResources />} />
-          <Route path="jobs/:jobId" element={<JobDetailPage />} />
+          <Route index element={<DashboardIndexRedirect />} />
+          <Route path="overview" element={<PremiumProtectedRoute><DashboardStats /></PremiumProtectedRoute>} />
+          <Route path="jobs" element={<PremiumProtectedRoute><JobResources /></PremiumProtectedRoute>} />
+          <Route path="jobs/:jobId" element={<PremiumProtectedRoute><JobDetailPage /></PremiumProtectedRoute>} />
           <Route path="events" element={<SpecialEvents />} />
-          <Route path="community" element={<CommunityHub />} />
+          <Route path="community" element={<PremiumProtectedRoute><CommunityHub /></PremiumProtectedRoute>} />
           <Route path="profile" element={<UserProfile />} />
           <Route
             path="premium"
@@ -103,6 +118,7 @@ function AppContent() {
         <Route path="/company-dashboard" element={<CompanyDashboard />} />
         <Route path="/company/:companyId" element={<CompanyProfilePage />} />
         <Route path="/payment/callback" element={<PaymentCallback />} />
+        <Route path="/events/:eventId" element={<div className="pt-16 min-h-screen bg-slate-50 pb-20"><EventDetail /></div>} />
         <Route path="/past-events" element={<PastEventsPage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/terms" element={<TermsConditionsPage />} />

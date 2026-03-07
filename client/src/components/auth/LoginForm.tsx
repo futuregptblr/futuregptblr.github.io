@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
 import { apiLogin } from '../../lib/api';
 import { toast } from 'react-toastify';
@@ -12,6 +12,7 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation() as any;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,9 +37,9 @@ export function LoginForm() {
         draggable: true,
       });
 
-      // Redirect non-premium users to waitlist, premium to dashboard
-      const isPremium = Boolean(data?.user?.isPremium);
-      window.location.href = isPremium ? '/dashboard' : '/membership-waitlist';
+      window.dispatchEvent(new Event("auth-change"));
+      const returnTo = location.state?.returnTo || '/dashboard/events';
+      navigate(returnTo);
     } catch (err: any) {
       setError(err.message);
       toast.error(err.message || "Please check your credentials and try again.", {

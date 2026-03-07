@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import {
   User,
-  Settings,
   Bell,
   Shield,
-  CreditCard,
   Download,
   BookOpen,
   Award,
@@ -13,10 +11,10 @@ import {
   Mail,
   Phone,
   Edit,
-  Camera,
   Globe,
   Moon,
   Sun,
+  AlertCircle,
 } from "lucide-react";
 import { EditProfileModal } from "./EditProfileModal";
 import PremiumMembershipCard from "../premium/PremiumMembershipCard";
@@ -138,7 +136,7 @@ export function UserProfile() {
       {/* Header */}
       <div className="bg-gradient-to-r from-yellow-400 to-blue-600 rounded-xl p-6 text-white">
         <h1 className="text-2xl font-bold mb-2">Profile & Settings</h1>
-        <p className="text-white/90">
+        <p className="text-slate-700">
           Manage your account, preferences, and subscription details.
         </p>
       </div>
@@ -150,7 +148,7 @@ export function UserProfile() {
             {[
               { id: "profile", label: "Profile", icon: User },
               // { id: "settings", label: "Settings", icon: Settings },
-              { id: "subscription", label: "Subscription", icon: CreditCard },
+              // { id: "subscription", label: "Subscription", icon: CreditCard },
               // { id: "achievements", label: "Achievements", icon: Award },
             ].map((tab) => {
               const Icon = tab.icon;
@@ -158,11 +156,10 @@ export function UserProfile() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
-                    activeTab === tab.id
-                      ? "border-yellow-400 text-yellow-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700"
-                  }`}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${activeTab === tab.id
+                    ? "border-yellow-400 text-yellow-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
                 >
                   <Icon className="h-4 w-4" />
                   <span>{tab.label}</span>
@@ -175,13 +172,36 @@ export function UserProfile() {
         <div className="p-6">
           {activeTab === "profile" && user && (
             <div className="space-y-6">
+              {/* Profile Completion Banner */}
+              {(!user?.role || !user?.company || !user?.bio || !user?.phone) && (
+                <div className="bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm gap-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="bg-orange-200 p-1.5 rounded-full shrink-0">
+                      <AlertCircle className="h-5 w-5 text-orange-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-md font-bold text-orange-900 leading-tight">Complete Your Profile</h3>
+                      <p className="text-sm text-orange-700 mt-0.5">
+                        Add your {(!user?.role ? 'role, ' : '')}{(!user?.company ? 'company, ' : '')}{(!user?.bio ? 'bio, ' : '')}{(!user?.phone ? 'phone number ' : '')} to get better visibility in the community.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowEditModal(true)}
+                    className="shrink-0 w-full sm:w-auto px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors text-sm shadow-sm"
+                  >
+                    Complete Profile
+                  </button>
+                </div>
+              )}
+
               {/* Profile Header */}
               <div className="flex items-start space-x-6">
                 <div className="relative">
-                  {/* <div className="text-6xl">{user?.avatar || '👤'}</div>
-                  <button className="absolute bottom-0 right-0 h-8 w-8 bg-yellow-400 rounded-full flex items-center justify-center hover:bg-yellow-300 transition-colors">
-                    <Camera className="h-4 w-4 text-blue-900" />
-                  </button> */}
+                  <div className="text-6xl">{user?.avatar || '👤'}</div>
+                  {/* <button className="absolute bottom-0 right-0 h-8 w-8 bg-yellow-400 rounded-full flex items-center justify-center hover:bg-yellow-300 transition-colors"> */}
+                  {/* <Camera className="h-4 w-4 text-blue-900" /> */}
+                  {/* </button> */}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-4">
@@ -189,9 +209,11 @@ export function UserProfile() {
                       <h2 className="text-2xl font-bold text-gray-900">
                         {user?.name || ''}
                       </h2>
-                      <p className="text-gray-600">
-                        {(user?.role || '')} {user?.company ? `at ${user.company}` : ''}
-                      </p>
+                      {(user?.role || user?.company) && (
+                        <p className="text-gray-600">
+                          {(user?.role || '')} {user?.company ? `at ${user.company}` : ''}
+                        </p>
+                      )}
                     </div>
                     <button
                       onClick={() => setShowEditModal(true)}
@@ -201,7 +223,7 @@ export function UserProfile() {
                       <span>Edit Profile</span>
                     </button>
                   </div>
-                  <p className="text-gray-600 mb-4">{user?.bio || ''}</p>
+                  {user?.bio && <p className="text-gray-600 mb-4">{user.bio}</p>}
                   {user?.resumeUrl && (
                     <div className="mb-4">
                       <a
@@ -216,10 +238,12 @@ export function UserProfile() {
                     </div>
                   )}
                   <div className="flex items-center space-x-4 text-sm text-gray-500">
-                    <div className="flex items-center space-x-1">
-                      <MapPin className="h-4 w-4" />
-                      <span>{user?.location || ''}</span>
-                    </div>
+                    {user?.location && (
+                      <div className="flex items-center space-x-1">
+                        <MapPin className="h-4 w-4" />
+                        <span>{user.location}</span>
+                      </div>
+                    )}
                     <div className="flex items-center space-x-1">
                       <Calendar className="h-4 w-4" />
                       <span>{user?.createdAt ? `Joined ${new Date(user.createdAt).toLocaleDateString()}` : ''}</span>
@@ -239,65 +263,77 @@ export function UserProfile() {
                       <Mail className="h-4 w-4 text-gray-500" />
                       <span className="text-gray-700">{user?.email}</span>
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <Phone className="h-4 w-4 text-gray-500" />
-                      <span className="text-gray-700">{(user as any)?.phone || ''}</span>
-                    </div>
+                    {user?.phone && (
+                      <div className="flex items-center space-x-3">
+                        <Phone className="h-4 w-4 text-gray-500" />
+                        <span className="text-gray-700">{user.phone}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    Professional Info
-                  </h3>
-                  <div className="space-y-3">
-                    <div>
-                      <label className="text-sm font-medium text-gray-700">
-                        Current Role
-                      </label>
-                      <p className="text-gray-900">{user?.role || ''}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-700">
-                        Company
-                      </label>
-                      <p className="text-gray-900">{user?.company || ''}</p>
+                {(user?.role || user?.company) && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Professional Info
+                    </h3>
+                    <div className="space-y-3">
+                      {user?.role && (
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">
+                            Current Role
+                          </label>
+                          <p className="text-gray-900">{user.role}</p>
+                        </div>
+                      )}
+                      {user?.company && (
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">
+                            Company
+                          </label>
+                          <p className="text-gray-900">{user.company}</p>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Skills */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">Skills</h3>
-                <div className="flex flex-wrap gap-2">
-                  {(user?.skills || []).map((skill: string) => (
-                    <span
-                      key={skill}
-                      className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
-                    >
-                      {skill}
-                    </span>
-                  ))}
+              {user?.skills && user.skills.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Skills</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {user.skills.map((skill: string) => (
+                      <span
+                        key={skill}
+                        className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Interests */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Interests
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {(user?.interests || []).map((interest: string) => (
-                    <span
-                      key={interest}
-                      className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium"
-                    >
-                      {interest}
-                    </span>
-                  ))}
+              {user?.interests && user.interests.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Interests
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {user.interests.map((interest: string) => (
+                      <span
+                        key={interest}
+                        className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium"
+                      >
+                        {interest}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Experience */}
               {user?.experience && user.experience.length > 0 && (

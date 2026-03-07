@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { apiAdminLogin, apiCloudinarySign, apiCreateTeamMember, apiDeleteTeamMember, apiGetTeam, apiUpdateTeamMember, apiListEvents, apiCreateEvent, apiAdminListAllEvents, apiAdminListRegistrations, apiUpdateRegistrationStatus } from '../lib/api';
 import type { TeamMember } from '../types';
-import { Users, Calendar, LogOut, Plus, X, Edit2, Trash2, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Users, Calendar, LogOut, Plus, X, Edit2, Trash2, CheckCircle, XCircle, Clock, Eye } from 'lucide-react';
+import { UserProfileView } from '../components/dashboard/UserProfileView';
 
 export default function AdminPage() {
   const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ export default function AdminPage() {
   const [viewingRegistrations, setViewingRegistrations] = useState<string | null>(null);
   const [registrations, setRegistrations] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'events' | 'team'>('events');
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
   const [eventFormOpen, setEventFormOpen] = useState(false);
   const [eventForm, setEventForm] = useState<{
@@ -22,6 +24,7 @@ export default function AdminPage() {
     startTime: string;
     endTime: string;
     location: string;
+    locationUrl: string;
     chapter: string;
     type: string;
     capacity: number;
@@ -33,6 +36,7 @@ export default function AdminPage() {
     startTime: '',
     endTime: '',
     location: '',
+    locationUrl: '',
     chapter: '',
     type: 'Meetup',
     capacity: 0,
@@ -434,7 +438,18 @@ export default function AdminPage() {
                   {registrations.map(reg => (
                     <div key={reg._id} className="bg-gray-50 rounded-lg p-4 flex items-center justify-between hover:bg-gray-100 transition-colors">
                       <div className="flex-1">
-                        <div className="font-medium text-gray-900">{reg.userName || reg.userId?.name || 'Unknown'}</div>
+                        <div className="font-medium text-gray-900 flex items-center gap-2">
+                          {reg.userName || reg.userId?.name || 'Unknown'}
+                          {reg.userId && (
+                            <button
+                              onClick={() => setSelectedUser(reg.userId)}
+                              className="p-1 hover:bg-white rounded-lg transition-colors text-blue-600 border border-transparent hover:border-blue-100 shadow-sm"
+                              title="View Full Profile"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
                         <div className="text-sm text-gray-600">{reg.userEmail || reg.userId?.email || '—'}</div>
                       </div>
                       <div className="flex items-center gap-3">
@@ -509,6 +524,29 @@ export default function AdminPage() {
         </div>
       )}
 
+      {/* User Profile Detail Modal */}
+      {selectedUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-[60] backdrop-blur-sm">
+          <div className="bg-white rounded-[2rem] shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-300">
+            <div className="flex items-center justify-between p-8 border-b border-gray-100 bg-slate-50/50">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 tracking-tight">Applicant Profile</h2>
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-1">Reviewing user details</p>
+              </div>
+              <button
+                onClick={() => setSelectedUser(null)}
+                className="p-3 bg-white hover:bg-slate-100 text-slate-400 hover:text-slate-600 rounded-2xl border border-slate-200 shadow-sm transition-all active:scale-95"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="overflow-y-auto flex-1 p-8 bg-white custom-scrollbar">
+              <UserProfileView user={selectedUser} />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Event Form Modal */}
       {eventFormOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -553,6 +591,7 @@ export default function AdminPage() {
                 startTime: eventForm.startTime || undefined,
                 endTime: eventForm.endTime || undefined,
                 location: eventForm.location,
+                locationUrl: eventForm.locationUrl || undefined,
                 chapter: eventForm.chapter || undefined,
                 type: eventForm.type || undefined,
                 capacity: Number(eventForm.capacity) || 0,
@@ -576,7 +615,7 @@ export default function AdminPage() {
                 setEvents(await apiListEvents('all' as any));
               }
               setEventFormOpen(false);
-              setEventForm({ title: '', description: '', date: '', startTime: '', endTime: '', location: '', chapter: '', type: 'Meetup', capacity: 0, file: null });
+              setEventForm({ title: '', description: '', date: '', startTime: '', endTime: '', location: '', locationUrl: '', chapter: '', type: 'Meetup', capacity: 0, file: null });
               setLoading(false);
             }} className="overflow-y-auto flex-1 p-6">
               <div className="space-y-4">
@@ -625,6 +664,15 @@ export default function AdminPage() {
                       value={eventForm.location}
                       onChange={e => setEventForm(f => ({ ...f, location: e.target.value }))}
                       required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Location URL (Gmaps)</label>
+                    <input
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      value={eventForm.locationUrl}
+                      onChange={e => setEventForm(f => ({ ...f, locationUrl: e.target.value }))}
+                      placeholder="https://maps.google.com/..."
                     />
                   </div>
                   <div>

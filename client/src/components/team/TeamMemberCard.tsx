@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Linkedin, Github, Globe } from 'lucide-react';
 import { TeamMemberModal } from './TeamMemberModal';
 import { TeamMember } from '../../types';
@@ -12,19 +12,19 @@ export function TeamMemberCard({ member }: TeamMemberCardProps) {
 
   return (
     <>
-      <div 
+      <div
         className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
         onClick={() => setIsModalOpen(true)}
       >
         <div className="relative">
-          <img 
-            src={member.image} 
+          <img
+            src={member.image}
             alt={member.name}
             className="w-full h-64 object-cover"
           />
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
             <h3 className="text-xl font-semibold text-white">{member.name}</h3>
-            <p className="text-yellow-300">{member.role}</p>
+            <p className="text-yellow-300">{member.chapter} Chapter</p>
             <p className="text-white">{member.designation}</p>
           </div>
         </div>

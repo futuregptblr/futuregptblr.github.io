@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
 // import { DashboardHeader } from '../components/dashboard/DashboardHeader';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { User } from '../types';
 import { API_BASE_URL } from '../lib/utils';
-import { useDispatch, useSelector } from 'react-redux';
-import type { RootState } from '../lib/store';
+import { useDispatch } from 'react-redux';
 import { setUser } from '../slices/userSlice';
 
 export function Dashboard() {
-  const user = useSelector((s: RootState) => s.user.currentUser);
   const dispatch = useDispatch();
+  const location = useLocation();
+  const isEventDetailPage = /^\/dashboard\/events\/[^/]+$/.test(location.pathname);
 
   useEffect(() => {
     // Get user data from localStorage or API
@@ -62,17 +62,16 @@ export function Dashboard() {
           });
       }
     } else {
-      try { dispatch(setUser(JSON.parse(userData))); } catch {}
+      try { dispatch(setUser(JSON.parse(userData))); } catch { }
     }
   }, []);
 
   return (
-    <div className="pt-14 min-h-screen bg-gray-50">
-      {/* <DashboardHeader /> */}
-      <div className="flex">
-        <DashboardSidebar />
-        <main className="flex-1 p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto">
+    <div className="pt-16 min-h-screen bg-slate-50 flex flex-col">
+      <div className="flex flex-col lg:flex-row flex-1">
+        {!isEventDetailPage && <DashboardSidebar />}
+        <main className="flex-1 p-4 lg:p-10 overflow-x-hidden">
+          <div className="max-w-[1400px] mx-auto w-full lg:min-h-[calc(100vh-8rem)]">
             <Outlet />
           </div>
         </main>
