@@ -1,0 +1,218 @@
+export interface ChapterLead {
+  name: string;
+  role: string;
+  chapter: string;
+  image: string;
+  linkedin: string;
+  bio: string;
+}
+
+export interface Event {
+  _id?: string;
+  id: string;
+  title: string;
+  date: string;
+  location: string;
+  locationUrl?: string;
+  chapter: string;
+  description: string;
+  image: string;
+  registrationLink: string;
+  lumaUrl?: string;
+  meetupUrl?: string;
+}
+
+export interface Chapter {
+  id: string;
+  city: string;
+  country: string;
+  leads: ChapterLead[];
+  memberCount: number;
+  image: string;
+  link: string;
+}
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  designation: string;
+  chapter?: string;
+  image: string;
+  bio: string;
+  linkedin?: string;
+  github?: string;
+  website?: string;
+}
+
+export interface Experience {
+  company?: string;
+  title?: string;
+  startDate?: string; // ISO string
+  endDate?: string | null; // ISO string or null for present
+  description?: string;
+}
+
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  isPremium?: boolean;
+  premiumPurchaseDate?: string | null;
+  paymentId?: string | null;
+  orderId?: string | null;
+  phone?: string;
+  location?: string;
+  role?: string;
+  company?: string;
+  bio?: string;
+  skills?: string[];
+  interests?: string[];
+  resumeUrl?: string;
+  experience?: Experience[];
+  avatar?: string;
+  joinDate?: string;
+  profileVisibility?: "public" | "members" | "private";
+  showOnlineStatus?: boolean;
+  allowDirectMessages?: boolean;
+  emailNotifications?: boolean;
+  pushNotifications?: boolean;
+  eventReminders?: boolean;
+  jobAlerts?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Job {
+  _id: string;
+  companyId: string | { _id: string; $oid?: string };
+  companyName: string;
+  title: string;
+  description: string;
+  requirements: string[];
+  location: string;
+  type: "full-time" | "part-time" | "contract" | "internship";
+  salary: {
+    min?: number;
+    max?: number;
+    currency?: string;
+  };
+  experience: string;
+  skills: string[];
+  benefits: string[];
+  isActive: boolean;
+  applications: number;
+  department?: string;
+  remotePolicy: "remote" | "hybrid" | "onsite";
+  applicationDeadline?: string;
+  startDate?: string;
+  contractDuration?: string;
+  visaSponsorship: boolean;
+  relocationAssistance: boolean;
+  allowCoverLetter: boolean;
+  requireResume: boolean;
+  maxApplications: number;
+  industry?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Company {
+  _id: string;
+  name: string;
+  email: string;
+  website?: string;
+  industry: string;
+  size: string;
+  location: string;
+  description: string;
+  logo?: string;
+  isVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface JobApplication {
+  id: string;
+  jobId: string;
+  userId: string;
+  companyId: string;
+  status:
+    | "pending"
+    | "reviewing"
+    | "shortlisted"
+    | "interviewed"
+    | "accepted"
+    | "rejected";
+  coverLetter?: string;
+  resumeUrl: string;
+  appliedAt: string;
+  companyNotes?: string;
+  interviewDate?: string;
+  interviewLocation?: string;
+  interviewType?: "phone" | "video" | "onsite";
+  isWithdrawn?: boolean;
+  withdrawnAt?: string | null;
+  // Populated relations (when API populates)
+  user?: Partial<User>;
+  job?: Partial<Job>;
+}
+
+export interface GlobalJob {
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  country?: string;
+  employmentType?: string;
+  workMode?: string;
+  salary?: {
+    min?: number | null;
+    max?: number | null;
+    currency?: string | null;
+  } | null;
+  description?: string;
+  requirements?: string[];
+  benefits?: string[];
+  postedDate?: string;
+  provider: string;
+  sourceName?: string;
+  applyUrl: string;
+  companyLogo?: string;
+  skills?: string[];
+  experience?: string;
+  isRemote?: boolean;
+  isInternship?: boolean;
+  isFullTime?: boolean;
+}
+
+export interface GlobalSavedJob {
+  _id: string;
+  userId: string;
+  jobId: string;
+  provider: string;
+  company: string;
+  title: string;
+  location?: string;
+  applyUrl: string;
+  jobSnapshot?: GlobalJob;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GlobalApplication {
+  _id: string;
+  userId: string;
+  jobId: string;
+  provider: string;
+  company: string;
+  title: string;
+  applyUrl: string;
+  appliedDate: string;
+  currentStatus: string;
+  notes: { _id?: string; body: string; createdAt: string; updatedAt?: string }[];
+  statusHistory: { status: string; changedAt: string; note?: string }[];
+  jobSnapshot?: GlobalJob;
+  createdAt: string;
+  updatedAt: string;
+}
