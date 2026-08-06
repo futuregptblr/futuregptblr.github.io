@@ -2,3 +2,240 @@
 > server@1.0.0 start
 > node index.js
 
+Original DB in URI: '/futuregpt'. Switching to '/test'.
+Connected to MongoDB
+Connected DB: test
+Connected Host: ac-dfnkjpf-shard-00-00.oxhektv.mongodb.net
+Collections: [
+  'globaljobcaches',
+  'events',
+  'users',
+  'globalapplicationstatuses',
+  'discussions',
+  'globalapplications',
+  'globalsavedjobs',
+  'jobapplications',
+  'jobs',
+  'groups',
+  'eventregistrations',
+  'teammembers',
+  'companies',
+  'waitlists'
+]
+--- Database Debug ---
+DB Name: test
+DB Host: ac-dfnkjpf-shard-00-00.oxhektv.mongodb.net
+Collections: [
+  'globaljobcaches',
+  'events',
+  'users',
+  'globalapplicationstatuses',
+  'discussions',
+  'globalapplications',
+  'globalsavedjobs',
+  'jobapplications',
+  'jobs',
+  'groups',
+  'eventregistrations',
+  'teammembers',
+  'companies',
+  'waitlists'
+]
+TeamMember Count: 11
+Event Count: 5
+----------------------
+server is running on port 5000
+Fetching all jobs...
+Raw jobs from database: [
+  {
+    salary: { min: 1, max: 10, currency: 'INR' },
+    _id: new ObjectId('6a423ada23fcee77b1a3f0d9'),
+    companyId: {
+      _id: new ObjectId('6a423a9123fcee77b1a3f0d1'),
+      name: 'Bennett University',
+      industry: 'Education'
+    },
+    companyName: 'Bennett University',
+    title: 'Intern ',
+    description: 'Best Hacker',
+    requirements: [ 'All kindaaa ' ],
+    location: 'remote ',
+    type: 'full-time',
+    experience: '0',
+    skills: [ 'all skills' ],
+    benefits: [ 'Nothing ' ],
+    isActive: true,
+    applications: 1,
+    remotePolicy: 'onsite',
+    visaSponsorship: false,
+    relocationAssistance: false,
+    allowCoverLetter: true,
+    requireResume: true,
+    maxApplications: 1000,
+    createdAt: 2026-06-29T09:28:58.595Z,
+    updatedAt: 2026-07-22T15:28:22.392Z,
+    __v: 0
+  },
+  {
+    salary: { currency: 'INR' },
+    _id: new ObjectId('68df74770369473980c9eefd'),
+    companyId: {
+      _id: new ObjectId('68b5e5eea45aa398cb1e576b'),
+      name: 'Future GPT',
+      industry: 'Technology'
+    },
+    companyName: 'Future GPT',
+    title: 'trt',
+    description: 't',
+    requirements: [],
+    location: 'h',
+    type: 'full-time',
+    experience: '0-1',
+    skills: [],
+    benefits: [],
+    isActive: true,
+    applications: 1,
+    remotePolicy: 'onsite',
+    visaSponsorship: false,
+    relocationAssistance: false,
+    allowCoverLetter: true,
+    requireResume: true,
+    maxApplications: 1000,
+    createdAt: 2025-10-03T07:00:07.089Z,
+    updatedAt: 2025-10-03T07:36:27.357Z,
+    __v: 0
+  },
+  {
+    salary: { min: 15000, max: 40000, currency: 'INR' },
+    _id: new ObjectId('68b5e6e6a45aa398cb1e5777'),
+    companyId: {
+      _id: new ObjectId('68b5e5eea45aa398cb1e576b'),
+      name: 'Future GPT',
+      industry: 'Technology'
+    },
+    companyName: 'FutureGPT',
+    title: 'software engineer ',
+    description: 'highly qualified engineer needed',
+    requirements: [],
+    location: 'Remote',
+    type: 'full-time',
+    experience: '2',
+    skills: [ 'react', 'node', 'python', 'aws' ],
+    benefits: [ 'competitive salary and fun!!' ],
+    isActive: true,
+    applications: 1,
+    createdAt: 2025-09-01T18:33:10.879Z,
+    updatedAt: 2025-09-12T18:08:04.756Z,
+    __v: 0,
+    allowCoverLetter: true,
+    maxApplications: 1000,
+    relocationAssistance: false,
+    remotePolicy: 'onsite',
+    requireResume: true,
+    visaSponsorship: false
+  }
+]
+Transformed jobs: [
+  {
+    id: new ObjectId('6a423ada23fcee77b1a3f0d9'),
+    companyId: new ObjectId('6a423a9123fcee77b1a3f0d1'),
+    companyName: 'Bennett University',
+    title: 'Intern ',
+    description: 'Best Hacker',
+    requirements: [ 'All kindaaa ' ],
+    location: 'remote ',
+    type: 'full-time',
+    salary: { min: 1, max: 10, currency: 'INR' },
+    experience: '0',
+    skills: [ 'all skills' ],
+    benefits: [ 'Nothing ' ],
+    isActive: true,
+    createdAt: 2026-06-29T09:28:58.595Z,
+    applications: 1
+  },
+  {
+    id: new ObjectId('68df74770369473980c9eefd'),
+    companyId: new ObjectId('68b5e5eea45aa398cb1e576b'),
+    companyName: 'Future GPT',
+    title: 'trt',
+    description: 't',
+    requirements: [],
+    location: 'h',
+    type: 'full-time',
+    salary: { currency: 'INR' },
+    experience: '0-1',
+    skills: [],
+    benefits: [],
+    isActive: true,
+    createdAt: 2025-10-03T07:00:07.089Z,
+    applications: 1
+  },
+  {
+    id: new ObjectId('68b5e6e6a45aa398cb1e5777'),
+    companyId: new ObjectId('68b5e5eea45aa398cb1e576b'),
+    companyName: 'FutureGPT',
+    title: 'software engineer ',
+    description: 'highly qualified engineer needed',
+    requirements: [],
+    location: 'Remote',
+    type: 'full-time',
+    salary: { min: 15000, max: 40000, currency: 'INR' },
+    experience: '2',
+    skills: [ 'react', 'node', 'python', 'aws' ],
+    benefits: [ 'competitive salary and fun!!' ],
+    isActive: true,
+    createdAt: 2025-09-01T18:33:10.879Z,
+    applications: 1
+  }
+]
+Fetching all jobs...
+Raw jobs from database: [
+  {
+    salary: { min: 15000, max: 40000, currency: 'INR' },
+    _id: new ObjectId('68b5e6e6a45aa398cb1e5777'),
+    companyId: {
+      _id: new ObjectId('68b5e5eea45aa398cb1e576b'),
+      name: 'Future GPT',
+      industry: 'Technology'
+    },
+    companyName: 'FutureGPT',
+    title: 'software engineer ',
+    description: 'highly qualified engineer needed',
+    requirements: [],
+    location: 'Remote',
+    type: 'full-time',
+    experience: '2',
+    skills: [ 'react', 'node', 'python', 'aws' ],
+    benefits: [ 'competitive salary and fun!!' ],
+    isActive: true,
+    applications: 1,
+    createdAt: 2025-09-01T18:33:10.879Z,
+    updatedAt: 2025-09-12T18:08:04.756Z,
+    __v: 0,
+    allowCoverLetter: true,
+    maxApplications: 1000,
+    relocationAssistance: false,
+    remotePolicy: 'onsite',
+    requireResume: true,
+    visaSponsorship: false
+  }
+]
+Transformed jobs: [
+  {
+    id: new ObjectId('68b5e6e6a45aa398cb1e5777'),
+    companyId: new ObjectId('68b5e5eea45aa398cb1e576b'),
+    companyName: 'FutureGPT',
+    title: 'software engineer ',
+    description: 'highly qualified engineer needed',
+    requirements: [],
+    location: 'Remote',
+    type: 'full-time',
+    salary: { min: 15000, max: 40000, currency: 'INR' },
+    experience: '2',
+    skills: [ 'react', 'node', 'python', 'aws' ],
+    benefits: [ 'competitive salary and fun!!' ],
+    isActive: true,
+    createdAt: 2025-09-01T18:33:10.879Z,
+    applications: 1
+  }
+]
