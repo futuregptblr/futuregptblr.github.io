@@ -50,6 +50,17 @@ export async function apiAdminLogin(payload: LoginPayload) {
   return res.json();
 }
 
+export async function apiVerifyAdmin(token: string) {
+  const res = await fetch(`${API_BASE_URL}/api/auth/admin-verify`, {
+    headers: authHeaders(token),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || "Admin session expired");
+  }
+  return res.json();
+}
+
 export async function apiForgotPassword(email: string) {
   const res = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
     method: "POST",

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { apiAdminLogin, apiCloudinarySign, apiCreateTeamMember, apiDeleteTeamMember, apiGetTeam, apiUpdateTeamMember, apiListEvents, apiCreateEvent, apiAdminListAllEvents, apiAdminListRegistrations, apiUpdateRegistrationStatus, apiUpdateEvent, apiDeleteEvent } from '../lib/api';
+import { apiAdminLogin, apiVerifyAdmin, apiCloudinarySign, apiCreateTeamMember, apiDeleteTeamMember, apiGetTeam, apiUpdateTeamMember, apiListEvents, apiCreateEvent, apiAdminListAllEvents, apiAdminListRegistrations, apiUpdateRegistrationStatus, apiUpdateEvent, apiDeleteEvent } from '../lib/api';
 import type { TeamMember } from '../types';
 import { Users, Calendar, LogOut, Plus, X, Edit2, Trash2, CheckCircle, XCircle, Clock, Eye } from 'lucide-react';
 import { UserProfileView } from '../components/dashboard/UserProfileView';
@@ -81,9 +81,16 @@ export default function AdminPage() {
   useEffect(() => {
     if (!token) return;
     (async () => {
-      const data = await apiGetTeam();
-      setTeam(data);
-      try { setEvents(await apiAdminListAllEvents(token)); } catch { try { setEvents(await apiListEvents('all' as any)); } catch { } }
+      try {
+        await apiVerifyAdmin(token);
+        const data = await apiGetTeam();
+        setTeam(data);
+        setEvents(await apiAdminListAllEvents(token));
+      } catch (error: any) {
+        localStorage.removeItem('adminToken');
+        setToken(null);
+        toast.error(error?.message || 'Admin session expired');
+      }
     })();
   }, [token]);
 

@@ -1,6 +1,8 @@
 const express = require('express');
 const { register, login, forgotPassword, resetPassword } = require('../controllers/authController');
 const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth');
+const requireAdmin = require('../middleware/admin');
 
 const router = express.Router();
 
@@ -8,6 +10,9 @@ router.post('/register', register);
 router.post('/login', login);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
+router.get('/admin-verify', auth, requireAdmin, (req, res) => {
+  res.json({ ok: true });
+});
 
 // Env-based single admin login
 router.post('/admin-login', (req, res) => {
@@ -32,5 +37,4 @@ router.post('/admin-login', (req, res) => {
 });
 
 module.exports = router;
-
 
