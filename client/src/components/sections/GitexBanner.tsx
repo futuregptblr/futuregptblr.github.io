@@ -156,6 +156,22 @@ const partnershipSlides: FeaturedSlide[] = [
       'Dubai Exhibition Centre, Expo City Dubai',
     ),
   },
+  {
+    image: '/WorldsummitAI_banner.png',
+    imageAlt: 'World Summit AI 2026 - FutureGPT Community Partnership',
+    badge: 'FutureGPT - Official Community Partner',
+    title: 'World Summit AI 2026',
+    subtitle: 'FutureGPT x World Summit AI 2026 | Community Partnership',
+    description:
+      "We're excited to announce that FutureGPT is joining World Summit AI 2026 as a Community Partner!\n\nWorld Summit AI is one of the leading global gatherings for the AI ecosystem, bringing together 10,000+ attendees, 300+ speakers, 100+ exhibitors, founders, researchers, investors, enterprises, policymakers, and AI innovators under one roof.\n\nThis year marks the 10th Anniversary of World Summit AI, with discussions spanning AI innovation, enterprise adoption, AI safety, governance, startups, emerging technologies, and the future of AI.\n\nAs a FutureGPT community, we're excited to connect our members with a global AI ecosystem, new ideas, meaningful collaborations, and the people shaping what comes next in artificial intelligence.\n\nFutureGPT Community Offer: Use code FUTUREGPT20 for 20% OFF your ticket.\n\nLet's connect, collaborate and shape the future of AI together.",
+    location: 'Taets Art & Event Park, Amsterdam',
+    date: '7-8 October 2026',
+    primaryCta: {
+      label: 'Learn More & Register',
+      href: 'https://ti.to/inspiredminds/world-summit-ai-2026/discount/FUTUREGPT20',
+      icon: <Ticket className="w-4 h-4" />,
+    },
+  },
 ];
 
 export function GitexBanner() {
