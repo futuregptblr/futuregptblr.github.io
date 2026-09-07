@@ -7,7 +7,7 @@ import {
   RiUser3Line
 } from 'react-icons/ri';
 
-type DashboardSection = 'overview' | 'jobs' | 'global-jobs' | 'events' | 'community' | 'profile';
+type DashboardSection = 'overview' | 'jobs' | 'global-jobs' | 'events' | 'monthly-events' | 'community' | 'profile';
 
 import { Link, useLocation } from 'react-router-dom';
 
@@ -41,6 +41,12 @@ export function DashboardSidebar() {
       description: 'Exclusive events'
     },
     {
+      id: 'monthly-events' as DashboardSection,
+      label: 'Monthly Events',
+      icon: RiCalendarEventLine,
+      description: 'Featured community sessions'
+    },
+    {
       id: 'community' as DashboardSection,
       label: 'Community Hub',
       icon: RiTeamLine,
@@ -65,7 +71,8 @@ export function DashboardSidebar() {
               ? item.id === 'overview'
               : path === target
               || (item.id === 'jobs' && path.startsWith('/dashboard/jobs'))
-              || (item.id === 'global-jobs' && path.startsWith('/dashboard/global-jobs'));
+              || (item.id === 'global-jobs' && path.startsWith('/dashboard/global-jobs'))
+              || (item.id === 'monthly-events' && path.startsWith('/dashboard/monthly-events'));
 
             return (
               <Link

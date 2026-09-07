@@ -226,6 +226,26 @@ export async function apiDeleteTeamMember(
 }
 
 // Events
+export type EventResourceDto = {
+  _id: string;
+  eventId: string;
+  title: string;
+  description?: string;
+  type: "ppt" | "pdf" | "doc" | "link" | "notes" | "video" | "image";
+  fileUrl?: string;
+  externalLink?: string;
+  isPublic?: boolean;
+  requiresAuthentication?: boolean;
+  order?: number;
+  speaker?: {
+    name?: string;
+    title?: string;
+    linkedinUrl?: string;
+  };
+  createdAt?: string;
+  updatedAt?: string;
+};
+
 export type EventDto = {
   _id: string;
   title: string;
@@ -236,6 +256,7 @@ export type EventDto = {
   location: string;
   locationUrl?: string;
   chapter?: string;
+  domain?: string;
   type?: string;
   capacity?: number;
   isPremium?: boolean;
@@ -245,16 +266,29 @@ export type EventDto = {
   tags?: string[];
   registrationsCount?: number;
   registrationLink?: string;
+  registrationUrl?: string;
+  published?: boolean;
+  isMonthlyEvent?: boolean;
+  isFeatured?: boolean;
+  speaker?: {
+    name?: string;
+    title?: string;
+    company?: string;
+    linkedinUrl?: string;
+    profileImage?: string;
+  };
+  resources?: EventResourceDto[];
 };
 
 export async function apiListEvents(
   scope: "upcoming" | "past" | "all" = "upcoming",
 ): Promise<EventDto[]> {
   const params = new URLSearchParams();
-  if (scope && scope !== "all") params.set("scope", scope);
+  if (scope) params.set("scope", scope);
   const res = await fetch(`${API_BASE_URL}/api/events?${params.toString()}`);
   if (!res.ok) throw new Error("Failed to load events");
-  return res.json();
+  const events: EventDto[] = await res.json();
+  return events.filter((event) => event.isMonthlyEvent !== true);
 }
 
 export async function apiAdminListAllEvents(
@@ -266,6 +300,23 @@ export async function apiAdminListAllEvents(
 
   if (!res.ok) throw new Error("Failed to load all events");
 
+  const events: EventDto[] = await res.json();
+  return events.filter((event) => event.isMonthlyEvent !== true);
+}
+
+export async function apiListMonthlyEvents(): Promise<EventDto[]> {
+  const res = await fetch(`${API_BASE_URL}/api/events?scope=all&kind=monthly`);
+  if (!res.ok) throw new Error("Failed to load monthly events");
+  return res.json();
+}
+
+export async function apiAdminListMonthlyEvents(
+  token: string,
+): Promise<EventDto[]> {
+  const res = await fetch(`${API_BASE_URL}/api/events?scope=all&kind=monthly`, {
+    headers: authHeaders(token),
+  });
+  if (!res.ok) throw new Error("Failed to load monthly events");
   return res.json();
 }
 
@@ -333,6 +384,74 @@ export async function apiDeleteEvent(token: string, eventId: string) {
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
     throw new Error(data.message || "Failed to delete event");
+  }
+  return res.json();
+}
+
+export async function apiListEventResources(
+  eventId: string,
+): Promise<EventResourceDto[]> {
+  const res = await fetch(`${API_BASE_URL}/api/events/${eventId}/resources`);
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || "Failed to load resources");
+  }
+  return res.json();
+}
+
+export async function apiCreateEventResource(
+  token: string,
+  eventId: string,
+  payload: Partial<EventResourceDto>,
+): Promise<EventResourceDto> {
+  const res = await fetch(`${API_BASE_URL}/api/events/${eventId}/resources`, {
+    method: "POST",
+    headers: authHeaders(token),
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || "Failed to create resource");
+  }
+  return res.json();
+}
+
+export async function apiUpdateEventResource(
+  token: string,
+  eventId: string,
+  resourceId: string,
+  payload: Partial<EventResourceDto>,
+): Promise<EventResourceDto> {
+  const res = await fetch(
+    `${API_BASE_URL}/api/events/${eventId}/resources/${resourceId}`,
+    {
+      method: "PUT",
+      headers: authHeaders(token),
+      body: JSON.stringify(payload),
+    },
+  );
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || "Failed to update resource");
+  }
+  return res.json();
+}
+
+export async function apiDeleteEventResource(
+  token: string,
+  eventId: string,
+  resourceId: string,
+) {
+  const res = await fetch(
+    `${API_BASE_URL}/api/events/${eventId}/resources/${resourceId}`,
+    {
+      method: "DELETE",
+      headers: authHeaders(token),
+    },
+  );
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || "Failed to delete resource");
   }
   return res.json();
 }

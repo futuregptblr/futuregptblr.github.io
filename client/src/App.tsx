@@ -13,6 +13,7 @@ import { SpecialEvents } from "./components/dashboard/SpecialEvents";
 import { EventDetail } from "./components/dashboard/EventDetail";
 import { CommunityHub } from "./components/dashboard/CommunityHub";
 import { UserProfile } from "./components/dashboard/UserProfile";
+import { MonthlyEvents } from "./components/dashboard/MonthlyEvents";
 import Onboarding from "./pages/Onboarding";
 import { SignupForm } from "./components/auth/SignupForm";
 import { LoginForm } from "./components/auth/LoginForm";
@@ -75,6 +76,8 @@ function AppContent() {
           <Route path="global-jobs" element={<GlobalJobs />} />
           <Route path="global-jobs/:jobId" element={<GlobalJobDetailPage />} />
           <Route path="events" element={<SpecialEvents />} />
+          <Route path="monthly-events" element={<MonthlyEvents />} />
+          <Route path="monthly-events/:eventId" element={<MonthlyEvents />} />
           <Route path="community" element={<CommunityHub />} />
           <Route path="profile" element={<UserProfile />} />
         </Route>

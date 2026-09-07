@@ -4,6 +4,7 @@ import { apiAdminLogin, apiVerifyAdmin, apiCloudinarySign, apiCreateTeamMember, 
 import type { TeamMember } from '../types';
 import { Users, Calendar, LogOut, Plus, X, Edit2, Trash2, CheckCircle, XCircle, Clock, Eye } from 'lucide-react';
 import { UserProfileView } from '../components/dashboard/UserProfileView';
+import { MonthlyEventsManagement } from '../components/admin/MonthlyEventsManagement';
 
 export default function AdminPage() {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ export default function AdminPage() {
   const [eventDraft, setEventDraft] = useState<any | null>(null);
   const [viewingRegistrations, setViewingRegistrations] = useState<string | null>(null);
   const [registrations, setRegistrations] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState<'events' | 'team'>('events');
+  const [activeTab, setActiveTab] = useState<'events' | 'monthly-events' | 'team'>('events');
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
   const [eventFormOpen, setEventFormOpen] = useState(false);
@@ -299,6 +300,16 @@ export default function AdminPage() {
             Events
           </button>
           <button
+            onClick={() => setActiveTab('monthly-events')}
+            className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors border-b-2 ${activeTab === 'monthly-events'
+              ? 'border-blue-600 text-blue-600'
+              : 'border-transparent text-gray-600 hover:text-gray-900'
+              }`}
+          >
+            <Calendar className="w-4 h-4" />
+            Monthly Events
+          </button>
+          <button
             onClick={() => setActiveTab('team')}
             className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors border-b-2 ${activeTab === 'team'
               ? 'border-blue-600 text-blue-600'
@@ -366,6 +377,11 @@ export default function AdminPage() {
               )}
             </div>
           </div>
+        )}
+
+        {/* Monthly Events Tab */}
+        {activeTab === 'monthly-events' && (
+          <MonthlyEventsManagement token={token} />
         )}
 
         {/* Team Tab */}

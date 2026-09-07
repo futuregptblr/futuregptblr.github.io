@@ -1,23 +1,42 @@
 const Event = require("../models/Event");
 const EventRegistration = require("../models/EventRegistration");
 
+async function ensureSingleFeaturedEvent(eventId) {
+  const updates = { $set: { isFeatured: false } };
+  if (eventId) {
+    await Event.updateMany({ _id: { $ne: eventId }, isFeatured: true }, updates);
+    return;
+  }
+  await Event.updateMany({ isFeatured: true }, updates);
+}
+
 async function listEvents(req, res) {
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const { scope = "upcoming" } = req.query;
+    const { scope = "upcoming", kind = "normal" } = req.query;
     const query = {};
+    const isAdminRequest = !!(
+      req.user &&
+      req.user.email &&
+      process.env.ADMIN_EMAIL &&
+      req.user.email.toLowerCase() === process.env.ADMIN_EMAIL.toLowerCase()
+    );
 
-    if (scope === "upcoming") {
-      query.date = { $gte: today };
-      query.published = true;
-    } else if (scope === "past") {
-      query.date = { $lt: today };
+    if (!isAdminRequest) {
       query.published = true;
     }
 
-    const events = await Event.find(query).sort({ date: 1 });
+    query.isMonthlyEvent = kind === "monthly" ? true : { $ne: true };
+
+    if (scope === "upcoming") {
+      query.date = { $gte: today };
+    } else if (scope === "past") {
+      query.date = { $lt: today };
+    }
+
+    const events = await Event.find(query).populate("resources").sort({ date: 1 });
     res.json(events);
   } catch (err) {
     console.error("listEvents error", err);
@@ -27,8 +46,24 @@ async function listEvents(req, res) {
 
 async function getEvent(req, res) {
   try {
-    const event = await Event.findById(req.params.id);
+    const event = await Event.findById(req.params.id).populate("resources");
     if (!event) return res.status(404).json({ message: "Event not found" });
+
+    if (event.isMonthlyEvent) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    const isAdminRequest = !!(
+      req.user &&
+      req.user.email &&
+      process.env.ADMIN_EMAIL &&
+      req.user.email.toLowerCase() === process.env.ADMIN_EMAIL.toLowerCase()
+    );
+
+    if (!isAdminRequest && !event.published) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
     res.json(event);
   } catch (err) {
     console.error("getEvent error", err);
@@ -38,10 +73,13 @@ async function getEvent(req, res) {
 
 async function createEvent(req, res) {
   try {
-    const created = await Event.create({
-      ...req.body,
-      createdBy: req.user?.sub,
-    });
+    const eventPayload = { ...req.body, createdBy: req.user?.sub };
+
+    if (eventPayload.isFeatured === true) {
+      await ensureSingleFeaturedEvent(eventPayload._id || null);
+    }
+
+    const created = await Event.create(eventPayload);
     res.status(201).json(created);
   } catch (err) {
     console.error("createEvent error", err);
@@ -51,7 +89,13 @@ async function createEvent(req, res) {
 
 async function updateEvent(req, res) {
   try {
-    const updated = await Event.findByIdAndUpdate(req.params.id, req.body, {
+    const eventPayload = { ...req.body };
+
+    if (eventPayload.isFeatured === true) {
+      await ensureSingleFeaturedEvent(req.params.id);
+    }
+
+    const updated = await Event.findByIdAndUpdate(req.params.id, eventPayload, {
       new: true,
       runValidators: true,
     });
@@ -83,13 +127,16 @@ async function registerForEvent(req, res) {
 
     const event = await Event.findById(id);
     if (!event) return res.status(404).json({ message: "Event not found" });
+    if (event.isMonthlyEvent) {
+      return res.status(404).json({ message: "Event not found" });
+    }
 
     const registration = await EventRegistration.create({
       eventId: id,
       userId,
       userName: req.user?.name || undefined,
       userEmail: req.user?.email || undefined,
-      status: "pending", // Set to pending for admin approval
+      status: "pending",
     });
 
     res.status(201).json(registration);
@@ -104,7 +151,7 @@ async function registerForEvent(req, res) {
 
 async function updateRegistrationStatus(req, res) {
   try {
-    const { id } = req.params; // registration ID
+    const { id } = req.params;
     const { status } = req.body;
 
     if (
@@ -134,12 +181,10 @@ async function updateRegistrationStatus(req, res) {
           $inc: { registrationsCount: 1 },
         });
       }
-    } else {
-      if (oldStatus === "approved" || oldStatus === "registered") {
-        await Event.findByIdAndUpdate(registration.eventId, {
-          $inc: { registrationsCount: -1 },
-        });
-      }
+    } else if (oldStatus === "approved" || oldStatus === "registered") {
+      await Event.findByIdAndUpdate(registration.eventId, {
+        $inc: { registrationsCount: -1 },
+      });
     }
 
     res.json(registration);
@@ -186,4 +231,5 @@ module.exports = {
   listMyRegistrations,
   adminListRegistrations,
   updateRegistrationStatus,
+  ensureSingleFeaturedEvent,
 };
