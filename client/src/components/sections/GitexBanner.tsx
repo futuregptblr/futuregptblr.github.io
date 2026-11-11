@@ -7,30 +7,38 @@ type SocialLink = {
   icon: string;
 };
 
+type FooterLink = {
+  href: string;
+  label: string;
+};
+
 const createPartnershipFooter = (
   eventName: string,
   socialLinks: SocialLink[],
   label: string,
   organizer: string,
   host?: string,
+  additionalLinks: FooterLink[] = [],
 ) => (
   <div className="border-t border-white/10 mt-8 pt-6">
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div className="flex items-center gap-2 flex-wrap justify-center">
-        <span className="text-xs text-slate-500 mr-1">Follow:</span>
-        {socialLinks.map((social) => (
-          <a
-            key={social.label}
-            href={social.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${eventName} ${social.label}`}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-slate-300 hover:bg-orange-500/20 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs font-bold"
-          >
-            {social.icon}
-          </a>
-        ))}
-      </div>
+      {socialLinks.length > 0 && (
+        <div className="flex items-center gap-2 flex-wrap justify-center">
+          <span className="text-xs text-slate-500 mr-1">Follow:</span>
+          {socialLinks.map((social) => (
+            <a
+              key={social.label}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${eventName} ${social.label}`}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-slate-300 hover:bg-orange-500/20 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs font-bold"
+            >
+              {social.icon}
+            </a>
+          ))}
+        </div>
+      )}
 
       <div className="text-xs text-slate-500 text-center sm:text-right">
         {label}: <span className="text-slate-400 font-semibold">{organizer}</span>
@@ -42,10 +50,66 @@ const createPartnershipFooter = (
         )}
       </div>
     </div>
+    {additionalLinks.length > 0 && (
+      <div className="mt-4 text-center text-xs text-slate-500">
+        <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-2">
+          {additionalLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-orange-300 text-sm font-semibold underline decoration-orange-400 underline-offset-2 hover:text-orange-200"
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
 );
 
 const partnershipSlides: FeaturedSlide[] = [
+  {
+    image: '/GITEX_GLOBAL.jpeg',
+    imageAlt: 'GITEX GLOBAL 2026, 7-11 December 2026, Dubai, UAE',
+    badge: 'FutureGPT – Official Media Partner & Ecosystem Partner',
+    title: 'GITEX GLOBAL 2026',
+    subtitle: "The World's Largest Tech & AI Show",
+    description:
+      "GITEX GLOBAL 2026, the world's largest tech & AI show, returns for its 46th edition from 7–11 December 2026 in Dubai, with 200,000+ tech executives from 180+ countries, 6,000+ exhibiting companies, and 400+ government entities expected to participate.\n\nThe event opens with the invite-only GITEX Summit on 7 December at Dubai World Trade Centre, followed by the GITEX GLOBAL Expo from 8–11 December at Dubai Exhibition Centre, Expo City Dubai, alongside Expand North Star and LivX.\n\nExplore AI infrastructure and data centres, energy technology, quantum technology, mobility, robotics, agentic AI and cybersecurity. Discover emerging solutions, connect with industry leaders and build partnerships to accelerate business growth.",
+    location: 'Dubai World Trade Centre & Dubai Exhibition Centre, Expo City Dubai, UAE',
+    date: '7–11 December 2026',
+    primaryCta: {
+      label: 'Get Tickets – Visitor',
+      href: 'https://visit.gitex.com/?sub_event=GLOBAL&utm_source=partner&utm_medium=referral&utm_campaign=gitex_global_2026&utm_content=power_pack_get_tickets&utm_term=visprom',
+      icon: <Ticket className="w-4 h-4" />,
+    },
+    secondaryCta: {
+      label: 'Book a Stand – Exhibitor',
+      href: 'https://mktg.gitex.com/BookAStand2026?utm_source=partner&utm_medium=referral&utm_campaign=gitex_global_2026&utm_content=power_pack_book_stand&utm_term=exprom',
+      icon: <Tag className="w-4 h-4" />,
+      variant: 'secondary',
+    },
+    footer: createPartnershipFooter(
+      'GITEX GLOBAL 2026',
+      [],
+      'For More Information',
+      'Visit GITEX GLOBAL 2026',
+      undefined,
+      [
+        {
+          label: 'Ecosystem Partner Enquiry',
+          href: 'https://mktg.gitex.com/GITEX2026EcosystemPartnerApplication?utm_source=partner&utm_medium=referral&utm_campaign=gitex_global_2026&utm_content=power_pack_ecosystem_enquiry',
+        },
+        {
+          label: 'Become a Speaker',
+          href: 'https://mktg.gitex.com/GITEX2026SpeakerInterest?utm_source=partner&utm_medium=referral&utm_campaign=gitex_global_2026&utm_content=power_pack_speaker_interest',
+        },
+      ],
+    ),
+  },
   {
     image: '/gitex_banner.jpg',
     imageAlt: 'GITEX AI KAZAKHSTAN 2026, 4-5 May 2026, Atakent IEC, Almaty, Kazakhstan',
