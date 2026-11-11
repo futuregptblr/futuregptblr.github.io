@@ -242,7 +242,17 @@ export function GitexBanner() {
   return (
     <FeaturedSlider
       title="Community Partnership Highlights"
-      subtitle="We are proud to be a Community Partner of GITEX AI KAZAKHSTAN 2026. As our member, you get exclusive access to discounted passes and early registration."
+      subtitle={
+        <>
+          <p className="text-xl sm:text-2xl font-bold text-white">
+            Big opportunities begin with <span className="text-orange-300">strong communities</span>.
+          </p>
+          <div className="mx-auto my-3 h-0.5 w-12 rounded-full bg-orange-400" aria-hidden="true" />
+          <p className="text-sm sm:text-base text-slate-400">
+            Together, we're opening doors to the people, ideas, and innovations shaping tomorrow.
+          </p>
+        </>
+      }
       slides={partnershipSlides}
     />
   );

@@ -38,7 +38,7 @@ export type FeaturedSlide = {
 
 type FeaturedSliderProps = {
   title: string;
-  subtitle?: string;
+  subtitle?: ReactNode;
   slides: FeaturedSlide[];
   className?: string;
 };
@@ -94,9 +94,9 @@ export function FeaturedSlider({
             </span>
           </div>
           {subtitle && (
-            <p className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
+            <div className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
               {subtitle}
-            </p>
+            </div>
           )}
         </div>
 
