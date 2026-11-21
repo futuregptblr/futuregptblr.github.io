@@ -1,0 +1,22 @@
+{
+  "name": "FutureGPT",
+  "short_name": "FutureGPT",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0b1026",
+  "background_color": "#0b1026",
+  "icons": [
+    {
+      "src": "/icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
